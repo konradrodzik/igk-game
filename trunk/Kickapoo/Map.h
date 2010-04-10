@@ -26,6 +26,14 @@ public:
 		return y * width + x;
 	}
 
+	bool blocked(int x, int y) const {
+		return map[index(x, y)] == '#';
+	}
+
+	bool collides(const D3DXVECTOR2& v) const;
+
+	D3DXVECTOR2 slide(const D3DXVECTOR2& a, const D3DXVECTOR2& );
+
 	void loadContent(vector<Player>& playerList, vector<Tower>& towerList);
 
 public:

@@ -183,3 +183,18 @@ void Map::draw()
 		}
 	}
 }
+
+bool Map::collides(const D3DXVECTOR2& v) const {
+	return blocked(v.x + 0.1f, v.y + 0.1f) || blocked(v.x + 0.9f, v.y + 0.1f) ||
+		blocked(v.x + 0.1f, v.y + 0.9f) || blocked(v.x + 0.9f, v.y + 0.9f);
+}
+	
+D3DXVECTOR2 Map::slide(const D3DXVECTOR2& a, const D3DXVECTOR2& b) {
+	if(!collides(D3DXVECTOR2(b.x, b.y)))
+		return b;
+	if(!collides(D3DXVECTOR2(b.x, a.y)))
+		return D3DXVECTOR2(b.x, a.y);
+	if(!collides(D3DXVECTOR2(a.x, b.y)))
+		return D3DXVECTOR2(a.x, b.y);
+	return a;
+}
