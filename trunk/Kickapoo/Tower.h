@@ -39,6 +39,16 @@ public:
 
 	}
 
+	int getX()
+	{
+		return x;
+	}
+
+	int getY()
+	{
+		return y;
+	}
+
 private:
 	Texture* texture;
 	bool isAlive;
