@@ -17,41 +17,71 @@ enum E_TOWER_STATE
 class Tower
 {
 public:
+	Tower(E_TOWER_TYPE type_)
+	{
+		type = type_;
+		state = ETS_ALIVE;
+	}
+
 	Tower()
 	{
+		state = ETS_ALIVE;
+	}
 
+	~Tower()
+	{
+		
+	}
+
+	void setAliveTexture(Texture* tex)
+	{
+		aliveTexture = tex;
+	}
+
+	void setDeathTexture(Texture* tex)
+	{
+		deathTexture = tex;
 	}
 
 	void draw()
 	{
-		//if(type)
-		//texture->set();
-		//g_Renderer()->drawRect();
+		if(state!=ETS_HIDE)
+		{
+			if(state == ETS_DYING)
+				deathTexture->set();
+			else if(state == ETS_ALIVE)
+				aliveTexture->set();
+
+			g_Renderer()->drawRect(Position.x*BLOCK_SIZE, Position.y*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+		}
 	}
 
 	void kill()
 	{
-
+		state = ETS_DYING;
 	}
 
 	void hide()
 	{
-
+		state = ETS_HIDE;
 	}
 
 	int getX()
 	{
-		return x;
+		return Position.x*BLOCK_SIZE+BLOCK_SIZE/2;
 	}
 
 	int getY()
 	{
-		return y;
+		return Position.y*BLOCK_SIZE+BLOCK_SIZE/2;
 	}
 
-private:
-	Texture* texture;
+public:
+	Texture* aliveTexture;
+	Texture* deathTexture;
 	bool isAlive;
-	int x, y;
+	D3DXVECTOR2 Position;
+	//std::vector<Missle*> missiles;
 	E_TOWER_TYPE type;
+	E_TOWER_STATE state;
 };

@@ -5,8 +5,10 @@ Map::Map()
 {
 	wall = new Texture;
 	tower = new Texture;
+	tower_death = new Texture;
 	wall->load("gfx/wall.png");
 	tower->load("gfx/tower.png");
+	tower_death->load("gfx/tower_death.png");
 }
 
 Map::~Map()
@@ -104,6 +106,21 @@ void Map::loadContent(vector<Player>& playerList, vector<Tower>& towerList)
 				player.Position.y = i;
 				playerList.push_back(player);
 			}
+			else if(block == '^' || block == '&') 
+			{
+				Tower tower_;
+				
+				if(block == '^')
+					tower_.type = ETT_STATIC;
+				else if(block == '&')
+					tower_.type = ETT_SHOOTING;
+
+				tower_.Position.x = j;
+				tower_.Position.y = i;
+				tower_.setAliveTexture(tower);
+				tower_.setDeathTexture(tower_death);
+				towerList.push_back(tower_);
+			}
 		}
 	}
 }
@@ -128,11 +145,11 @@ void Map::draw()
 				wall->set();
 				g_Renderer()->drawRect(j*BLOCK_SIZE+size, i*BLOCK_SIZE+size, BLOCK_SIZE-2*size, BLOCK_SIZE-2*size);
 			}
-			else if(block == '^')
+			/*else if(block == '^')
 			{
 				tower->set();
 				g_Renderer()->drawRect(j*BLOCK_SIZE, i*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
-			}
+			}*/
 		}
 	}
 

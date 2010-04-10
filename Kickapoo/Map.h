@@ -36,4 +36,5 @@ public:
 	int height;
 	Texture* wall;
 	Texture* tower;
+	Texture* tower_death;
 };
