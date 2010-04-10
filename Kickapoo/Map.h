@@ -13,6 +13,12 @@ public:
 
 	void draw();
 
+	char at(int x, int y) const {
+		return map[y * width + x];
+	}
+
 public:
-	char **map;
+	vector<char> map;
+	int width;
+	int height;
 };
