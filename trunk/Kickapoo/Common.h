@@ -53,6 +53,7 @@ using namespace std;
 #include "Audio.h"
 #include "Water.h"
 #include "../Box2D/Box2D/Box2D.h"
+#include "AnimationSequence.h"
 //#include "ParticleEmitter.h"
 #include "Mouse.h"
 #include "Game.h"
