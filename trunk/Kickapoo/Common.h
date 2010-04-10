@@ -57,6 +57,7 @@ using namespace std;
 #include "AnimationSequence.h"
 //#include "ParticleEmitter.h"
 #include "Mouse.h"
+#include "Map.h"
 #include "Game.h"
 
 #pragma comment(lib, "../Box2D/Library/box2d.lib")
