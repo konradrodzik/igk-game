@@ -109,9 +109,9 @@ LRESULT CALLBACK Window::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
  	case WM_SETCURSOR:
 		SetCursor(LoadCursor(NULL, NULL));
-// 		SetClassLong(hwnd,    // window handle 
-// 			GCL_HCURSOR,      // ch9nge cursor 
-// 			(LONG)LoadCursor(hInstance, IDC_ARROW)2);   
+ 	//	SetClassLong(hwnd,    // window handle 
+ 	//		GCL_HCURSOR,      // ch9nge cursor 
+		//	(LONG)LoadCursor(hInstance, IDC_ARROW));   
 		//SetCursor(LoadCursor(NULL, IDC_CROSS));
  		break;
 
