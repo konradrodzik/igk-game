@@ -30,12 +30,14 @@ float Timer::update()
 		currentProbes = 0;
 	}
 
-	frameTime = 0;
+	//frameTime = 0;
 
-	for (int i = 0; i < MAX_PROBES_AVG; i++)
-		frameTime += frameTimes[i];
+	//for (int i = 0; i < MAX_PROBES_AVG; i++)
+	//	frameTime += frameTimes[i];
 
-	frameTime = frameTime / (float)MAX_PROBES_AVG;
+	//frameTime = frameTime / (float)MAX_PROBES_AVG;
+
+	frameTime = seconds;
 
 	m_engineTime += frameTime;
 	return frameTime;

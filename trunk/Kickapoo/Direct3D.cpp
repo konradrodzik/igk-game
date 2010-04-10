@@ -120,8 +120,11 @@ void Direct3D::setDefaultSettings()
 	d3dDevice->SetRenderState( D3DRS_POINTSIZE_MIN, FloatToDWORD(0.01f) );
 
 	D3DXMATRIX matrix;
-	D3DXMatrixOrthoLH(&matrix, 80, 60, -1, 1);
+	D3DXMatrixOrthoLH(&matrix, g_Window()->getWidth(), g_Window()->getHeight(), -1, 1);
 	d3dDevice->SetTransform(D3DTS_PROJECTION, &matrix);
+
+	D3DXMatrixTranslation(&matrix, -g_Window()->getWidth() / 2, -g_Window()->getHeight() / 2, 0);
+	d3dDevice->SetTransform(D3DTS_VIEW, &matrix);
 }
 
 void Direct3D::restoreDevice()

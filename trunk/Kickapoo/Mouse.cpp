@@ -3,7 +3,7 @@
 
 Mouse::Mouse(void)
 {
-	size = 1.5f;
+	size = 16.0f;
 }
 
 Mouse::~Mouse(void)
@@ -13,19 +13,21 @@ Mouse::~Mouse(void)
 void Mouse::create()
 {
 	cursor = "cursor.png";
+	x = g_Window()->getWidth() / 2;
+	y = g_Window()->getHeight() / 2;
 }
 
 void Mouse::update()
 {
-	float sensitivity = 20.0f;
+	float sensitivity = 300.0f;
 	int dx, dy;
 	g_Input()->getMovement(dx, dy);
 
 	x += dx * sensitivity * g_Timer()->getFrameTime(); 
 	y -= dy * sensitivity * g_Timer()->getFrameTime();
 
-	if(x < -40) x = -40; if(x > 40) x = 40;
-	if(y < -30) y = -30; if(y > 30) y = 30;
+	if(x < 0) x = 0; if(x > g_Window()->getWidth()) x = g_Window()->getWidth();
+	if(y < 0) y = 0; if(y > g_Window()->getHeight()) y = g_Window()->getHeight();
 }
 
 void Mouse::drawCursor()
