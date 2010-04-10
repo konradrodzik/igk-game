@@ -4,11 +4,15 @@
 Map::Map()
 {
 	wall = new Texture;
+	tower = new Texture;
 	wall->load("gfx/wall.jpg");
+	tower->load("gfx/tower.png");
 }
 
 Map::~Map()
 {
+	delete wall;
+	delete tower;
 }
 
 static void trimr(char * buffer) {
@@ -55,6 +59,11 @@ void Map::draw()
 			if(block == '#')
 			{
 				wall->set();
+				g_Renderer()->drawRect(j*BLOCK_SIZE, i*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+			}
+			else if(block == '^')
+			{
+				tower->set();
 				g_Renderer()->drawRect(j*BLOCK_SIZE, i*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 			}
 		}

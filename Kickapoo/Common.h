@@ -58,6 +58,8 @@ using namespace std;
 //#include "ParticleEmitter.h"
 #include "Mouse.h"
 #include "Map.h"
+#include "Player.h"
+#include "Tower.h"
 #include "Game.h"
 #include "Particles.h"
 

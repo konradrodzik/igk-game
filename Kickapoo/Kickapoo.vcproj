@@ -285,6 +285,14 @@
 				RelativePath=".\Map.h"
 				>
 			</File>
+			<File
+				RelativePath=".\Player.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Tower.h"
+				>
+			</File>
 			<Filter
 				Name="Framework"
 				>

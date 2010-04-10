@@ -35,4 +35,7 @@ protected:
 	Texture gameScreen_;
 	Font introFont_;
 	Map* map;
+	std::vector<Tower*> towers;
+	std::vector<Player*> player;
+	Player* activePlayer;
 };

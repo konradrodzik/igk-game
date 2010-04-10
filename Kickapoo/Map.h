@@ -25,4 +25,5 @@ public:
 	int width;
 	int height;
 	Texture* wall;
+	Texture* tower;
 };
