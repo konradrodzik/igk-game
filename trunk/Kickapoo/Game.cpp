@@ -6,7 +6,7 @@ string _introText = "The time has changed and the world is FUCKED. BULLSHIT!";
 
 
 Game::Game(void)
-:  state_(EGameState::Intro)
+:  state_(EGameState::Running)
 ,  kryzys_("kryzys_logo.jpg")
 ,  crysis_("crysis.jpg")
 ,  gameScreen_("game_screen.jpg")
@@ -57,9 +57,8 @@ void Game::update()
 	{
 	} else
 	{
-
 	}
-
+		map->update();
 
 	ParticleSystem * ps = ParticleSystem::getSingletonPtr();
 	ps->spawnParticle(D3DXVECTOR2(g_Mouse()->getX(), g_Mouse()->getY()),

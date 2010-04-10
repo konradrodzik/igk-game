@@ -1,7 +1,7 @@
 #pragma once
 #include "Common.h"
 
-static const int BLOCK_SIZE = 20;
+static const int BLOCK_SIZE = 25;
 
 class Map
 {
@@ -16,12 +16,17 @@ public:
 
 	void draw();
 
-	char at(int x, int y) const {
-		return map[y * width + x];
+	void fill();
+	void fill_r(int x, int y, float dt);
+
+	int index(int x, int y) const {
+		return y * width + x;
 	}
 
 public:
 	string map;
+	vector<float> blockRandom;
+
 	int width;
 	int height;
 	Texture* wall;
