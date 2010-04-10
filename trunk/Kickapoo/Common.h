@@ -59,6 +59,7 @@ using namespace std;
 #include "Mouse.h"
 #include "Map.h"
 #include "Game.h"
+#include "Particles.h"
 
 #pragma comment(lib, "../Box2D/Library/box2d.lib")
 #pragma comment(lib, "../FMOD/lib/fmodex_vc.lib")
