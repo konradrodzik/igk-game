@@ -13,10 +13,13 @@ class Player
 {
 public:
 	D3DXVECTOR2 Position;
+	D3DXVECTOR2 Velocity;
 
 	vector<PlayerState> StateList;
 
 	PlayerState* findState(float time);
+
+	Player();
 
 private:
 };
