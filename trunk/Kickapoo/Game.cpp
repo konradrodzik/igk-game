@@ -164,6 +164,12 @@ void Game::drawDynamicObjects()
 			g_Renderer()->drawRect(player.Position.x*BLOCK_SIZE, player.Position.y*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 		}
 	}
+
+	for(unsigned i = 0; i < towers.size(); ++i)
+	{
+		Tower& tower = towers[i];
+		tower.draw();
+	}
 }
 
 void Game::draw()
@@ -204,5 +210,14 @@ void Game::draw()
 		map->draw();
 		drawDynamicObjects();
 		g_ParticleSystem()->renderParticles();
+
+
+		for(int i = 0; i < towers.size(); ++i)
+		{
+			Tower* tower = &towers[i];
+			if(tower->state != ETS_ALIVE)
+				continue;
+			killTower(tower);
+		}
 	}
 }
