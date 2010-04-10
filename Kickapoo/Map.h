@@ -1,6 +1,8 @@
 #pragma once
 #include "Common.h"
 
+static const int BLOCK_SIZE = 10;
+
 class Map
 {
 public:
@@ -22,4 +24,5 @@ public:
 	vector<char> map;
 	int width;
 	int height;
+	Texture* wall;
 };
