@@ -21,7 +21,7 @@ public:
 	}
 
 public:
-	vector<char> map;
+	string map;
 	int width;
 	int height;
 	Texture* wall;

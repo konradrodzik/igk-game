@@ -11,6 +11,12 @@ Map::~Map()
 {
 }
 
+static void trimr(char * buffer) {
+	unsigned length = strlen(buffer);
+	while(buffer[0] && (buffer[length-1] == '\n' || buffer[length-1] == '\r'))
+		buffer[length-1] = 0;
+}
+
 Map* Map::load( const std::string& name )
 {
 	FILE* file = fopen(name.c_str(), "r");
@@ -20,11 +26,15 @@ Map* Map::load( const std::string& name )
 	Map* map = new Map;
 
 	fscanf(file, "%i %i", &map->width, &map->height);
-	
-	map->map.resize(map->width * map->height);
 
-	for(int i = 0; i < map->height; ++i)
-		fgets(&map->map[i * map->width], map->width, file);
+	while(!feof(file)) {
+		static char buffer[10000];
+		fgets(buffer, sizeof(buffer), file);
+		trimr(buffer);
+		map->map += buffer;
+	}
+
+	assert(map->map.size() == map->width*map->height);
 
 	fclose(file);
 	return map;
