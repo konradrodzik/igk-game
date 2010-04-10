@@ -27,8 +27,8 @@
 #include <locale>
 #include <stdlib.h>
 
-#include <fmod.hpp>
-#include <fmod_errors.h>
+#include "../FMOD/inc/fmod.hpp"
+#include "../FMOD/inc/fmod_errors.h"
 #include "../FastDelegate/FastDelegate.h"
 #include "../FastDelegate/FastDelegateBind.h"
 
@@ -58,6 +58,7 @@ using namespace std;
 #include "Game.h"
 
 #pragma comment(lib, "../Box2D/Library/box2d.lib")
+#pragma comment(lib, "../FMOD/lib/fmodex_vc.lib")
 //#include "Physics.h"
 
 extern Game* g_Game;
