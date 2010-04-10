@@ -10,4 +10,9 @@ public:
 	void create();
 	void update();
 	void draw();
+
+private:
+	CSprite* sprite;
+	Texture* crysisLogo;
+	Map* map;
 };
