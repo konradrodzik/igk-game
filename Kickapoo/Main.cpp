@@ -4,7 +4,7 @@
 
 void onLostDevice();
 
-Font mousePosition;
+Font* mousePosition;
 Game* g_Game;
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nShowCmd)
@@ -15,6 +15,11 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, in
 	g_Input()->init(hInstance, false);
 	g_Audio()->create();
 	g_Mouse()->create();
+
+	RECT rect = {0, g_Window()->getHeight() - 20, 100, 100};
+
+	mousePosition = new Font();
+	mousePosition->create("Verdana", 10, 10, false, &rect);
 
 	g_Game = new Game();
 	g_Game->create();
@@ -43,6 +48,8 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, in
 		g_Renderer()->setIdentity();
 		g_Game->draw();
 		g_Mouse()->drawCursor();
+
+		mousePosition->write("mouse position: (%f, %f)", g_Mouse()->getX(), g_Mouse()->getY());
 
 		getDevice()->EndScene();
 		hr = getDevice()->Present(NULL, NULL, NULL, NULL);

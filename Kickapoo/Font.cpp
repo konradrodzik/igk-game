@@ -1,6 +1,5 @@
 #include "Common.h"
 
-
 const int MAX_BUFF = 4096;
 
 Font::Font() : textParam(DT_LEFT), textColor(0xFFFFFFFF) {
