@@ -5,13 +5,13 @@ static float _introTime = 0.0f;
 static float _fake;
 string _introText = "The time has changed and the world is FUCKED. BULLSHIT!";
 
-
 Game::Game(void)
-:  state_(EGameState::Running)
+:  state_(EGameState::Intro)
 ,  kryzys_("kryzys_logo.jpg")
 ,  crysis_("crysis.jpg")
 ,  gameScreen_("game_screen.jpg")
 {
+	changeState(EGameState::Tutorial);
 	relativeTime = 0;
 }
 
@@ -23,17 +23,23 @@ void Game::changeState(EGameState::TYPE state)
 {
 	state_ = state;
 
+	//! TODO: implement tutorial
+	if(state == EGameState::Tutorial)
+	{
+		changeState(EGameState::Selection);
+	} else
 	if(state == EGameState::Running) {
 		relativeTime = 0;
-	}
-	else if(state == EGameState::Selection) {
+	} else 
+		//! TODO: implement selection
+		if(state == EGameState::Selection) {
 		relativeTime = 0;
 		if(activePlayer)
 			activePlayer->Velocity = D3DXVECTOR2(0, 0);
 		activePlayer = NULL;
 
-		// hack 
-		changeState(EGameState::Running);
+		// hack off
+		// changeState(EGameState::Running);
 	}
 }
 
@@ -93,8 +99,8 @@ void Game::create()
 	map = Map::load("mapa.txt");
 	map->loadContent(playerList, towers);
 
-	if(playerList.size())
-		activePlayer = &playerList[0];
+//	if(playerList.size())
+//		activePlayer = &playerList[0];
 }
 
 void Game::update()
@@ -107,6 +113,13 @@ void Game::update()
 	else if(state_ == EGameState::Running)
 	{
 		map->update();
+		for(int i = 0; i < towers.size(); ++i)
+		{
+			Tower* tower = &towers[i];
+			if(tower->state != ETS_ALIVE)
+				continue;
+			killTower(tower);
+		}
 
 		ParticleSystem * ps = ParticleSystem::getSingletonPtr();
 		ps->spawnParticle(D3DXVECTOR2(g_Mouse()->getX(), g_Mouse()->getY()),
@@ -225,14 +238,26 @@ void Game::draw()
 		map->draw();
 		drawDynamicObjects();
 		g_ParticleSystem()->renderParticles();
+	}
+}
 
 
-		for(int i = 0; i < towers.size(); ++i)
+void Game::onLeftClick()
+{
+
+	if(state_ ==  EGameState::Selection)
+	{
+
+		for(int i=0; i < (int) playerList.size(); ++i)
 		{
-			Tower* tower = &towers[i];
-			if(tower->state != ETS_ALIVE)
-				continue;
-			killTower(tower);
+
+			if(playerList[i].contains(g_Mouse()->getX(), g_Mouse()->getY()))
+			{
+
+				activePlayer = &playerList[i];
+				changeState(EGameState::Running);
+				return;
+			}
 		}
 	}
 }

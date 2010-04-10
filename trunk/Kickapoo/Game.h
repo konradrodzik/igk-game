@@ -18,6 +18,7 @@ namespace EGameState
 class Game
 {
 public:
+
 	Game(void);
 	~Game(void);
 
@@ -30,13 +31,19 @@ public:
 	//! spawn tower explosion
 	void explodeTower(void* tower);
 
+	//! left mouse button clicked
+	void onLeftClick();
+
 	void changeState(EGameState::TYPE state);
 	void create();
 	void update();
 	void drawDynamicObjects();
 	void draw();
 
+	
 protected:
+	
+
 	EGameState::TYPE state_;
 	Texture kryzys_;
 	Texture crysis_;

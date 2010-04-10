@@ -13,7 +13,7 @@ enum E_TOWER_STATE
 	ETS_DYING,
 	ETS_HIDE,
 };
-
+//! TODO: add reset state
 class Tower
 {
 public:
