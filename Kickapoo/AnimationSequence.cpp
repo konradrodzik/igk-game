@@ -216,3 +216,16 @@ bool AnimationSequenceActivator::update(float dt)
 	return false;
 }
 
+
+AnimationSequenceActivator1Param::AnimationSequenceActivator1Param( FastDelegate1<void*> function, void* param)
+: function_(function)
+, param_(param)
+{}
+
+bool AnimationSequenceActivator1Param::update(float dt)
+{
+	if(!function_.empty())
+		function_(param_);
+	return false;
+}
+

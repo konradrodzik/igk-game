@@ -111,5 +111,21 @@ protected:
 };
 
 
+//! calls selected function and continue
+class AnimationSequenceActivator1Param : public AnimationSequence
+{
+public:
+	AnimationSequenceActivator1Param( FastDelegate1<void*> function, void* param );
+
+public:
+	//! update sequence, returns false if should be deleted
+	virtual bool update(float dt);
+
+protected:
+	//!
+	FastDelegate1<void*> function_;
+	void* param_;
+};
+
 
 #endif /* ANIMATIONSEQUENCE_H_ */

@@ -23,6 +23,13 @@ public:
 
 	//! start gameplay after intro
 	void startGame();
+
+	//! kills tower
+	void killTower(Tower* tower);
+
+	//! spawn tower explosion
+	void explodeTower(void* tower);
+
 	void changeState(EGameState::TYPE state);
 	void create();
 	void update();

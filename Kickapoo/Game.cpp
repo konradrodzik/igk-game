@@ -2,6 +2,7 @@
 #include "Game.h"
 
 static float _introTime = 0.0f;
+static float _fake;
 string _introText = "The time has changed and the world is FUCKED. BULLSHIT!";
 
 
@@ -32,6 +33,33 @@ void Game::startGame()
 {
 	changeState(EGameState::Tutorial);
 }
+
+void Game::killTower(Tower* tower)
+{
+	//! kill tower
+	AnimationSequenceActivator* kill = new AnimationSequenceActivator(MakeDelegate(tower, &Tower::kill));
+	
+	//! add particle wait 1 sec and hide tower
+	AnimationSequenceActivator1Param* spawnParticle = new AnimationSequenceActivator1Param(MakeDelegate(this, &Game::explodeTower), tower);
+	AnimationSequenceScalar* wait1Sec = new AnimationSequenceScalar(_fake, 0, 1, 1.0f);
+	AnimationSequenceActivator* hide = new AnimationSequenceActivator(MakeDelegate(tower, &Tower::hide));
+	
+	//! set seq
+	kill->setNext(spawnParticle);
+	spawnParticle->setNext(wait1Sec);
+	wait1Sec->setNext(hide);
+
+	//! add to system
+	AnimationSequence::add(kill);
+}
+
+void Game:: explodeTower(void* t)
+{
+	Tower* tower = (Tower*)t;
+	ParticleSystem * ps = ParticleSystem::getSingletonPtr();
+	ps->spawnExplosion(D3DXVECTOR2(tower->getX(), tower->getY()));
+}
+
 
 void Game::create()
 {
@@ -69,8 +97,7 @@ void Game::update()
 			D3DXVECTOR2(0, 1), false, 1.0f, 50.0f, D3DCOLOR_ARGB(0x80, 0x80, 0x80, 0), 4.0f);
 #endif
 
-		ps->spawnExplosion(D3DXVECTOR2(g_Mouse()->getX(), g_Mouse()->getY()));
-
+		
 		g_ParticleSystem()->updateParticles();
 		map->update();
 	}
