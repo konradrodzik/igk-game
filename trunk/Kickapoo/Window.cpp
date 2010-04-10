@@ -57,7 +57,12 @@ bool Window::initApplication(const string& appName,
 	ShowWindow(hWnd, SW_SHOW);
 	UpdateWindow(hWnd);
 
-	ShowCursor(false);
+	RECT rect;
+	GetClientRect(getHWND(), &rect);
+	width = rect.right - rect.left;
+	height = rect.bottom - rect.top;
+
+	//ShowCursor(false);
 
 	clearKeyState();
 	return true;
@@ -108,11 +113,11 @@ LRESULT CALLBACK Window::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		break;
 
  	case WM_SETCURSOR:
-		SetCursor(LoadCursor(NULL, NULL));
+	//	SetCursor(LoadCursor(NULL, NULL));
  	//	SetClassLong(hwnd,    // window handle 
  	//		GCL_HCURSOR,      // ch9nge cursor 
-		//	(LONG)LoadCursor(hInstance, IDC_ARROW));   
-		//SetCursor(LoadCursor(NULL, IDC_CROSS));
+	//		(LONG)LoadCursor(hInstance, IDC_ARROW));   
+		SetCursor(LoadCursor(NULL, IDC_CROSS));
  		break;
 
 	case WM_LBUTTONDOWN:
@@ -129,8 +134,11 @@ LRESULT CALLBACK Window::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		break;
 
 	case WM_MOUSEMOVE:
-		mouseX = g_Mouse()->getX();
-		mouseY = g_Mouse()->getY();
+		{
+			g_Mouse()->setPos((float)LOWORD(lParam), g_Window()->getHeight() - (float)HIWORD(lParam));
+			mouseX = g_Mouse()->getX();
+			mouseY = g_Mouse()->getY();
+		}
 	break;
 
 	case WM_RBUTTONDOWN:

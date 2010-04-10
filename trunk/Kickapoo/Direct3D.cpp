@@ -17,11 +17,15 @@ void Direct3D::initDirect3D(int bits, bool isFullscreen)
 	findBestRefreshRate();
 
 	ZeroMemory(&d3dpp, sizeof(D3DPRESENT_PARAMETERS));
-	
+	RECT rect;
+	GetClientRect(g_Window()->getHWND(), &rect);
+	int width = rect.right - rect.left;
+	int height = rect.bottom - rect.top;
+
 	d3dpp.Windowed = !isFullscreen;		
 	if(isFullscreen) {
-		d3dpp.BackBufferWidth  = g_Window()->getWidth();
-		d3dpp.BackBufferHeight = g_Window()->getHeight();
+		d3dpp.BackBufferWidth  = width;
+		d3dpp.BackBufferHeight = height;
 	}
 
 	d3dpp.BackBufferCount  = 1;
@@ -61,11 +65,16 @@ void Direct3D::findBestRefreshRate()
 	
 	d3D->EnumAdapterModes(D3DADAPTER_DEFAULT, displayMode.Format, dispalyModeCount - 1, pMode);
 
+	RECT rect;
+	GetClientRect(g_Window()->getHWND(), &rect);
+	int width = rect.right - rect.left;
+	int height = rect.bottom - rect.top;
+
 	int currentRefreshRate = 0;
 	for (int i = 0; i < dispalyModeCount; i++)
 	{
-		if (pMode[i].Width  == g_Window()->getWidth()  && 
-			pMode[i].Height == g_Window()->getHeight() && 
+		if (pMode[i].Width  == width  && 
+			pMode[i].Height == height && 
 			currentRefreshRate < pMode[i].RefreshRate)
 		{
 			currentRefreshRate = pMode[i].RefreshRate;
@@ -120,10 +129,14 @@ void Direct3D::setDefaultSettings()
 	d3dDevice->SetRenderState( D3DRS_POINTSIZE_MIN, FloatToDWORD(0.01f) );
 
 	D3DXMATRIX matrix;
-	D3DXMatrixOrthoLH(&matrix, g_Window()->getWidth(), g_Window()->getHeight(), -1, 1);
+	RECT rect;
+	GetClientRect(g_Window()->getHWND(), &rect);
+	int width = rect.right - rect.left;
+	int height = rect.bottom - rect.top;
+	D3DXMatrixOrthoLH(&matrix, width, height, -1, 1);
 	d3dDevice->SetTransform(D3DTS_PROJECTION, &matrix);
 
-	D3DXMatrixTranslation(&matrix, -g_Window()->getWidth() / 2, -g_Window()->getHeight() / 2, 0);
+	D3DXMatrixTranslation(&matrix, -width / 2.0f, -height / 2.0f, 0);
 	d3dDevice->SetTransform(D3DTS_VIEW, &matrix);
 }
 
