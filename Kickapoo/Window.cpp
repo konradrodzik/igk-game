@@ -130,6 +130,8 @@ LRESULT CALLBACK Window::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		break;
 
 	case WM_LBUTTONUP:
+		//! clicked
+		g_Game->onLeftClick();
 		lmousebutton = true;
 		break;
 
