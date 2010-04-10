@@ -5,7 +5,7 @@ Map::Map()
 {
 	wall = new Texture;
 	tower = new Texture;
-	wall->load("gfx/wall.jpg");
+	wall->load("gfx/wall.png");
 	tower->load("gfx/tower.png");
 }
 
