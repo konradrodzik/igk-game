@@ -27,8 +27,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, in
 	mousePosition->create("Verdana", 20, 0, false, &rect);
 	mousePosition->setTextColor(D3DCOLOR_RGBA(255, 0, 0, 255));
 
-	g_Game = new Game();
-	g_Game->create();
+	
 
 	HRESULT hr;
 	g_Direct3D()->enableAlphaBlending(true);
@@ -36,8 +35,11 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, in
 	RenderToTexture texture;
 	texture.init(width, height);
 
-	Water water;
-	water.create(0, 0, width, height, 20);
+	//Water water;
+	//water.create(0, 0, width, height, 20);
+
+	g_Game = new Game();
+	g_Game->create();
 
 	while( !g_Window()->isDone() ) 
 	{			
@@ -69,9 +71,10 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, in
 			g_Timer()->getFPS(), g_Mouse()->getX(), g_Mouse()->getY());
 	
 		texture.endRenderToTexture();
-
-		water.setTexture(texture.getTexture());
-		water.render();
+		getDevice()->SetTexture(0, *texture.getTexture());
+		g_Renderer()->drawRect(0, 0, width, height);
+	//	water.setTexture(texture.getTexture());
+	//	water.render();
 
 		//int width = width / 2;
 		//int height = height / 2;
