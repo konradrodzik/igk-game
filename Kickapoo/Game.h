@@ -30,5 +30,9 @@ public:
 
 protected:
 	EGameState::TYPE state_;
+	Texture kryzys_;
+	Texture crysis_;
+	Texture gameScreen_;
+	Font introFont_;
 	Map* map;
 };
