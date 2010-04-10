@@ -20,23 +20,6 @@ float Timer::update()
 				    / static_cast<float>(ticksPerSecond.QuadPart);
 	
 	lastTime = currentTime;	
-
-	static float frameTimes[MAX_PROBES_AVG] = {0, 0, 0, 0, 0, 0};
-	static int currentProbes = 0;
-
-	frameTimes[currentProbes++] = seconds;
-
-	if (currentProbes > MAX_PROBES_AVG - 1) {
-		currentProbes = 0;
-	}
-
-	//frameTime = 0;
-
-	//for (int i = 0; i < MAX_PROBES_AVG; i++)
-	//	frameTime += frameTimes[i];
-
-	//frameTime = frameTime / (float)MAX_PROBES_AVG;
-
 	frameTime = seconds;
 
 	m_engineTime += frameTime;

@@ -16,16 +16,23 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, in
 	g_Audio()->create();
 	g_Mouse()->create();
 
-	RECT rect = {0, g_Window()->getHeight() - 20, 100, 100};
+	RECT rect = {0, 0, g_Window()->getWidth(), 100};
 
 	mousePosition = new Font();
-	mousePosition->create("Verdana", 10, 10, false, &rect);
+	mousePosition->create("Verdana", 20, 0, false, &rect);
+	mousePosition->setTextColor(D3DCOLOR_RGBA(255, 0, 0, 255));
 
 	g_Game = new Game();
 	g_Game->create();
 
 	HRESULT hr;
 	g_Direct3D()->enableAlphaBlending(true);
+
+	RenderToTexture texture;
+	texture.init(g_Window()->getWidth(), g_Window()->getHeight());
+
+	Water water;
+	water.create(0, 0, 1024, 768, 20);
 
 	while( !g_Window()->isDone() ) 
 	{			
@@ -40,16 +47,32 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, in
 		g_Input()->update();
 		//g_World()->update(g_Timer()->getFrameTime());
 		g_Game->update();
+		water.update();
 
 		getDevice()->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
 			D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);			
 		getDevice()->BeginScene();		
 
+		texture.beginRenderToTexture();
+
 		g_Renderer()->setIdentity();
 		g_Game->draw();
 		g_Mouse()->drawCursor();
 
-		mousePosition->write("mouse position: (%f, %f)", g_Mouse()->getX(), g_Mouse()->getY());
+		mousePosition->write("fps: %0.1f\nmouse position: (%0.1f, %0.1f)", 
+			g_Timer()->getFPS(), g_Mouse()->getX(), g_Mouse()->getY());
+	
+		texture.endRenderToTexture();
+
+		water.setTexture(texture.getTexture());
+		water.render();
+
+		//int width = g_Window()->getWidth() / 2;
+		//int height = g_Window()->getHeight() / 2;
+		//texture.draw(0, 0, width, height);
+		//texture.draw(width, 0, width, height);
+		//texture.draw(0, height, width, height);
+		//texture.draw(width, height, width, height);
 
 		getDevice()->EndScene();
 		hr = getDevice()->Present(NULL, NULL, NULL, NULL);

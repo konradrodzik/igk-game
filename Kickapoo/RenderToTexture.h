@@ -13,6 +13,8 @@ public:
 	void beginRenderToTexture();
 	void endRenderToTexture();
 
+	void draw(float x, float y, float width, float height);
+
 	void onLostDevice();
 	void onResetDevice();
 
