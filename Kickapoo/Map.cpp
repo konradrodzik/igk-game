@@ -8,7 +8,6 @@ Map::Map()
 
 Map::~Map()
 {
-	delete map;
 }
 
 Map* Map::load( const std::string& name )
@@ -23,8 +22,8 @@ Map* Map::load( const std::string& name )
 	
 	map->map.resize(map->width * map->height);
 
-	for(int i = 0; i < height; ++i)
-		fgets(&map->map[i * width], width, file);
+	for(int i = 0; i < map->height; ++i)
+		fgets(&map->map[i * map->width], map->width, file);
 
 	fclose(file);
 	return map;
