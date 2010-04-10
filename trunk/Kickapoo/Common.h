@@ -52,6 +52,7 @@ using namespace std;
 #include "RenderToTexture.h"
 #include "Audio.h"
 #include "Water.h"
+#include "CSprite.h"
 #include "../Box2D/Box2D/Box2D.h"
 #include "AnimationSequence.h"
 //#include "ParticleEmitter.h"

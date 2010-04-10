@@ -182,6 +182,10 @@
 				RelativePath=".\Main.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\Map.cpp"
+				>
+			</File>
 			<Filter
 				Name="Framework"
 				>
@@ -191,6 +195,10 @@
 				</File>
 				<File
 					RelativePath=".\Audio.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CSprite.cpp"
 					>
 				</File>
 				<File
@@ -269,6 +277,10 @@
 				RelativePath=".\Game.h"
 				>
 			</File>
+			<File
+				RelativePath=".\Map.h"
+				>
+			</File>
 			<Filter
 				Name="Framework"
 				>
@@ -282,6 +294,10 @@
 				</File>
 				<File
 					RelativePath=".\Common.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CSprite.h"
 					>
 				</File>
 				<File
