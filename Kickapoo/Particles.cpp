@@ -1,5 +1,6 @@
 #include "Common.h"
 #include "Particles.h"
+#include <math.h>
 
 Particle::Particle(IParticleSystem * _pSystem, const D3DXVECTOR2& pos, const D3DXVECTOR2& dir,
 	 bool loop, float lifeTime, float velocity, D3DCOLOR color, float size)
@@ -78,5 +79,21 @@ void ParticleSystem::renderParticles()
 	for(std::list<Particle *>::const_iterator it = instances.begin() ; it != instances.end() ; ++it)
 	{
 		g_Renderer()->drawRect((*it)->pos().x, (*it)->pos().y, (*it)->size, (*it)->size, (*it)->color);
+	}
+}
+
+void ParticleSystem::spawnExplosion(const D3DXVECTOR2& pos, float lifeTime,
+					float distance, D3DXCOLOR color, float size,
+					int nParticles)
+{
+	for (int i = 0 ; i < nParticles ; ++i)
+	{
+		D3DXVECTOR2 dir;
+		float angle = RandomFloat(0.0f, 3.14f * 2.0f);
+		dir.x = cos(angle);
+		dir.y = sin(angle);
+
+		spawnParticle(pos, dir, false, RandomFloat(lifeTime / 3.0f, lifeTime),
+			RandomFloat(10.0f, 30.0f), color, RandomFloat(size / 2.0f, size));
 	}
 }
