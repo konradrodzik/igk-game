@@ -186,6 +186,10 @@
 				RelativePath=".\Map.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\Player.cpp"
+				>
+			</File>
 			<Filter
 				Name="Framework"
 				>

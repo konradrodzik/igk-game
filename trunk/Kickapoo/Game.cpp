@@ -12,6 +12,7 @@ Game::Game(void)
 ,  crysis_("crysis.jpg")
 ,  gameScreen_("game_screen.jpg")
 {
+	relativeTime = 0;
 }
 
 Game::~Game(void)
@@ -22,10 +23,15 @@ void Game::changeState(EGameState::TYPE state)
 {
 	state_ = state;
 
-	//! TODO: implement tutorial
-	if(state_ == EGameState::Tutorial)
-	{
-		state_ = EGameState::Running;
+	if(state == EGameState::Running) {
+		relativeTime = 0;
+	}
+	else if(state == EGameState::Selection) {
+		relativeTime = 0;
+		activePlayer = NULL;
+
+		// hack 
+		changeState(EGameState::Running);
 	}
 }
 
@@ -68,11 +74,13 @@ void Game::create()
 	//! Wave it and FadeOut [1.0f - 2.0f]
 	//! Fade In Game Screen [2.0f - 3.0f]
 	//! Type text [3.0f - 3.0f + textLength * 0.1f]
-	float totalTime = 3 + _introText.size() * 0.1f;
-	AnimationSequenceScalar* introTimeLine = new AnimationSequenceScalar(_introTime, 0.0f, totalTime, totalTime);
-	AnimationSequenceActivator* startGame = new AnimationSequenceActivator( MakeDelegate(this, &Game::startGame) );
-	introTimeLine->setNext(startGame);
-	AnimationSequence::add(introTimeLine);
+	if(state_ == EGameState::Intro) {
+		float totalTime = 3 + _introText.size() * 0.1f;
+		AnimationSequenceScalar* introTimeLine = new AnimationSequenceScalar(_introTime, 0.0f, totalTime, totalTime);
+		AnimationSequenceActivator* startGame = new AnimationSequenceActivator( MakeDelegate(this, &Game::startGame) );
+		introTimeLine->setNext(startGame);
+		AnimationSequence::add(introTimeLine);
+	}
 
 	//! intro font
 	RECT rect = {160, 400, g_Window()->getWidth(), g_Window()->getHeight()};
@@ -81,6 +89,10 @@ void Game::create()
 
 
 	map = Map::load("mapa.txt");
+	map->loadContent(playerList, towers);
+
+	if(playerList.size())
+		activePlayer = &playerList[0];
 }
 
 void Game::update()
@@ -89,20 +101,69 @@ void Game::update()
 
 	if(state_ == EGameState::Intro)
 	{
-	} else
+	} 
+	else if(state_ == EGameState::Running)
 	{
+		map->update();
+
 		ParticleSystem * ps = ParticleSystem::getSingletonPtr();
-#if 0
 		ps->spawnParticle(D3DXVECTOR2(g_Mouse()->getX(), g_Mouse()->getY()),
 			D3DXVECTOR2(0, 1), false, 1.0f, 50.0f, D3DCOLOR_ARGB(0x80, 0x80, 0x80, 0), 4.0f);
-#endif
 
-		
 		g_ParticleSystem()->updateParticles();
-		map->update();
-	}
-		
 
+		relativeTime += dt;
+
+		if(relativeTime > 10.0f) {
+			changeState(EGameState::Selection);
+		}
+		else if(activePlayer) {
+			PlayerState* lastState = activePlayer->findState(relativeTime);
+			D3DXVECTOR2 position(0, 0);
+			D3DXVECTOR2 velocity(0, 0);
+
+			PlayerState state;
+
+			if(lastState)
+				state.Position = lastState->Position;
+			else
+				state.Position = activePlayer->Position;
+		
+			if(GetKeyState(VK_UP)&0x80)
+				velocity.y += 1;
+			if(GetKeyState(VK_DOWN)&0x80)
+				velocity.y -= 1;
+			if(GetKeyState(VK_LEFT)&0x80)
+				velocity.x -= 1;
+			if(GetKeyState(VK_RIGHT)&0x80)
+				velocity.x += 1;
+
+			state.Position += velocity * BLOCK_SIZE * dt / 3;
+			state.Time = relativeTime;
+			state.Fire = (GetKeyState(VK_SPACE)&0x80) != 0;
+			state.Direction = D3DXVECTOR2(0, 0);
+
+			//if(lastState && state.Time - lastState->Time < 1.0f/60.0f)
+			//	*lastState = state;
+			//else
+				activePlayer->StateList.push_back(state);
+		}
+	}
+}
+	
+void Game::drawDynamicObjects()
+{
+	for(unsigned i = 0; i < playerList.size(); ++i) {
+		Player& player = playerList[i];
+		PlayerState* state = NULL;
+
+		if(state_ == EGameState::Running && (state = player.findState(relativeTime)))	{
+			g_Renderer()->drawRect(state->Position.x*BLOCK_SIZE, state->Position.y*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+		}
+		else {
+			g_Renderer()->drawRect(player.Position.x*BLOCK_SIZE, player.Position.y*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+		}
+	}
 }
 
 void Game::draw()
@@ -141,6 +202,7 @@ void Game::draw()
 	} else
 	{
 		map->draw();
+		drawDynamicObjects();
 		g_ParticleSystem()->renderParticles();
 	}
 }

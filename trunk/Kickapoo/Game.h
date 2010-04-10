@@ -33,6 +33,7 @@ public:
 	void changeState(EGameState::TYPE state);
 	void create();
 	void update();
+	void drawDynamicObjects();
 	void draw();
 
 protected:
@@ -42,7 +43,8 @@ protected:
 	Texture gameScreen_;
 	Font introFont_;
 	Map* map;
-	std::vector<Tower*> towers;
-	std::vector<Player*> player;
+	std::vector<Tower> towers;
+	std::vector<Player> playerList;
 	Player* activePlayer;
+	float relativeTime;
 };
