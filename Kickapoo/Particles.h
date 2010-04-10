@@ -32,7 +32,7 @@ private:
 	D3DXVECTOR2 position;
 };
 
-class ParticleSystem : public IParticleSystem
+class ParticleSystem : public IParticleSystem, public Singleton<ParticleSystem>
 {
 public:
 	ParticleSystem();
@@ -51,3 +51,5 @@ private:
 	std::list<Particle *> instances;
 	float curTime;
 };
+
+DefineAccessToSingleton(ParticleSystem)

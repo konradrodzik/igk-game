@@ -32,7 +32,7 @@ bool Particle::updateState()
 		return true;
 	}
 
-	position = start + dirVec * velocity * (tt - respawnTime); 
+	position += dirVec * velocity * g_Timer()->getFrameTime();
 	return true;
 }
 
