@@ -9,8 +9,8 @@ Game* g_Game;
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nShowCmd)
 {
-	g_Window()->initApplication( "IGK Framework", 1024, 768, hInstance, true );
-	g_Direct3D()->initDirect3D(32, true);
+	g_Window()->initApplication( "IGK Framework", 1024, 768, hInstance, false );
+	g_Direct3D()->initDirect3D(32, false);
 	g_Renderer()->create();
 	g_Input()->init(hInstance, false);
 	g_Audio()->create();
@@ -37,7 +37,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, in
 		g_Game->update();
 
 		getDevice()->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
-			D3DCOLOR_XRGB(255, 255, 255), 1.0f, 0);			
+			D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);			
 		getDevice()->BeginScene();		
 
 		g_Renderer()->setIdentity();

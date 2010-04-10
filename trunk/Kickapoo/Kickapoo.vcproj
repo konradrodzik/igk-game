@@ -178,6 +178,10 @@
 				RelativePath=".\Game.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\Main.cpp"
+				>
+			</File>
 			<Filter
 				Name="Framework"
 				>
@@ -212,10 +216,6 @@
 				</File>
 				<File
 					RelativePath=".\Logger.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Main.cpp"
 					>
 				</File>
 				<File
