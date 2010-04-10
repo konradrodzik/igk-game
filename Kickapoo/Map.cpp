@@ -8,7 +8,7 @@ Map::Map()
 
 Map::~Map()
 {
-
+	delete map;
 }
 
 Map* Map::load( const std::string& name )
@@ -19,24 +19,12 @@ Map* Map::load( const std::string& name )
 
 	Map* map = new Map;
 
-	int width;
-	int height;
-	fscanf(file, "%i %i", &width, &height);
+	fscanf(file, "%i %i", &map->width, &map->height);
 	
-	map->map = new char *[height] ;
-	for( int i = 0 ; i < height ; i++ )
-		map->map[i] = new char[width];
-
+	map->map.resize(map->width * map->height);
 
 	for(int i = 0; i < height; ++i)
-	{
-		for(int j = 0; j < width; ++j)
-		{
-			char block;
-			fscanf(file, "%c", &block);
-			map->map[j][i] = block;
-		}
-	}
+		fgets(&map->map[i * width], width, file);
 
 	fclose(file);
 	return map;
