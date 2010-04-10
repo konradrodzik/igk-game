@@ -210,10 +210,6 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\Level.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\Logger.cpp"
 					>
 				</File>
@@ -223,10 +219,6 @@
 				</File>
 				<File
 					RelativePath=".\Mouse.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\ParticleEmitter.cpp"
 					>
 				</File>
 				<File
@@ -300,19 +292,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Level.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Logger.h"
 					>
 				</File>
 				<File
 					RelativePath=".\Mouse.h"
-					>
-				</File>
-				<File
-					RelativePath=".\ParticleEmitter.h"
 					>
 				</File>
 				<File

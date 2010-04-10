@@ -53,13 +53,11 @@ using namespace std;
 #include "Audio.h"
 #include "Water.h"
 #include "../Box2D/Box2D/Box2D.h"
-#include "Physics.h"
-#include "ParticleEmitter.h"
+//#include "ParticleEmitter.h"
 #include "Mouse.h"
-#include "Level.h"
 #include "Game.h"
 
 #pragma comment(lib, "../Box2D/Library/box2d.lib")
-#include "Physics.h"
+//#include "Physics.h"
 
 extern Game* g_Game;

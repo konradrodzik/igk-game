@@ -96,47 +96,7 @@ LRESULT CALLBACK Window::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		return 0;
 
 	case WM_CHAR:
-		charPressed = (char)wParam;
-
-		if(charPressed == 'n' && editorMode)
-		{
-			if(points.size() >= 3)
-			{
-				bool success = g_World()->addShape(points);
-				if(!success) {
-					points.clear();
-					return 0;
-				}
-
-				lines.push_back(points);
-				
-				points.clear();
-				
-			}
-		}
-		else if(charPressed == 'p')
-		{
-			if(drawPoints)
-				drawPoints = false;
-			else drawPoints = true;
-		}
-		else if(charPressed == 'l')
-		{
-			if(drawLines)
-				drawLines = false;
-			else drawLines = true;
-		}
-		else if(charPressed == 'e')
-		{
-			if(editorMode)
-				editorMode = false;
-			else editorMode = true;
-		} else
-			if(charPressed == 'z') {
-				pause = !pause;
-			}else if(charPressed == 'u')
-				g_World()->swapGravity();
-		
+		charPressed = (char)wParam;		
 		break;
 
 	case WM_KEYUP:
@@ -173,35 +133,7 @@ LRESULT CALLBACK Window::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		mouseY = g_Mouse()->getY();
 	break;
 
-
 	case WM_RBUTTONDOWN:
-		
-		if(editorMode)
-		{
-			if(points.size())
-			{
-				points.pop_back();
-			}
-			else
-			{
-				if(lines.size())
-				{
-					lines.pop_back();
-					g_World()->remove_last();
-
-					// 				std::vector<D3DXVECTOR2> points;
-					// 				points = lines[lines.size()-1];
-					// 				if(points.size())
-					// 				{
-					// 					lines.pop_back();
-					// 					points.pop_back();
-					// 					lines.push_back(points);
-					// 				}
-				}
-			}
-		}
-		
-		
 		break;
 	}
 	return DefWindowProc(hwnd, uMsg, wParam, lParam);
