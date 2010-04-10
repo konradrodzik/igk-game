@@ -20,6 +20,12 @@ Game::~Game(void)
 void Game::changeState(EGameState::TYPE state)
 {
 	state_ = state;
+
+	//! TODO: implement tutorial
+	if(state_ == EGameState::Tutorial)
+	{
+		state_ = EGameState::Running;
+	}
 }
 
 void Game::startGame()
@@ -57,14 +63,14 @@ void Game::update()
 	{
 	} else
 	{
-	}
+		ParticleSystem * ps = ParticleSystem::getSingletonPtr();
+		ps->spawnParticle(D3DXVECTOR2(g_Mouse()->getX(), g_Mouse()->getY()),
+			D3DXVECTOR2(0, 1), false, 1.0f, 50.0f, D3DCOLOR_ARGB(0x80, 0x80, 0x80, 0), 4.0f);
+		g_ParticleSystem()->updateParticles();
 		map->update();
+	}
+		
 
-	ParticleSystem * ps = ParticleSystem::getSingletonPtr();
-	ps->spawnParticle(D3DXVECTOR2(g_Mouse()->getX(), g_Mouse()->getY()),
-		D3DXVECTOR2(0, 1), false, 1.0f, 50.0f, D3DCOLOR_ARGB(0x80, 0x80, 0x80, 0), 4.0f);
-
-	g_ParticleSystem()->updateParticles();
 }
 
 void Game::draw()
