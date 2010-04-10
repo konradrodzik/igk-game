@@ -17,11 +17,12 @@ void Mouse::create()
 
 void Mouse::update()
 {
-	float sensitivity = 10.0f;
+	float sensitivity = 20.0f;
 	int dx, dy;
 	g_Input()->getMovement(dx, dy);
 
-	x += dx * sensitivity * g_Timer()->getFrameTime(); y -= dy * sensitivity * g_Timer()->getFrameTime();
+	x += dx * sensitivity * g_Timer()->getFrameTime(); 
+	y -= dy * sensitivity * g_Timer()->getFrameTime();
 
 	if(x < -40) x = -40; if(x > 40) x = 40;
 	if(y < -30) y = -30; if(y > 30) y = 30;
