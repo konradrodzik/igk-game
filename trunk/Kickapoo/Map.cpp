@@ -3,7 +3,8 @@
 
 Map::Map()
 {
-
+	wall = new Texture;
+	wall->load("gfx/wall.jpg");
 }
 
 Map::~Map()
@@ -36,5 +37,16 @@ void Map::update()
 
 void Map::draw()
 {
-
+	for(int i = 0; i < height; ++i)
+	{
+		for(int j = 0; j < width; ++j)
+		{
+			char block = at(j, i);
+			if(block == '#')
+			{
+				wall->set();
+				g_Renderer()->drawRect(width*BLOCK_SIZE, height*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+			}
+		}
+	}
 }
