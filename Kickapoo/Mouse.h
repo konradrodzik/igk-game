@@ -15,6 +15,11 @@ public:
 
 	void update();
 	void drawCursor();
+	void setPos(float x_, float y_)
+	{
+		x = x_;
+		y = y_;
+	}
 
 	float getX() { return x; }
 	float getY() { return y; }

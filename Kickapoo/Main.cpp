@@ -16,7 +16,12 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, in
 	g_Audio()->create();
 	g_Mouse()->create();
 
-	RECT rect = {0, 0, g_Window()->getWidth(), 100};
+	int width = g_Window()->getWidth();
+	int height = g_Window()->getHeight();
+
+
+
+	RECT rect = {0, 0, width, 100};
 
 	mousePosition = new Font();
 	mousePosition->create("Verdana", 20, 0, false, &rect);
@@ -29,10 +34,10 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, in
 	g_Direct3D()->enableAlphaBlending(true);
 
 	RenderToTexture texture;
-	texture.init(g_Window()->getWidth(), g_Window()->getHeight());
+	texture.init(width, height);
 
 	Water water;
-	water.create(0, 0, g_Window()->getWidth(), g_Window()->getHeight(), 20);
+	water.create(0, 0, width, height, 20);
 
 	while( !g_Window()->isDone() ) 
 	{			
@@ -41,14 +46,14 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, in
 		if(g_Window()->keyDown(VK_ESCAPE))
 			g_Window()->exitApplication();
 
-		g_Timer()->update();6
+		g_Timer()->update();
 		g_Audio()->update();
 		g_Mouse()->update();
 		g_Input()->update();
 		//g_World()->update(g_Timer()->getFrameTime());
 		AnimationSequence::updateAll(g_Timer()->getFrameTime());
 		g_Game->update();
-		water.update();
+		//water.update();
 
 		getDevice()->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER,
 			D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);			
@@ -68,8 +73,8 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, in
 		water.setTexture(texture.getTexture());
 		water.render();
 
-		//int width = g_Window()->getWidth() / 2;
-		//int height = g_Window()->getHeight() / 2;
+		//int width = width / 2;
+		//int height = height / 2;
 		//texture.draw(0, 0, width, height);
 		//texture.draw(width, 0, width, height);
 		//texture.draw(0, height, width, height);

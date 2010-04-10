@@ -39,6 +39,10 @@ public:
 	{
 		width = width_; height = height_;
 		MoveWindow(hWnd, 0, 0, width, height, true);
+		RECT rect;
+		GetClientRect(getHWND(), &rect);
+		width = rect.right - rect.left;
+		height = rect.bottom - rect.top;
 	}
 
 	bool isDone()			{ return isDone_; }
