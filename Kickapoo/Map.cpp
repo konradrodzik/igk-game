@@ -86,6 +86,27 @@ void Map::fill_r(int x, int y, float dt)
 	if(y < width-1)
 		fill_r(x, y+1, dt+scale);
 }
+	
+void Map::loadContent(vector<Player>& playerList, vector<Tower>& towerList)
+{
+	playerList.clear();
+	towerList.clear();
+
+	for(int i = 0; i < height; ++i)
+	{
+		for(int j = 0; j < width; ++j)
+		{
+			char block = map[index(j, i)];
+			if(block == '@')
+			{
+				Player player;
+				player.Position.x = j;
+				player.Position.y = i;
+				playerList.push_back(player);
+			}
+		}
+	}
+}
 
 void Map::update()
 {

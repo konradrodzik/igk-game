@@ -3,6 +3,9 @@
 
 static const int BLOCK_SIZE = 25;
 
+class Player;
+class Tower;
+
 class Map
 {
 public:
@@ -22,6 +25,8 @@ public:
 	int index(int x, int y) const {
 		return y * width + x;
 	}
+
+	void loadContent(vector<Player>& playerList, vector<Tower>& towerList);
 
 public:
 	string map;
