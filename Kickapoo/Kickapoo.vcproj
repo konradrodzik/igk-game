@@ -186,6 +186,10 @@
 				Name="Framework"
 				>
 				<File
+					RelativePath=".\AnimationSequence.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Audio.cpp"
 					>
 				</File>
@@ -268,6 +272,10 @@
 			<Filter
 				Name="Framework"
 				>
+				<File
+					RelativePath=".\AnimationSequence.h"
+					>
+				</File>
 				<File
 					RelativePath=".\Audio.h"
 					>

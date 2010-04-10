@@ -9,7 +9,7 @@ Game* g_Game;
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nShowCmd)
 {
-	g_Window()->initApplication( "IGK Framework", 1024, 768, hInstance, false );
+	g_Window()->initApplication( "IGK Framework", 800, 600, hInstance, false );
 	g_Direct3D()->initDirect3D(32, false);
 	g_Renderer()->create();
 	g_Input()->init(hInstance, false);
@@ -32,7 +32,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, in
 	texture.init(g_Window()->getWidth(), g_Window()->getHeight());
 
 	Water water;
-	water.create(0, 0, 1024, 768, 20);
+	water.create(0, 0, g_Window()->getWidth(), g_Window()->getHeight(), 20);
 
 	while( !g_Window()->isDone() ) 
 	{			
@@ -41,11 +41,12 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, in
 		if(g_Window()->keyDown(VK_ESCAPE))
 			g_Window()->exitApplication();
 
-		g_Timer()->update();
+		g_Timer()->update();6
 		g_Audio()->update();
 		g_Mouse()->update();
 		g_Input()->update();
 		//g_World()->update(g_Timer()->getFrameTime());
+		AnimationSequence::updateAll(g_Timer()->getFrameTime());
 		g_Game->update();
 		water.update();
 
@@ -86,6 +87,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, in
 	// zwolnienie nie zwolnionych zasobow
 	Texture::releaseResources();
 	Font::releaseResources();
+	AnimationSequence::releaseAll();
 
 	g_Renderer()->release();
 	g_Audio()->release();
