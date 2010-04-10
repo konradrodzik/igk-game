@@ -55,7 +55,7 @@ void Map::draw()
 			if(block == '#')
 			{
 				wall->set();
-				g_Renderer()->drawRect(width*BLOCK_SIZE, height*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+				g_Renderer()->drawRect(j*BLOCK_SIZE, i*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 			}
 		}
 	}

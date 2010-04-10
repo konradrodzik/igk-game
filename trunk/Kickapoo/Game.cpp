@@ -56,4 +56,5 @@ void Game::update()
 
 void Game::draw()
 {
+	map->draw();
 }
