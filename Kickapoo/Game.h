@@ -56,7 +56,6 @@ public:
 	void drawDynamicObjects();
 	void draw();
 
-	void drawClock();
 	void updateClock();
 
 	//! loads level
