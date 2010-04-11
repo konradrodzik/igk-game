@@ -33,8 +33,20 @@ bool Particle::updateState()
 		return true;
 	}
 
-	position += dirVec * velocity * g_Timer()->getFrameTime();
+	position += dirVec * applyVelocity(velocity, g_Timer()->getFrameTime());
 	return true;
+}
+
+Particle2::Particle2(IParticleSystem * _pSystem, const D3DXVECTOR2& pos, const D3DXVECTOR2& dir,
+		  bool loop, float lifeTime, float velocity, D3DCOLOR color, float size,
+		  const FastDelegate2<float, float, float>& _func)
+		  : Particle(_pSystem, pos, dir, loop, lifeTime, velocity, color, size),
+		  _velocityTransform(_func)
+{
+}
+
+Particle2::~Particle2()
+{
 }
 
 ParticleSystem::ParticleSystem()
@@ -68,6 +80,13 @@ void ParticleSystem::spawnParticle(const D3DXVECTOR2& pos, const D3DXVECTOR2& di
 	instances.push_back(new Particle(this, pos, direction, looping, lifeTime, velocity, color, size));
 }
 
+void ParticleSystem::spawnParticle(const D3DXVECTOR2& pos, const D3DXVECTOR2& direction,
+				   bool looping, float lifeTime, float velocity, D3DCOLOR color, float size,
+				   const FastDelegate2<float, float, float>& _func)
+{
+	instances.push_back(new Particle2(this, pos, direction, looping, lifeTime, velocity, color, size, _func));
+}
+
 float ParticleSystem::currentTime() const
 {
 	return curTime;
@@ -75,11 +94,32 @@ float ParticleSystem::currentTime() const
 
 void ParticleSystem::renderParticles()
 {
+	if(instances.empty())
+		return;
+
 	g_Renderer()->setIdentity();
+
+	std::vector<D3DXVECTOR2> positions; positions.reserve(instances.size());
+	std::vector<D3DXVECTOR2> sizes; sizes.reserve(instances.size());
+	std::vector<D3DCOLOR> colors; colors.reserve(instances.size());
+
 	for(std::list<Particle *>::const_iterator it = instances.begin() ; it != instances.end() ; ++it)
 	{
-		g_Renderer()->drawRect((*it)->pos().x, (*it)->pos().y, (*it)->size, (*it)->size, (*it)->color);
+		positions.push_back((*it)->pos());
+		sizes.push_back(D3DXVECTOR2((*it)->size, (*it)->size));
+		colors.push_back((*it)->color);
 	}
+
+	g_Renderer()->drawRects(&positions, &sizes, &colors, instances.size());
+}
+
+float ParticleSystem::_explosionTransform(float v, float dt)
+{
+	if(dt == 0.0f)
+		return 0.0f;
+	float tt = dt / (dt + 1.0f);
+
+	return v * tt * cos(tt);
 }
 
 void ParticleSystem::spawnExplosion(const D3DXVECTOR2& pos, float lifeTime,
@@ -92,8 +132,11 @@ void ParticleSystem::spawnExplosion(const D3DXVECTOR2& pos, float lifeTime,
 		float angle = RandomFloat(0.0f, 3.14f * 2.0f);
 		dir.x = cos(angle);
 		dir.y = sin(angle);
+		float _life = RandomFloat(lifeTime / 3.0f, lifeTime);
+		float _velocity = RandomFloat(10.0f, 30.0f);
 
-		spawnParticle(pos, dir, false, RandomFloat(lifeTime / 3.0f, lifeTime),
-			RandomFloat(10.0f, 30.0f), color, RandomFloat(size / 2.0f, size));
+		spawnParticle(pos, dir, false, _life,
+			_velocity, color, RandomFloat(size / 2.0f, size),
+			ParticleSystem::_explosionTransform);
 	}
 }

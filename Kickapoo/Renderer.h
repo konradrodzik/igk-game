@@ -62,6 +62,8 @@ public:
 	void drawRect(float x, float y, float width, float height, 
 		float u1, float v1, float u2, float v2, D3DCOLOR color = 0xFFFFFFFF);
 
+	void drawRects(const std::vector<D3DXVECTOR2> * positions, const std::vector<D3DXVECTOR2> * sizes, const std::vector<D3DCOLOR> * colors, int count);
+
 	void drawRect(
 		float x1, float y1, float u1, float v1, 
 		float x2, float y2, float u2, float v2, 
