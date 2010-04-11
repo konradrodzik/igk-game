@@ -16,8 +16,8 @@ float Timer::update()
 
 	QueryPerformanceCounter(&currentTime);
 	
-	float seconds =  (static_cast<float>(currentTime.QuadPart) - static_cast<float>(lastTime.QuadPart)) 
-				    / static_cast<float>(ticksPerSecond.QuadPart);
+	double seconds =  (static_cast<double>(currentTime.QuadPart) - static_cast<double>(lastTime.QuadPart)) 
+				    / static_cast<double>(ticksPerSecond.QuadPart);
 	
 	lastTime = currentTime;	
 	frameTime = seconds;
@@ -39,7 +39,7 @@ float Timer::getFPS()
 	
 	lastTime = currentTime;
 	
-	avgFps = (avgFps * 100 + fps) / 101.0f;
+	avgFps = (avgFps * 3 + fps) / 4;
 
 	return avgFps;
 }
@@ -51,12 +51,12 @@ LARGE_INTEGER Timer::getCurrentTime()
 	return currentTime;
 }
 
-float Timer::calculateTime(LARGE_INTEGER *time)
+double Timer::calculateTime(LARGE_INTEGER *time)
 {
 	LARGE_INTEGER currentTime;
 
 	QueryPerformanceCounter(&currentTime);
 
-	return (static_cast<float>(currentTime.QuadPart) - static_cast<float>(time->QuadPart)) 
-		  / static_cast<float>(ticksPerSecond.QuadPart);
+	return (static_cast<double>(currentTime.QuadPart) - static_cast<double>(time->QuadPart)) 
+		  / static_cast<double>(ticksPerSecond.QuadPart);
 }

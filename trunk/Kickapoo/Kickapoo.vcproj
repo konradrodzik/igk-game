@@ -282,6 +282,10 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="NewFilter1"
+				>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"

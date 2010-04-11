@@ -28,9 +28,10 @@ void Tower::ai(std::vector<Player> * players)
 				D3DXVECTOR2 shootDir;
 				D3DXVec2Normalize(&shootDir, &dvec);
 				
-				g_ParticleSystem()->spawnParticle(myPos, shootDir, false, 5.0f, 30.0f * (1.0f - retarded),
+				g_ParticleSystem()->spawnParticle(myPos, shootDir * 4, false, 5.0f, 60.0f * (1.0f - retarded),
 					D3DCOLOR_ARGB(255, 0x80, 0, 0x20), 4.0f, ParticleHarmful);
 			}
+			return;
 		}
 	}
 }

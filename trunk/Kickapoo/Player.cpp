@@ -113,7 +113,8 @@ void Player::record(float dt, float rt, Map* map, bool fire) {
 		fire;
 	state.Aim = D3DXVECTOR2(g_Mouse()->getX() / (float)BLOCK_SIZE, g_Mouse()->getY() / (float)BLOCK_SIZE);
 
-	if(lastState && state.Time - lastState->Time < 1.0f/30.0f) {
+	if(lastState && state.Time - lastState->Time < 1.0f/60.0f) {
+		return;
 		state.Time = lastState->Time;
 		*lastState = state;
 	}
@@ -124,31 +125,40 @@ void Player::record(float dt, float rt, Map* map, bool fire) {
 void Player::draw(bool drawStateList, bool drawFromState, float relativeTime) {
 	PlayerState* state = NULL;
 
-	std::vector<vertex> lines;
+	static std::vector<vertex> lines;
 	int i = 0;
 
-	if(drawStateList) {
+	if(drawStateList && StateList.size()) {
+		lines.resize(StateList.size() * 2);
+
 		D3DXVECTOR2 lastPosition = Position;
+
+		lines[i].pos.x = lastPosition.x* BLOCK_SIZE+ BLOCK_SIZE/2;
+		lines[i].pos.y = lastPosition.y* BLOCK_SIZE+ BLOCK_SIZE/2;
+		lines[i].pos.z = 0;
+		lines[i].color = D3DCOLOR_ARGB(255,255,255,255);
+		i++;
+
 		for(PlayerStateList::iterator itor = StateList.begin(); itor != StateList.end(); ++itor) {
 			D3DXVECTOR2 diff = (itor->Position - lastPosition) * BLOCK_SIZE;
 			if(D3DXVec2Length(&diff) < 6 && &*itor != &StateList.back()) {
 				continue;
 			}
 
-			lines.push_back(vertex());
-			lines[i].pos.x = lastPosition.x* BLOCK_SIZE+ BLOCK_SIZE/2;
-			lines[i].pos.y = lastPosition.y* BLOCK_SIZE+ BLOCK_SIZE/2;
+			lines[i].pos.x = itor->Position.x* BLOCK_SIZE+ BLOCK_SIZE/2;
+			lines[i].pos.y = itor->Position.y* BLOCK_SIZE+ BLOCK_SIZE/2;
 			lines[i].pos.z = 0;
-			lines[i].color = D3DCOLOR_ARGB(255,255,255,255);
+			lines[i].color = D3DCOLOR_XRGB(128,128,128);
 			i++;
 	//		g_Renderer()->drawLine(lastPosition.x * BLOCK_SIZE+ BLOCK_SIZE/2, lastPosition.y * BLOCK_SIZE+ BLOCK_SIZE/2, 
 	//			itor->Position.x * BLOCK_SIZE + BLOCK_SIZE/2, itor->Position.y * BLOCK_SIZE+ BLOCK_SIZE/2, 1, D3DCOLOR_XRGB(120, 120, 120));
 			lastPosition = itor->Position;
 	}
 
-		if(lines.size() > 1) {
-			getDevice()->SetFVF(FVF_TEX);
-			getDevice()->DrawPrimitiveUP(D3DPT_LINESTRIP, lines.size()/2, &lines[0], sizeof(vertex));
+		if(i > 1) {
+			getDevice()->SetFVF(D3DFVF_XYZ | D3DFVF_DIFFUSE);
+			getDevice()->SetTexture(0, NULL);
+			getDevice()->DrawPrimitiveUP(D3DPT_LINESTRIP, i-1, &lines[0], sizeof(vertex));
 		}
 
 		if(StateList.size()) {

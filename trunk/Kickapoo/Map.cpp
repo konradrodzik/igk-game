@@ -82,7 +82,7 @@ Map* Map::load( const std::string& name )
 					map->map[index] = '^';
 				}
 				else if(bytes[1]>80) {
-					map->map[index] = '^';
+					map->map[index] = '&';
 				}
 				else {
 					map->map[index] = '#';
@@ -105,6 +105,7 @@ Map* Map::load( const std::string& name )
 	assert(map->map.size() == map->width*map->height);
 	
 	map->blockRandom.resize(map->map.size());
+	map->towerListMapped.resize(map->map.size());
 
 	map->fill();
 
@@ -187,6 +188,11 @@ void Map::loadContent(vector<Player>& playerList, vector<Tower>& towerList)
 			}
 		}
 	}
+
+	for(unsigned i = 0; i < towerList.size(); ++i) {
+		Tower& tower = towerList[i];
+		towerListMapped[index(tower.Position.x, tower.Position.y)] = &tower;
+	}
 }
 
 void Map::update()
@@ -208,6 +214,11 @@ void Map::draw()
 
 				wall->set();
 				g_Renderer()->drawRect(j*BLOCK_SIZE+size, i*BLOCK_SIZE+size, BLOCK_SIZE-2*size, BLOCK_SIZE-2*size);
+			}
+			else {
+				wall->set();
+				g_Renderer()->drawRect(j*BLOCK_SIZE+1, i*BLOCK_SIZE+1, BLOCK_SIZE-2, BLOCK_SIZE-2, D3DCOLOR_XRGB(16, 16, 16));
+
 			}
 			/*else if(block == '^')
 			{
@@ -281,4 +292,15 @@ D3DXVECTOR2 Map::slide(const D3DXVECTOR2& a, const D3DXVECTOR2& b) {
 	if(!collides(D3DXVECTOR2(a.x, b.y)))
 		return D3DXVECTOR2(a.x, b.y);
 	return a;
+}
+
+bool Map::blocked(int x, int y, bool withTower) const {
+	if(map[index(x, y)] == '#')
+		return true;
+
+	Tower* tower = towerListMapped[index(x, y)];
+	if(tower && tower->state == ETS_ALIVE)
+		return withTower;
+
+	return false;
 }

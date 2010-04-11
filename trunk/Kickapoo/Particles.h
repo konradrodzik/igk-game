@@ -85,11 +85,13 @@ public:
 
 	void spawnExplosion(const D3DXVECTOR2& pos, float lifeTime = 1.5f,
 		float distance = 30.0f, D3DXCOLOR color = D3DCOLOR_ARGB(0x80, 0x80, 0, 0), float size = 3.0f,
-		int nParticles = 50, int type = 0);
+		int nParticles = 10, int type = 0);
 
 	bool particlesFoundByRect(float x, float y, float w, float h, int byType) const;
 	void clipParticles(float x, float y, float w, float h, int byType);
 	void clear();
+
+	void checkParticlesAgainstMap(Map& map, int byType, Game& game);
 
 private: // IParticleSystem
 	virtual float currentTime() const;

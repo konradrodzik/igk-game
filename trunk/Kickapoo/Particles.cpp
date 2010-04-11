@@ -33,7 +33,7 @@ bool Particle::updateState(Map * map)
 	{
 		float px = (position.x) / BLOCK_SIZE;
 		float py = (position.y) / BLOCK_SIZE;
-		if(map->blocked(px, py))
+		if(map->blocked(px, py, false))
 		{
 		return false;
 		}
@@ -75,8 +75,25 @@ ParticleSystem::~ParticleSystem()
 		delete *it;
 }
 
+template<typename Cont, typename Itor>
+Itor fast_erase(Cont& cont, Itor itor) {
+	if(cont.empty())
+		return cont.end();
+
+	if(cont.end()-1 == itor) {
+		cont.resize(cont.size()-1);
+		return cont.end();
+	}
+
+	std::swap(*itor, cont.back());
+	cont.resize(cont.size()-1);
+	return itor;
+}
+
 void ParticleSystem::updateParticles(Map * map)
 {
+	LARGE_INTEGER timer = g_Timer()->getCurrentTime();
+	
 	curTime = g_Timer()->getEngineTime();
 	for(std::vector<Particle *>::iterator it = instances.begin() ; it != instances.end() ; )
 	{
@@ -85,9 +102,13 @@ void ParticleSystem::updateParticles(Map * map)
 			++it;
 		} else {
 			delete *it;
-			it = instances.erase(it);
+			it = fast_erase(instances, it);
+			//it = instances.erase(it);
 		}
 	}
+
+	double updateTImer = g_Timer()->calculateTime(&timer);
+	updateTImer;
 }
 
 void ParticleSystem::spawnParticle(const D3DXVECTOR2& pos, const D3DXVECTOR2& direction,
@@ -133,7 +154,8 @@ void ParticleSystem::renderParticles()
 	if(instances.empty())
 		return;
 
-	std::vector<Particle *> texturedParticles;
+	static std::vector<Particle *> texturedParticles;
+	texturedParticles.resize(0);
 	texturedParticles.reserve(instances.size());
 
 	g_Renderer()->setIdentity();
@@ -218,6 +240,34 @@ void ParticleSystem::spawnExplosion(const D3DXVECTOR2& pos, float lifeTime,
 
 		spawnParticle(pos, dir, false, _life,
 			_velocity, color, size, type);
+	}
+}
+
+void ParticleSystem::checkParticlesAgainstMap(Map& map, int byType, Game& game) {
+	for(std::vector<Particle *>::iterator it = instances.begin() ; it != instances.end() ; )
+	{
+		Particle * p = *it;
+		if(p->type != byType) {
+			++it;
+			continue;
+		}
+
+		int index = map.index(p->pos().x / BLOCK_SIZE, p->pos().y / BLOCK_SIZE);
+		Tower* tower = map.towerListMapped[index];
+
+		if(tower) {
+			if(tower->state != ETS_ALIVE) {
+				++it;
+				continue;
+			}
+
+			game.killTower(tower);
+
+			it = fast_erase(instances, it);
+		}
+		else {
+			++it;
+		}
 	}
 }
 

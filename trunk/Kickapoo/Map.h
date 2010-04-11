@@ -28,9 +28,7 @@ public:
 		return y * width + x;
 	}
 
-	bool blocked(int x, int y) const {
-		return map[index(x, y)] == '#';
-	}
+	bool blocked(int x, int y, bool withTower = true) const;
 
 	bool collides(const D3DXVECTOR2& v) const;
 
@@ -40,6 +38,7 @@ public:
 
 public:
 	string map;
+	vector<Tower*> towerListMapped;
 	vector<float> blockRandom;
 
 	int width;

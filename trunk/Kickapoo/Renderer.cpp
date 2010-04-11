@@ -145,7 +145,7 @@ void Renderer::drawRect(float x, float y, float width, float height, D3DCOLOR co
 void Renderer::drawRects(const std::vector<D3DXVECTOR2> * positions, const std::vector<D3DXVECTOR2> * sizes, const std::vector<D3DCOLOR> * colors, int count)
 {
 	vertex * v;
-	std::vector<vertex> vertices;
+	static std::vector<vertex> vertices;
 
 	vertices.resize(count * 6);
 	v = &vertices[0];
