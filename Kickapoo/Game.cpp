@@ -146,48 +146,7 @@ void Game::update()
 			changeState(EGameState::Selection);
 		}
 		else if(activePlayer) {
-			PlayerState* lastState = activePlayer->findState(relativeTime);
-			D3DXVECTOR2 position(0, 0);
-			D3DXVECTOR2 force(0, 0);
-
-			PlayerState state;
-
-			if(lastState)
-				state.Position = lastState->Position;
-			else
-				state.Position = activePlayer->Position;
-		
-			if(GetKeyState(VK_UP)&0x80)
-				force.y += 1;
-			if(GetKeyState(VK_DOWN)&0x80)
-				force.y -= 1;
-			if(GetKeyState(VK_LEFT)&0x80)
-				force.x -= 1;
-			if(GetKeyState(VK_RIGHT)&0x80)
-				force.x += 1;
-
-			activePlayer->Velocity *= exp(-dt) * 0.98f;
-			activePlayer->Velocity += 10 * force * dt;
-
-			float length = D3DXVec2Length(&activePlayer->Velocity);
-			if(length > 2)
-				activePlayer->Velocity /= length / 2;
-
-			D3DXVECTOR2 oldPosition = state.Position;
-			state.Position += activePlayer->Velocity * dt * BLOCK_SIZE / 3;
-
-			state.Position = map->slide(oldPosition, state.Position);
-
-			state.Time = relativeTime;
-			state.Fire = (GetKeyState(VK_SPACE)&0x80) != 0;
-			state.Direction = D3DXVECTOR2(0, 0);
-
-			if(lastState && state.Time - lastState->Time < 1.0f/60.0f) {
-				state.Time = lastState->Time;
-				*lastState = state;
-			}
-			else
-				activePlayer->StateList.push_back(state);
+			activePlayer->update(dt, relativeTime, map);
 		}
 	}
 }
