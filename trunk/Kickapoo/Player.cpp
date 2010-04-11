@@ -39,7 +39,7 @@ void Player::update(float rt) {
 		D3DXVec2Normalize(&direction, &direction);
 
 		ParticleSystem::getSingletonPtr()->spawnParticle(
-			state->center() * BLOCK_SIZE, direction, false, 10.0f, BLOCK_SIZE * 20, -1, 3, ParticleShot);
+			state->center() * BLOCK_SIZE, direction, false, 10.0f, BLOCK_SIZE * 20, -1, 5, ParticleShot);
 
 	}
 }
