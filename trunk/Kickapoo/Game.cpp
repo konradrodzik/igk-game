@@ -195,26 +195,7 @@ void Game::update()
 void Game::drawDynamicObjects()
 {
 	for(unsigned i = 0; i < playerList.size(); ++i) {
-		Player& player = playerList[i];
-		PlayerState* state = NULL;
-
-		if(state_ == EGameState::Running && (state = player.findState(relativeTime)))	{
-			g_Renderer()->drawRect(state->Position.x*BLOCK_SIZE, state->Position.y*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
-		}
-		else {
-			g_Renderer()->drawRect(player.Position.x*BLOCK_SIZE, player.Position.y*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
-		}
-
-		D3DXVECTOR2 lastPosition = player.Position;
-		for(PlayerStateList::iterator itor = player.StateList.begin(); itor != player.StateList.end(); ++itor) {
-			g_Renderer()->drawLine(lastPosition.x * BLOCK_SIZE+ BLOCK_SIZE/2, lastPosition.y * BLOCK_SIZE+ BLOCK_SIZE/2, 
-				itor->Position.x * BLOCK_SIZE + BLOCK_SIZE/2, itor->Position.y * BLOCK_SIZE+ BLOCK_SIZE/2, 1, D3DCOLOR_XRGB(120, 120, 120));
-			lastPosition = itor->Position;
-		}
-
-		if(player.StateList.size()) {
-			g_Renderer()->drawRect(lastPosition.x * BLOCK_SIZE+ BLOCK_SIZE/2, lastPosition.y * BLOCK_SIZE+ BLOCK_SIZE/2, 2, 2, D3DCOLOR_XRGB(190, 80, 80));
-		}
+		playerList[i].draw(true, state_ == EGameState::Running, relativeTime);
 	}
 
 	for(unsigned i = 0; i < towers.size(); ++i)
