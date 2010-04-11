@@ -51,6 +51,8 @@ void Game::changeState(EGameState::TYPE state)
 		for(int i = 0; i < playerList.size(); ++i)
 			playerList[i].reset();
 
+		g_ParticleSystem()->clear();
+
 	} else 
 		//! TODO: implement selection
 		if(state == EGameState::Selection) {

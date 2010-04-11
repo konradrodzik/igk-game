@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../Box2D"
+				AdditionalIncludeDirectories="../Box2D;&quot;C:\Program Files\Microsoft DirectX SDK (February 2010)\Include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -64,6 +64,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="d3dxof.lib dxguid.lib d3dx9.lib d3d9.lib dinput8.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;C:\Program Files\Microsoft DirectX SDK (February 2010)\Lib\x86&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -190,6 +191,10 @@
 			</File>
 			<File
 				RelativePath=".\Player.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Tower.cpp"
 				>
 			</File>
 			<Filter
