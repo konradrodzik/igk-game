@@ -241,7 +241,7 @@ void Game::update()
 	{
 		g_ParticleSystem()->updateParticles(map, relativeTime);
 		g_ParticleSystem()->checkParticlesAgainstMap(*map, ParticleShot, *this);
-		g_ParticleSystem()->checkParticlesAgainstPlayer(&playerList, ParticleHarmful, MakeDelegate(this, &Game::onPlayerKilled));
+		g_ParticleSystem()->checkParticlesAgainstPlayer(&playerList, ParticleHarmful, MakeDelegate(this, &Game::onPlayerKilled), relativeTime);
 		if(state_ != EGameState::Running)
 			return;
 

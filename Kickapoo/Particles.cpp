@@ -309,7 +309,7 @@ void ParticleSystem::checkParticlesAgainstMap(Map& map, int byType, Game& game) 
 	}
 }
 
-void ParticleSystem::checkParticlesAgainstPlayer(const std::vector<Player> * players, int byType, FastDelegate1<Player*> killPlayer)
+void ParticleSystem::checkParticlesAgainstPlayer(const std::vector<Player> * players, int byType, FastDelegate1<Player*> killPlayer, float rt)
 {
 	for(std::vector<Particle *>::iterator it = instances.begin() ; it != instances.end() ; ++it)
 	{
@@ -320,11 +320,13 @@ void ParticleSystem::checkParticlesAgainstPlayer(const std::vector<Player> * pla
 
 		for(int i = 0 ; i < players->size() ; ++i)
 		{
-			const Player * q = &(*players)[i];
-			float x1 = q->getX() - q->playerSize / 2;
-			float y1 = q->getY() - q->playerSize / 2;
-			float x2 = q->getX() + q->playerSize / 2;
-			float y2 = q->getY() + q->playerSize / 2;
+			Player * q = const_cast<Player*>(&(*players)[i]);
+			D3DXVECTOR2 rel = q->relativePosition(rt);
+
+			float x1 = rel.x - q->playerSize / 2;
+			float y1 = rel.y - q->playerSize / 2;
+			float x2 = rel.x + q->playerSize / 2;
+			float y2 = rel.y + q->playerSize / 2;
 			if(x1 < p->pos().x && p->pos().x < x2 &&
 				y1 < p->pos().y && p->pos().y < y2)
 			{
