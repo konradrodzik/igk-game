@@ -121,6 +121,8 @@ LRESULT CALLBACK Window::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
  		break;
 
 	case WM_LBUTTONDOWN:
+		
+		g_Game->onLeftDown();
 		if(lmousebutton && editorMode)
 		{
 			points.push_back(D3DXVECTOR2(g_Mouse()->getX(), g_Mouse()->getY()));
@@ -131,6 +133,7 @@ LRESULT CALLBACK Window::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 	case WM_LBUTTONUP:
 		//! clicked
+		g_Game->onLeftUp();
 		g_Game->onLeftClick();
 		lmousebutton = true;
 		break;

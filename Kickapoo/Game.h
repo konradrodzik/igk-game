@@ -34,6 +34,9 @@ public:
 	//! left mouse button clicked
 	void onLeftClick();
 
+	void onLeftDown() { leftMouseDown = true; }
+	void onLeftUp() { leftMouseDown = false; }
+
 	void changeState(EGameState::TYPE state);
 	void create();
 	void update();
@@ -54,4 +57,5 @@ protected:
 	std::vector<Player> playerList;
 	Player* activePlayer;
 	float relativeTime;
+	bool leftMouseClick, leftMouseDown;
 };
