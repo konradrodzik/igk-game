@@ -10,6 +10,7 @@ Game::Game(void)
 ,  kryzys_("kryzys_logo.jpg")
 ,  crysis_("crysis.jpg")
 ,  gameScreen_("game_screen.jpg")
+, clockTexture("gfx/circle.png")
 {
 	relativeTime = 0;
 	activePlayer = NULL;
@@ -153,10 +154,15 @@ void Game::update()
 		else if(activePlayer) {
 			activePlayer->record(dt, relativeTime, map, leftMouseDown);
 		}
+		
+
 
 		if(state_ == EGameState::Running) {
 			for(int i = 0; i < playerList.size(); ++i)
 				playerList[i].update(relativeTime);
+
+
+			updateClock();
 		}
 	}
 
@@ -214,6 +220,7 @@ void Game::draw()
 		map->draw();
 		drawDynamicObjects();
 		g_ParticleSystem()->renderParticles();
+		drawClock();
 	}
 }
 
@@ -238,5 +245,32 @@ void Game::onLeftClick()
 				return;
 			}
 		}
+	}
+}
+
+void Game::drawClock()
+{
+	clockTexture.set();
+	g_Renderer()->drawRect(620, 420, 128, 128);
+	for(int i = 0; i < clockLines.size(); ++i)
+	{
+		SLine line = clockLines[i];
+		g_Renderer()->drawLine(line.x1, line.y1, line.x2, line.y2, 1, D3DCOLOR_RGBA(0, 0, 255, 255));
+	}
+}
+
+void Game::updateClock()
+{
+	static float circleAngle = 0;
+	SLine line;
+	line.x1 = line.y1 = 0.0f;
+	line.x2 = sinf(circleAngle*DEG2RAD)*64;
+	line.y2 = cosf(circleAngle*DEG2RAD)*64;
+	clockLines.push_back(line);
+	circleAngle = circleAngle*360.0f/relativeTime;
+	if(relativeTime > 10.0f)
+	{
+		circleAngle = 0;
+		clockLines.clear();
 	}
 }
