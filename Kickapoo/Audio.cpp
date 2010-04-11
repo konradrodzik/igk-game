@@ -40,9 +40,9 @@ void Audio::update()
 	system->update();
 }
 
-void Audio::play(FMOD::Sound* sound, float volume)
+void Audio::play(FMOD::Sound* sound, float volume, bool stop)
 {
-	system->playSound(FMOD_CHANNEL_FREE, sound, false, &channel);
+	system->playSound(FMOD_CHANNEL_FREE, sound, stop, &channel);
 	channel->setVolume(volume);
 }
 
