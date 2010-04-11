@@ -24,7 +24,7 @@ Game::Game(void)
 {
 	relativeTime = 0;
 	activePlayer = NULL;
-	changeState(EGameState::Tutorial);
+	changeState(EGameState::Intro);
 	map = NULL;
 
 	g_AudioSystem.create();
@@ -52,7 +52,10 @@ void Game::loadLevel()
 	towersAlive_ = towers.size();
 	replayCount_ = 0;	
 
-	changeState(EGameState::Selection);
+	if(level_==0)
+		changeState(EGameState::Tutorial);
+	else
+		changeState(EGameState::Selection);
 }
 
 Game::~Game(void)
@@ -118,6 +121,7 @@ void Game::changeState(EGameState::TYPE state)
 
 void Game::startGame()
 {
+	loadLevel();
 	changeState(EGameState::Tutorial);
 }
 
@@ -200,7 +204,7 @@ void Game::create()
 
 	level_ = 0;
 	replayCount_ = 0;
-	loadLevel();
+	
 }
 
 void Game::update()
