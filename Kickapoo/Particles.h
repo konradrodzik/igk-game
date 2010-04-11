@@ -24,7 +24,7 @@ public:
 	Particle(IParticleSystem * _pSystem, const D3DXVECTOR2& pos, const D3DXVECTOR2& dir,
 		bool loop, float lifeTime, float velocity, D3DCOLOR color, float size, int type);
 	virtual ~Particle();
-	bool updateState();
+	bool updateState(Map *);
 
 	const D3DXVECTOR2& pos() const { return position; }
 
@@ -58,7 +58,7 @@ public:
 	ParticleSystem();
 	virtual ~ParticleSystem();
 
-	void updateParticles();
+	void updateParticles(Map * map);
 	void spawnParticle(const D3DXVECTOR2& pos, const D3DXVECTOR2& direction,
 		bool looping, float lifeTime, float velocity, D3DCOLOR color, float size, int type = 0);
 	void spawnParticle(const D3DXVECTOR2& pos, const D3DXVECTOR2& direction,
