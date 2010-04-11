@@ -86,7 +86,7 @@ public:
 		int nParticles = 50, int type = 0);
 
 	bool particlesFoundByRect(float x, float y, float w, float h, int byType) const;
-
+	void clipParticles(float x, float y, float w, float h, int byType);
 	void clear();
 
 private: // IParticleSystem

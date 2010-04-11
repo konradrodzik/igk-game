@@ -156,7 +156,10 @@ void Game::update()
 			if(tower->state != ETS_ALIVE)
 				continue;
 			if(g_ParticleSystem()->particlesFoundByRect(tower->getX() - BLOCK_SIZE / 2, tower->getY() - BLOCK_SIZE / 2, BLOCK_SIZE, BLOCK_SIZE, ParticleShot))
+			{
+				g_ParticleSystem()->clipParticles(tower->getX() - BLOCK_SIZE / 2.0f, tower->getY() - BLOCK_SIZE / 2.0f, BLOCK_SIZE, BLOCK_SIZE, ParticleShot);
 				killTower(tower);
+			}
 		}
 
 		ParticleSystem * ps = ParticleSystem::getSingletonPtr();
