@@ -1,7 +1,7 @@
 #pragma once
 #include "Common.h"
 
-static const int BLOCK_SIZE = 15;
+static const int BLOCK_SIZE = 20;
 
 class Player;
 class Tower;
