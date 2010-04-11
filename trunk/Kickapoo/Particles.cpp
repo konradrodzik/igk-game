@@ -231,6 +231,26 @@ bool ParticleSystem::particlesFoundByRect(float x, float y, float w, float h, in
 	return false;
 }
 
+void ParticleSystem::clipParticles(float x, float y, float w, float h, int byType)
+{
+	for(std::vector<Particle *>::iterator it = instances.begin() ; it != instances.end() ; )
+	{
+		Particle * p = *it;
+		if((p->type != byType) ||
+		   (p->pos().x < x) ||
+		   (p->pos().y < y) ||
+		   (p->pos().x > (x + w)) ||
+		   (p->pos().y > (y + h)))
+		{
+			++it;
+		} else
+		{
+			delete *it;
+			it = instances.erase(it);
+		}
+	}
+}
+
 void ParticleSystem::clear()
 {
 	for(std::vector<Particle *>::iterator it = instances.begin() ; it != instances.end() ; ++it)
