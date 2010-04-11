@@ -382,6 +382,7 @@ void Game::onLeftClick()
 
 void Game::drawClock()
 {
+	updateClock();
 /*	return;
 	clockTexture.set();
 	g_Renderer()->drawRect(620, 420, 128, 128);
