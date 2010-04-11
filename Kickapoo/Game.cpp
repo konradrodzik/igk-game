@@ -453,6 +453,5 @@ void Game::updateClock()
 
 void Game::onPlayerKilled()
 {
-
-
+	changeState(EGameState::Selection);
 }
