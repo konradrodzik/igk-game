@@ -87,6 +87,8 @@ public:
 
 	bool particlesFoundByRect(float x, float y, float w, float h, int byType) const;
 
+	void clear();
+
 private: // IParticleSystem
 	virtual float currentTime() const;
 

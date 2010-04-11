@@ -230,3 +230,10 @@ bool ParticleSystem::particlesFoundByRect(float x, float y, float w, float h, in
 
 	return false;
 }
+
+void ParticleSystem::clear()
+{
+	for(std::vector<Particle *>::iterator it = instances.begin() ; it != instances.end() ; ++it)
+		delete *it;
+	instances.clear();
+}
