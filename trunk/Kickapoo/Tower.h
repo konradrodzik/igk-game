@@ -21,11 +21,19 @@ public:
 	{
 		type = type_;
 		state = ETS_ALIVE;
+		minPlayerDistance = 100.0f;
+		retarded = 0.5f;
+		lastShootAt = 0.0f;
+		shootTimeDelta = 0.3f;
 	}
 
 	Tower()
 	{
 		state = ETS_ALIVE;
+		minPlayerDistance = 100.0f;
+		retarded = 0.5f;
+		lastShootAt = 0.0f;
+		shootTimeDelta = 0.3f;
 	}
 
 	~Tower()
@@ -76,6 +84,8 @@ public:
 		return Position.y*BLOCK_SIZE+BLOCK_SIZE/2;
 	}
 
+	void ai(std::vector<Player> * players);
+
 public:
 	Texture* aliveTexture;
 	Texture* deathTexture;
@@ -84,4 +94,8 @@ public:
 	//std::vector<Missle*> missiles;
 	E_TOWER_TYPE type;
 	E_TOWER_STATE state;
+	float minPlayerDistance;
+	float retarded;
+	float lastShootAt;
+	float shootTimeDelta;
 };
