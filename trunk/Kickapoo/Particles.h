@@ -38,8 +38,8 @@ public:
 
 	const D3DXVECTOR2& pos() const { return position; }
 
-	virtual float applyVelocity(float v, float dt) const {
-		return v * dt;
+	virtual D3DXVECTOR2 applyVelocity(Particle * self, float dt) const {
+		return self->dirVec * self->velocity * dt;
 	}
 private:
 	IParticleSystem * particleSystem;
@@ -49,17 +49,17 @@ private:
 
 class Particle2 : public Particle
 {
-	FastDelegate2<float, float, float> _velocityTransform;
+	FastDelegate2<Particle *, float, D3DXVECTOR2> _velocityTransform;
 public:
-	virtual float applyVelocity(float v, float dt) const
+	virtual D3DXVECTOR2 applyVelocity(Particle * self, float dt) const
 		{
-		return _velocityTransform(v, dt);
+		return _velocityTransform(self, dt);
 		}
 
 	Particle2(IParticleSystem * _pSystem, const D3DXVECTOR2& pos, const D3DXVECTOR2& dir,
 		bool loop, float lifeTime, float velocity, D3DCOLOR color, float size, int type,
 		Texture * tex, bool needsRot,
-		const FastDelegate2<float, float, float>& _func);
+		const FastDelegate2<Particle *, float, D3DXVECTOR2>& _func);
 	virtual ~Particle2();
 };
 
@@ -73,9 +73,11 @@ public:
 	void spawnParticle(const D3DXVECTOR2& pos, const D3DXVECTOR2& direction,
 		bool looping, float lifeTime, float velocity, D3DCOLOR color, float size, int type = 0,
 		Texture * tex = NULL, bool needsRot = true);
-	void spawnParticle(const D3DXVECTOR2& pos, const D3DXVECTOR2& direction,
-		bool looping, float lifeTime, float velocity, D3DCOLOR color, float size,
-		const FastDelegate2<float, float, float>& _func, int type = 0);
+
+	void spawnParticle(const FastDelegate2<Particle *, float, D3DXVECTOR2>& _func, 
+		const D3DXVECTOR2& pos, const D3DXVECTOR2& direction,
+		bool looping, float lifeTime, float velocity, D3DCOLOR color, float size, int type = 0,
+		Texture * tex = NULL, bool needsRot = true);
 
 	void renderParticles();
 
