@@ -22,9 +22,9 @@ public:
 		type = type_;
 		state = ETS_ALIVE;
 		minPlayerDistance = 200.0f;
-		retarded = 0.5f;
+		retarded = 0.6f;
 		lastShootAt = 0.0f;
-		shootTimeDelta = 0.3f;
+		shootTimeDelta = 0.5f;
 		shootTarget = D3DXVECTOR2(1.0f, 0.0f);
 	}
 
@@ -32,9 +32,9 @@ public:
 	{
 		state = ETS_ALIVE;
 		minPlayerDistance = 200.0f;
-		retarded = 0.5f;
+		retarded = 0.6;
 		lastShootAt = 0.0f;
-		shootTimeDelta = 0.3f;
+		shootTimeDelta = 0.5f;
 		shootTarget = D3DXVECTOR2(1.0f, 0.0f);
 	}
 
