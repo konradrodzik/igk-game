@@ -107,9 +107,12 @@ void Player::draw(bool drawStateList, bool drawFromState, float relativeTime) {
 		}
 	}
 
+		
+
 	if(drawFromState && (state = findState(relativeTime)))	{
+		D3DXVECTOR2 direction = state->Aim - state->Position;
 		playerSelectedTexture->set();
-		g_Renderer()->drawRect(state->Position.x*BLOCK_SIZE, state->Position.y*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+		g_Renderer()->drawRotatedRect(state->Position.x*BLOCK_SIZE, state->Position.y*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE, direction);
 	}
 	else {
 		playerTexture->set();
