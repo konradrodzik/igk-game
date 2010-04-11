@@ -27,6 +27,8 @@ public:
 	D3DXVECTOR2 Position;
 	D3DXVECTOR2 Velocity;
 	float LastShootTime;
+	Texture* playerTexture;
+	Texture* playerSelectedTexture;
 
 	bool contains(int x, int y)
 	{
