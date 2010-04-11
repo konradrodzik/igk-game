@@ -52,18 +52,19 @@ Particle2::~Particle2()
 
 ParticleSystem::ParticleSystem()
 {
+	instances.reserve(10000);
 }
 
 ParticleSystem::~ParticleSystem()
 {
-	for(std::list<Particle *>::iterator it = instances.begin() ; it != instances.end() ; ++it)
+	for(std::vector<Particle *>::iterator it = instances.begin() ; it != instances.end() ; ++it)
 		delete *it;
 }
 
 void ParticleSystem::updateParticles()
 {
 	curTime = g_Timer()->getEngineTime();
-	for(std::list<Particle *>::iterator it = instances.begin() ; it != instances.end() ; )
+	for(std::vector<Particle *>::iterator it = instances.begin() ; it != instances.end() ; )
 	{
 		if((*it)->updateState())
 		{
@@ -104,7 +105,7 @@ void ParticleSystem::renderParticles()
 	std::vector<D3DXVECTOR2> sizes; sizes.reserve(instances.size());
 	std::vector<D3DCOLOR> colors; colors.reserve(instances.size());
 
-	for(std::list<Particle *>::const_iterator it = instances.begin() ; it != instances.end() ; ++it)
+	for(std::vector<Particle *>::const_iterator it = instances.begin() ; it != instances.end() ; ++it)
 	{
 		positions.push_back((*it)->pos());
 		sizes.push_back(D3DXVECTOR2((*it)->size, (*it)->size));

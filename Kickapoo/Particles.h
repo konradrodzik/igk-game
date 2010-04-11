@@ -77,7 +77,7 @@ private: // IParticleSystem
 	virtual float currentTime() const;
 
 private:
-	std::list<Particle *> instances;
+	std::vector<Particle *> instances;
 	float curTime;
 };
 
