@@ -30,6 +30,7 @@ Game::Game(void)
 	clockSound = g_AudioSystem.loadSound("sfx/clock.mp3");
 	explosionSound = g_AudioSystem.loadSound("sfx/explosion.wav");
 	g_fireSound = g_AudioSystem.loadSound("sfx/fire.wav");
+	pickSound = g_AudioSystem.loadSound("sfx/pick.wav");
 }
 
 void Game::loadLevel()
@@ -350,6 +351,7 @@ void Game::onLeftClick()
 
 			if(playerList[i].contains(g_Mouse()->getX(), g_Mouse()->getY()))
 			{
+				g_AudioSystem.play(pickSound);
 
 				activePlayer = &playerList[i];
 				activePlayer->StateList.clear();
