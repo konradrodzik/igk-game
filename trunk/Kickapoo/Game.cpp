@@ -160,7 +160,7 @@ void Game::killTower(Tower* tower)
 
 void Game::onTowerKilled()
 {
-towersAlive_--;
+	towersAlive_--;
 	if(towersAlive_ <= 0)
 	{
 		//! Change level
@@ -205,18 +205,18 @@ void Game::create()
 	}
 
 	//! intro font
-	RECT tmp={160, 400, g_Window()->getWidth(), g_Window()->getHeight()};
+	RECT tmp={160, 530, g_Window()->getWidth(), g_Window()->getHeight()};
 	_introRect = tmp;
 	introFont_ = new Font();
-	introFont_->create("Comic Sans MS", 40, 5, false, &_introRect);
+	introFont_->create("Comic Sans MS", 40, 0, false, &_introRect);
 	introFont_->setTextColor(D3DCOLOR_RGBA(127, 100, 0, 255));
 
 
-	RECT screenMiddle ={g_Window()->getWidth() * 0.25f, g_Window()->getHeight()*0.25f, g_Window()->getWidth(), g_Window()->getHeight()};
+	RECT screenMiddle ={g_Window()->getWidth() * 0.25f, g_Window()->getHeight()*0.5f, g_Window()->getWidth() * 0.25f + g_Window()->getWidth(),  g_Window()->getHeight() * 0.25f + g_Window()->getHeight()};
 	_screenMiddleRect = screenMiddle;
 	scoreFont = new Font();
-	scoreFont->create("Comic Sans MS", 40, 5, false, &_screenMiddleRect);
-	scoreFont->setTextColor(D3DCOLOR_RGBA(127, 100, 0, 255));
+	scoreFont->create("Comic Sans MS", 40, 0, false, &_screenMiddleRect);
+	scoreFont->setTextColor(D3DCOLOR_RGBA(255, 0, 0, 255));
 
 	RECT rect2 = {665, 64, g_Window()->getWidth(), g_Window()->getHeight()};
 	clockFont = new Font();
@@ -362,14 +362,14 @@ void Game::draw()
 		if(state_ == EGameState::LevelFinished)
 		{
 			getDevice()->SetTexture(0, NULL);
-			g_Renderer()->drawRect(_screenMiddleRect.left, _screenMiddleRect.top, _screenMiddleRect.right - _screenMiddleRect.left, _screenMiddleRect.bottom - _screenMiddleRect.top, D3DCOLOR_ARGB(127,255,255,255));
-			introFont_->write("Gratulacje! Uda³o Ci siê w czasie: %0.2f", relativeTime);
+			g_Renderer()->drawRect(g_Window()->getWidth() / 4 - 30, g_Window()->getHeight() / 4, g_Window()->getWidth() / 2 + 60, g_Window()->getHeight() / 2, D3DCOLOR_ARGB(127,255,255,255));
+			scoreFont->write("Gratulacje! Uda³o Ci siê w czasie: %0.2f", relativeTime);
 		}
 		else if(state_ == EGameState::GameFinished)
 			{
 				getDevice()->SetTexture(0, NULL);
-				g_Renderer()->drawRect(_screenMiddleRect.left, _screenMiddleRect.top, _screenMiddleRect.right - _screenMiddleRect.left, _screenMiddleRect.bottom - _screenMiddleRect.top, D3DCOLOR_ARGB(127, 255,255,255));
-				introFont_->write("Gratulacje! Gra ukoñczona ostatni czas: %0.2f", relativeTime);
+				g_Renderer()->drawRect(g_Window()->getWidth() / 4 - 30, g_Window()->getHeight() / 4, g_Window()->getWidth() / 2 + 60, g_Window()->getHeight() / 2, D3DCOLOR_ARGB(127,255,255,255));
+				scoreFont->write("Gratulacje! Gra ukoñczona ostatni czas: %0.2f", relativeTime);
 			}
 
 	}
