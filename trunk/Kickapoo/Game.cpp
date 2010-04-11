@@ -121,7 +121,7 @@ void Game::create()
 	introFont_->setTextColor(D3DCOLOR_RGBA(255, 0, 0, 255));
 
 
-	map = Map::load("mapa.txt");
+	map = Map::load("mapa.bmp");
 	map->loadContent(playerList, towers);
 
 //	if(playerList.size())

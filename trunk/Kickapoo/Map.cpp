@@ -1,5 +1,4 @@
 #include "Common.h"
-#include "Map.h"
 
 Map::Map()
 {
@@ -27,21 +26,77 @@ static void trimr(char * buffer) {
 		buffer[length-1] = 0;
 }
 
+const char* basename(const char* p) {
+	if(strlen(p) >= 3)
+		return &p[strlen(p)-3];
+	return "";
+}
+
 Map* Map::load( const std::string& name )
 {
-	FILE* file = fopen(name.c_str(), "r");
+	FILE* file = fopen(name.c_str(), "rb");
 	if(!file)
 		return NULL;
 
 	Map* map = new Map;
 
-	fscanf(file, "%i %i", &map->width, &map->height);
+	if(!strcmpi(basename(name.c_str()), "bmp")) {
+		BITMAPFILEHEADER bmfh;
+		fread(&bmfh,sizeof(BITMAPFILEHEADER),1,file);
+		BITMAPINFOHEADER bmih;
+		fread(&bmih,sizeof(BITMAPINFOHEADER),1,file);
 
-	while(!feof(file)) {
-		static char buffer[10000];
-		fgets(buffer, sizeof(buffer), file);
-		trimr(buffer);
-		map->map += buffer;
+		fseek(file, bmfh.bfOffBits, SEEK_SET);
+
+		map->width = bmih.biWidth;
+		map->height = bmih.biHeight;
+		map->map.resize(map->width * map->height);
+
+		assert(bmih.biBitCount == 24);
+		assert(bmih.biCompression == 0);
+
+		unsigned pad = (LONG)((float)map->width*(float)bmih.biBitCount/8.0);
+		unsigned byteWidth = pad;
+
+		//add any extra space to bring each line to a DWORD boundary
+		while(pad%4!=0) {
+			 pad++;
+		}
+
+		for(unsigned i = map->height; i-- > 0; ) {
+			byte bytes[3];
+			for(unsigned j = 0; j < map->width; ++j) {
+				int index = (map->height - i - 1) * map->width + j;
+				fread(bytes, 3, 1, file);
+				std::swap(bytes[0], bytes[2]);
+				if(bytes[0]>80 && bytes[1]>80 && bytes[2]>80)
+					continue;
+
+				if(bytes[0]>80) {
+					map->map[index] = '@';
+				}
+				else if(bytes[2]>80) {
+					map->map[index] = '^';
+				}
+				else if(bytes[1]>80) {
+					map->map[index] = '^';
+				}
+				else {
+					map->map[index] = '#';
+				}
+			}
+			fread(bytes, pad-byteWidth, 1, file);
+		}
+	}
+	else {
+		fscanf(file, "%i %i", &map->width, &map->height);
+
+		while(!feof(file)) {
+			static char buffer[10000];
+			fgets(buffer, sizeof(buffer), file);
+			trimr(buffer);
+			map->map += buffer;
+		}
 	}
 
 	assert(map->map.size() == map->width*map->height);
@@ -146,7 +201,7 @@ void Map::draw()
 			char block = map[index(j, i)];
 			if(block == '#')
 			{
-				float size = 4+cosf(blockRandom[i * width + j]*6) * 2.0f;
+				float size = 2+cosf(blockRandom[i * width + j]*6) * 1.0f;
 
 				wall->set();
 				g_Renderer()->drawRect(j*BLOCK_SIZE+size, i*BLOCK_SIZE+size, BLOCK_SIZE-2*size, BLOCK_SIZE-2*size);

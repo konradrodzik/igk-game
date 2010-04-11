@@ -4,11 +4,42 @@ Player::Player() : Position(0,0), Velocity(0,0) {
 
 }
 
+static bool operator < (const PlayerState& state, const PlayerState& other) {
+	return state.Time < other.Time;
+}
+
+int compareMyType (const void * a, const void * b)
+{
+	PlayerState* aa = (PlayerState*)a;
+	PlayerState* bb = (PlayerState*)b;
+
+	if(aa->Time < bb->Time)
+		return -1;
+	if(aa->Time > bb->Time)
+		return 1;
+	return 0;
+}
+
 PlayerState* Player::findState(float time) {
+#if 1
+	if(StateList.empty())
+		return NULL;
+
+	PlayerState dummy;
+	dummy.Time = time;
+
+	vector<PlayerState>::iterator itor = std::lower_bound(StateList.begin(), StateList.end(), dummy);
+	
+	if(itor != StateList.end())
+		return &*itor;
+	else
+		return &StateList.back();
+#else
 	for(vector<PlayerState>::reverse_iterator itor = StateList.rbegin(); itor != StateList.rend(); ++itor) {
 		if(itor->Time < time)
 			return &*itor;
 	}
+#endif
 	return NULL;
 }
 
@@ -82,7 +113,7 @@ void Player::record(float dt, float rt, Map* map, bool fire) {
 		fire;
 	state.Aim = D3DXVECTOR2(g_Mouse()->getX() / (float)BLOCK_SIZE, g_Mouse()->getY() / (float)BLOCK_SIZE);
 
-	if(lastState && state.Time - lastState->Time < 1.0f/60.0f) {
+	if(lastState && state.Time - lastState->Time < 1.0f/30.0f) {
 		state.Time = lastState->Time;
 		*lastState = state;
 	}
@@ -96,6 +127,11 @@ void Player::draw(bool drawStateList, bool drawFromState, float relativeTime) {
 	if(drawStateList) {
 		D3DXVECTOR2 lastPosition = Position;
 		for(PlayerStateList::iterator itor = StateList.begin(); itor != StateList.end(); ++itor) {
+			D3DXVECTOR2 diff = (itor->Position - lastPosition) * BLOCK_SIZE;
+			if(D3DXVec2Length(&diff) < 6 && &*itor != &StateList.back()) {
+				continue;
+			}
+
 			g_Renderer()->drawLine(lastPosition.x * BLOCK_SIZE+ BLOCK_SIZE/2, lastPosition.y * BLOCK_SIZE+ BLOCK_SIZE/2, 
 				itor->Position.x * BLOCK_SIZE + BLOCK_SIZE/2, itor->Position.y * BLOCK_SIZE+ BLOCK_SIZE/2, 1, D3DCOLOR_XRGB(120, 120, 120));
 			lastPosition = itor->Position;
