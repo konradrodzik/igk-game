@@ -126,6 +126,10 @@ void Game::create()
 	introFont_->create("Verdana", 20, 0, false, &rect);
 	introFont_->setTextColor(D3DCOLOR_RGBA(255, 0, 0, 255));
 
+	RECT rect2 = {665, 64, g_Window()->getWidth(), g_Window()->getHeight()};
+	clockFont = new Font();
+	clockFont->create("Verdana", 20, 0, false, &rect2);
+	clockFont->setTextColor(D3DCOLOR_RGBA(255, 0, 0, 255));
 
 	map = Map::load("mapa.bmp");
 	map->loadContent(playerList, towers);
@@ -298,29 +302,31 @@ void Game::drawClock()
 {
 	clockTexture.set();
 	g_Renderer()->drawRect(620, 420, 128, 128);
+	char buffer[10];
+	sprintf(buffer, "%.2f", relativeTime);
 	for(int i = 0; i < clockLines.size(); ++i)
 	{
 		SLine line = clockLines[i];
-		g_Renderer()->drawLine(line.x1, line.y1, line.x2, line.y2, 1, D3DCOLOR_RGBA(0, 0, 255, 128));
+		g_Renderer()->drawLine(line.x1, line.y1, line.x2, line.y2, 1, D3DCOLOR_RGBA(0, 0, 255, 64));
 	}
+	clockFont->write(buffer);
 }
 
 void Game::updateClock()
 {
 	static float circleAngle = 0;
 	static bool isLooping = false;
-	float step = 10.0f/360.0f*10; 
 	SLine line;
 	line.x1 = 684.0f;
 	line.y1 = 484.0f;
 	line.x2 = line.x1+sin(circleAngle*DEG2RAD)*66;
 	line.y2 = line.y1+cos(circleAngle*DEG2RAD)*66;
-	circleAngle += step;
+	circleAngle = relativeTime*360.0f/10;
 
 	if((int)circleAngle >= clockLines.size())
 		clockLines.push_back(line);
 	
-	if(relativeTime > 10.0f)
+	if(relativeTime >= 9.9f)
 	{
 		circleAngle = 0;
 		clockLines.clear();
@@ -331,5 +337,4 @@ void Game::updateClock()
 		g_AudioSystem.play(clockSound);
 		isLooping = true;
 	}
-	
 }
