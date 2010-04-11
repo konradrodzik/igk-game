@@ -35,6 +35,12 @@ bool Particle::updateState(Map * map, float rt)
 		float py = (position.y) / BLOCK_SIZE;
 		if(map->blocked(px, py, false))
 		{
+			if(type == ParticleShot)
+			{
+			g_ParticleSystem()->spawnExplosion(position, 2.0f, 30.0f,
+				D3DCOLOR_ARGB(128,128,0,0), 3.0f, 10, 0, true);
+			}
+
 		return false;
 		}
 	}
@@ -72,6 +78,11 @@ ParticleSystem::ParticleSystem()
 ParticleSystem::~ParticleSystem()
 {
 	for(std::vector<Particle *>::iterator it = instances.begin() ; it != instances.end() ; ++it)
+	{
+		Particle * p = *it;
+		delete p;
+	}
+	for(std::vector<Particle *>::iterator it = queue.begin() ; it != queue.end() ; ++it)
 	{
 		Particle * p = *it;
 		delete p;
@@ -114,23 +125,39 @@ void ParticleSystem::updateParticles(Map * map, float rt)
 
 	double updateTImer = g_Timer()->calculateTime(&timer);
 	updateTImer;
+
+	// Copy items from queue to this item
+	for(std::vector<Particle *>::iterator it = queue.begin() ; it != queue.end() ; ++it)
+	{
+	instances.push_back(*it);
+	}
+	queue.clear();
 }
 
 void ParticleSystem::spawnParticle(const D3DXVECTOR2& pos, const D3DXVECTOR2& direction,
 	bool looping, float lifeTime, float velocity, D3DCOLOR color, float size, int type,
-	Texture * tex, bool needsRot)
+	Texture * tex, bool needsRot, bool queue)
 {
-	instances.push_back(new Particle(this, pos, direction, looping, lifeTime, velocity, color, size, type,
-		tex, needsRot));
+	Particle * pp = new Particle(this, pos, direction, looping, lifeTime, velocity, color, size, type,
+		tex, needsRot);
+
+	if(queue)
+		this->queue.push_back(pp);
+	else
+		instances.push_back(pp);
 }
 
 void ParticleSystem::spawnParticle(const FastDelegate2<Particle *, float, D3DXVECTOR2>& _func, 
 				   const D3DXVECTOR2& pos, const D3DXVECTOR2& direction,
 				   bool looping, float lifeTime, float velocity, D3DCOLOR color, float size, int type,
-				   Texture * tex, bool needsRot)
+				   Texture * tex, bool needsRot, bool queue)
 {
-	instances.push_back(new Particle2(this, pos, direction, looping, lifeTime, velocity, color, size, type,
-		tex, needsRot, _func));
+	Particle * pp = new Particle2(this, pos, direction, looping, lifeTime, velocity, color, size, type,
+		tex, needsRot, _func);
+	if(queue)
+		this->queue.push_back(pp);
+	else
+		instances.push_back(pp);
 }
 
 /*void ParticleSystem::spawnParticle(const D3DXVECTOR2& pos, const D3DXVECTOR2& direction,
@@ -232,7 +259,7 @@ float ParticleSystem::_explosionTransform(float v, float dt)
 
 void ParticleSystem::spawnExplosion(const D3DXVECTOR2& pos, float lifeTime,
 					float distance, D3DXCOLOR color, float size,
-					int nParticles, int type)
+					int nParticles, int type, bool queue)
 {
 	for (int i = 0 ; i < nParticles ; ++i)
 	{
@@ -244,7 +271,7 @@ void ParticleSystem::spawnExplosion(const D3DXVECTOR2& pos, float lifeTime,
 		float _velocity = RandomFloat(10.0f, 30.0f);
 
 		spawnParticle(pos, dir, false, _life,
-			_velocity, color, size, type);
+			_velocity, color, size, type, NULL, false, queue);
 	}
 }
 
@@ -353,11 +380,22 @@ void ParticleSystem::clear()
 		Particle * p = *it;
 		delete p;
 	}
+
+	for(std::vector<Particle *>::iterator it = queue.begin() ; it != queue.end() ; ++it)
+	{
+		Particle * p = *it;
+		delete p;
+	}
+
 		
 	instances.clear();
+	queue.clear();
 }
 
-void ParticleSystem::addParticle(Particle * particle)
+void ParticleSystem::addParticle(Particle * particle, bool queue)
 {
-	instances.push_back(particle);
+	if(queue)
+		this->queue.push_back(particle);
+	else
+		instances.push_back(particle);
 }
