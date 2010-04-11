@@ -97,10 +97,9 @@ void Game::killTower(Tower* tower)
 
 void Game:: explodeTower(void* t)
 {
-	//Tower* tower = (Tower*)t;
-	//ParticleSystem * ps = ParticleSystem::getSingletonPtr();
-	//ps->spawnExplosion(D3DXVECTOR2(tower->getX(), tower->getY()));
-	//ps->spawnExplosion(D3DXVECTOR2(tower->getX(), tower->getY()));
+	Tower* tower = (Tower*)t;
+	ParticleSystem * ps = ParticleSystem::getSingletonPtr();
+	ps->spawnExplosion(D3DXVECTOR2(tower->getX(), tower->getY()));
 }
 
 
@@ -128,9 +127,6 @@ void Game::create()
 
 	map = Map::load("mapa.bmp");
 	map->loadContent(playerList, towers);
-
-//	if(playerList.size())
-//		activePlayer = &playerList[0];
 }
 
 void Game::update()
@@ -236,10 +232,15 @@ void Game::draw()
 					typedText.assign(_introText.c_str(), (int)((_introTime - 3.0f) * 10.0f));
 					introFont_->write(typedText.c_str());
 
-			//		getDevice()->SetTexture(0, zero_.getTexture());
-			//		g_Renderer()->drawRect(0, _splashZeroElementY, g_Window()->getWidth(), g_Window()->getHeight(), D3DCOLOR_ARGB(255,255,255,255));
-			//		getDevice()->SetTexture(0, one_.getTexture());
-			//		g_Renderer()->drawRect(0, _splashOneElementY, g_Window()->getWidth(), g_Window()->getHeight(), D3DCOLOR_ARGB(255,255,255,255));
+					if(_splashOneElementY > 0.0f) {
+						float speed =  600.0f / 1.5f;
+						_splashZeroElementY -= speed * g_Timer()->getFrameTime();
+						_splashOneElementY -= speed * g_Timer()->getFrameTime();
+					};
+					getDevice()->SetTexture(0, zero_.getTexture());
+					g_Renderer()->drawRect(0, _splashZeroElementY, g_Window()->getWidth(), g_Window()->getHeight(), D3DCOLOR_ARGB(255,255,255,255));
+					getDevice()->SetTexture(0, one_.getTexture());
+					g_Renderer()->drawRect(0, _splashOneElementY, g_Window()->getWidth(), g_Window()->getHeight(), D3DCOLOR_ARGB(255,255,255,255));
 				}
 
 	} else
@@ -255,7 +256,7 @@ void Game::draw()
 			float ssize = 32 * (- _selectionAlpha + 3);
 
 			getDevice()->SetTexture(0, selection_.getTexture());
-			g_Renderer()->drawRect( activePlayer->getX()- ssize * 0.5f, activePlayer->getY() - ssize * 0.5f, ssize, ssize, D3DCOLOR_ARGB((int)(_selectionAlpha*255), 255, 0,0));
+			g_Renderer()->drawRect( activePlayer->getX()- ssize * 0.5f, activePlayer->getY() - ssize * 0.5f, ssize, ssize, D3DCOLOR_ARGB((int)(_selectionAlpha*255), 120, 255,0));
 
 		}
 

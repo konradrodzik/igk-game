@@ -124,6 +124,9 @@ void Player::record(float dt, float rt, Map* map, bool fire) {
 void Player::draw(bool drawStateList, bool drawFromState, float relativeTime) {
 	PlayerState* state = NULL;
 
+	std::vector<vertex> lines;
+	int i = 0;
+
 	if(drawStateList) {
 		D3DXVECTOR2 lastPosition = Position;
 		for(PlayerStateList::iterator itor = StateList.begin(); itor != StateList.end(); ++itor) {
@@ -132,9 +135,20 @@ void Player::draw(bool drawStateList, bool drawFromState, float relativeTime) {
 				continue;
 			}
 
-			g_Renderer()->drawLine(lastPosition.x * BLOCK_SIZE+ BLOCK_SIZE/2, lastPosition.y * BLOCK_SIZE+ BLOCK_SIZE/2, 
-				itor->Position.x * BLOCK_SIZE + BLOCK_SIZE/2, itor->Position.y * BLOCK_SIZE+ BLOCK_SIZE/2, 1, D3DCOLOR_XRGB(120, 120, 120));
+			lines.push_back(vertex());
+			lines[i].pos.x = lastPosition.x* BLOCK_SIZE+ BLOCK_SIZE/2;
+			lines[i].pos.y = lastPosition.y* BLOCK_SIZE+ BLOCK_SIZE/2;
+			lines[i].pos.z = 0;
+			lines[i].color = D3DCOLOR_ARGB(255,255,255,255);
+			i++;
+	//		g_Renderer()->drawLine(lastPosition.x * BLOCK_SIZE+ BLOCK_SIZE/2, lastPosition.y * BLOCK_SIZE+ BLOCK_SIZE/2, 
+	//			itor->Position.x * BLOCK_SIZE + BLOCK_SIZE/2, itor->Position.y * BLOCK_SIZE+ BLOCK_SIZE/2, 1, D3DCOLOR_XRGB(120, 120, 120));
 			lastPosition = itor->Position;
+	}
+
+		if(lines.size() > 1) {
+			getDevice()->SetFVF(FVF_TEX);
+			getDevice()->DrawPrimitiveUP(D3DPT_LINESTRIP, lines.size()/2, &lines[0], sizeof(vertex));
 		}
 
 		if(StateList.size()) {

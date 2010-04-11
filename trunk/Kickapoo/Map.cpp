@@ -223,9 +223,19 @@ void Map::draw()
 
 			if(a == '#' && a != b || a != b && b == '#') 
 			{
-				g_Renderer()->drawLine((j+1)*BLOCK_SIZE-1, i*BLOCK_SIZE,
-					(j+1)*BLOCK_SIZE-1, (i+1)*BLOCK_SIZE, 2, D3DCOLOR_XRGB(64, 64, 255));
-			}
+					g_Renderer()->drawLine((j+1)*BLOCK_SIZE-1, i*BLOCK_SIZE,
+						(j+1)*BLOCK_SIZE-1, (i+1)*BLOCK_SIZE, 2, D3DCOLOR_XRGB(64, 64, 255));
+
+			/*	float sx = (j+1)*BLOCK_SIZE-1;
+				float sy = i*BLOCK_SIZE;
+				float ex = (j+1)*BLOCK_SIZE-1;
+				float ey = (i+1)*BLOCK_SIZE;
+
+				float centerx = (sx + ex) * 0.5f - (ex-sx)*0.5f;
+				float centery = (sy + ey) * 0.5f - (ey-sy)*0.5f;
+				wall->set();
+				g_Renderer()->drawRect( centerx, centery, 4, ey - sy, D3DCOLOR_XRGB(64, 64, 255));
+			*/}
 		}
 	}
 
@@ -240,6 +250,16 @@ void Map::draw()
 			{
 				g_Renderer()->drawLine(j*BLOCK_SIZE, (i+1)*BLOCK_SIZE-1,
 					(j+1)*BLOCK_SIZE, (i+1)*BLOCK_SIZE-1, 2, D3DCOLOR_XRGB(64, 64, 255));
+/*				float sx =j*BLOCK_SIZE;
+				float sy = (i+1)*BLOCK_SIZE-1;
+				float ex =(j+1)*BLOCK_SIZE;
+				float ey = (i+1)*BLOCK_SIZE-1;
+
+				float centerx = (sx + ex) * 0.5f - (ex-sx)*0.5f;
+				float centery = (sy + ey) * 0.5f - (ey-sy)*0.5f;
+				wall->set();
+				g_Renderer()->drawRect( centerx, centery, ex-sx , 4, D3DCOLOR_XRGB(64, 64, 255));
+*/
 			}
 		}
 	}
