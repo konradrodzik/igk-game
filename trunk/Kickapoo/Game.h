@@ -26,6 +26,7 @@ struct SLine
 
 
 extern Sound* g_fireSound;
+extern Sound* g_wallSound;
 
 
 class Game
