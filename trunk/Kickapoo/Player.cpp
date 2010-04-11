@@ -13,8 +13,49 @@ PlayerState* Player::findState(float time) {
 }
 
 
-void Player::update(float dt) {
+void Player::update(float dt, float rt, Map* map) {
+	PlayerState* lastState = findState(rt);
+	D3DXVECTOR2 position(0, 0);
+	D3DXVECTOR2 force(0, 0);
 
+	PlayerState state;
+
+	if(lastState)
+		state.Position = lastState->Position;
+	else
+		state.Position = Position;
+
+	if(GetKeyState(VK_UP)&0x80)
+		force.y += 1;
+	if(GetKeyState(VK_DOWN)&0x80)
+		force.y -= 1;
+	if(GetKeyState(VK_LEFT)&0x80)
+		force.x -= 1;
+	if(GetKeyState(VK_RIGHT)&0x80)
+		force.x += 1;
+
+	Velocity *= exp(-dt) * 0.98f;
+	Velocity += 10 * force * dt;
+
+	float length = D3DXVec2Length(&Velocity);
+	if(length > 2)
+		Velocity /= length / 2;
+
+	D3DXVECTOR2 oldPosition = state.Position;
+	state.Position += Velocity * dt * BLOCK_SIZE / 3;
+
+	state.Position = map->slide(oldPosition, state.Position);
+
+	state.Time = rt;
+	state.Fire = (GetKeyState(VK_SPACE)&0x80) != 0;
+	state.Direction = D3DXVECTOR2(0, 0);
+
+	if(lastState && state.Time - lastState->Time < 1.0f/60.0f) {
+		state.Time = lastState->Time;
+		*lastState = state;
+	}
+	else
+		StateList.push_back(state);
 }
 
 void Player::draw(bool drawStateList, bool drawFromState, float relativeTime) {

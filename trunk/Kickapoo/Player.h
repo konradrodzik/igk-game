@@ -43,7 +43,7 @@ public:
 		return Position.y*playerSize+playerSize/2;
 	}
 
-	void update(float dt);
+	void update(float dt, float rt, Map* map);
 
 	void draw(bool drawStateList, bool drawFromState, float relativeTime);
 
