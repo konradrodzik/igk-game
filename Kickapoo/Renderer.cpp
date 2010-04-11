@@ -336,6 +336,6 @@ void Renderer::drawRotatedRect(float x, float y, float w, float h, D3DXVECTOR2& 
 
 	drawRect(ap.x, ap.y, 0.0f, 1.0f,
 		ap.x, bp.y, 0.0f, 0.0f,
-		bp.x, ap.y, 1.0f, 1.0f,
-		bp.x, bp.y, 1.0f, 0.0f);	
+		bp.x, bp.y, 1.0f, 0.0f,
+		bp.x, ap.y, 1.0f, 1.0f);
 }

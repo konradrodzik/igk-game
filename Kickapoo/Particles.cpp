@@ -113,7 +113,7 @@ float ParticleSystem::currentTime() const
 class TextureSorter
 {
 public:
-	bool operator()(const Particle *& p1, const Particle *& p2) const
+	bool operator()(Particle *& p1, Particle *& p2) const
 	{
 		return (unsigned)p1->texture < (unsigned)p2->texture;
 	}
@@ -173,7 +173,7 @@ void ParticleSystem::renderParticles()
 			{
 
 				g_Renderer()->drawRect(texturedParticles[i]->pos().x, 
-					texturedParticles[i]->pos().y(),
+					texturedParticles[i]->pos().y,
 					texturedParticles[i]->size,
 					texturedParticles[i]->size);
 			}
