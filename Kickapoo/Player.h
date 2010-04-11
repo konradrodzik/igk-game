@@ -32,5 +32,20 @@ public:
 
 	Player();
 
+
+	int getX()
+	{
+		return Position.x*playerSize+playerSize/2;
+	}
+
+	int getY()
+	{
+		return Position.y*playerSize+playerSize/2;
+	}
+
+	void update(float dt);
+
+	void draw(bool drawStateList, bool drawFromState, float relativeTime);
+
 private:
 };

@@ -23,6 +23,8 @@ public:
 	void fill_r(int x, int y, float dt);
 
 	int index(int x, int y) const {
+		if(y >= height || y < 0 || x >= width || x <= 0)
+			return 0;
 		return y * width + x;
 	}
 
