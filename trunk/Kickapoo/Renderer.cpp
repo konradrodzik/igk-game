@@ -144,52 +144,56 @@ void Renderer::drawRect(float x, float y, float width, float height, D3DCOLOR co
 
 void Renderer::drawRects(const std::vector<D3DXVECTOR2> * positions, const std::vector<D3DXVECTOR2> * sizes, const std::vector<D3DCOLOR> * colors, int count)
 {
-	vertex v[4];
+	vertex * v;
 	std::vector<vertex> vertices;
 
-	vertices.reserve(count * 4);
+	vertices.resize(count * 4);
+	v = &vertices[0];
 
 	for(int i = 0 ; i < count ; ++i)
 	{
-		v[0].pos.x = positions->at(i).x;
-		v[0].pos.y = positions->at(i).y;
+		float x = positions->at(i).x;
+		float y = positions->at(i).y;
+		float width = sizes->at(i).x;
+		float height = sizes->at(i).y;
+		D3DCOLOR color = colors->at(i);
+
+		v[0].pos.x = x;
+		v[0].pos.y = y;
 		v[0].pos.z = 0;
 		//	v[0].rhw = 1.0f;
-		v[0].color = colors->at(i);
+		v[0].color = color;
 		v[0].tu = 0.0f;
 		v[0].tv = 1.0f;
 
-		v[1].pos.x = positions->at(i).x;
-		v[1].pos.y = positions->at(i).y + sizes->at(i).y;
+		v[1].pos.x = x;
+		v[1].pos.y = y + height;
 		v[1].pos.z = 0;
 		//	v[1].rhw = 1.0f;
-		v[1].color = colors->at(i);
+		v[1].color = color;
 		v[1].tu = 0.0f;
 		v[1].tv = 0.0f;		
 
-		v[2].pos.x = positions->at(i).x + sizes->at(i).x;
-		v[2].pos.y = positions->at(i).y;
+		v[2].pos.x = x + width;
+		v[2].pos.y = y;
 		v[2].pos.z = 0;
 		//	v[2].rhw = 1.0f;
-		v[2].color = colors->at(i);
+		v[2].color = color;
 		v[2].tu = 1.0f;
 		v[2].tv = 1.0f;		
 
-		v[3].pos.x = positions->at(i).x + sizes->at(i).x;
-		v[3].pos.y = positions->at(i).y + sizes->at(i).y;
+		v[3].pos.x = x + width;
+		v[3].pos.y = y + height;
 		v[3].pos.z = 0;
 		//	v[3].rhw = 1.0f;
-		v[3].color = colors->at(i);
+		v[3].color = color;
 		v[3].tu = 1.0f;
 		v[3].tv = 0.0f;
 
-		vertices.push_back(v[0]);
-		vertices.push_back(v[1]);
-		vertices.push_back(v[2]);
-		vertices.push_back(v[3]);
+		v += 4;
 	}
 
-	vb->pushData(sizeof(vertex) * count * 4, &vertices[0], chunk);
+	vb->pushData(sizeof(vertex) * vertices.size(), &vertices[0], chunk);
 
 	getDevice()->SetFVF(FVF_TEX);
 	getDevice()->SetStreamSource(0, vb->getBuffer(), chunk.offset, sizeof(vertex));
