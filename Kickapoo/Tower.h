@@ -95,7 +95,7 @@ public:
 		return Position.y*BLOCK_SIZE+BLOCK_SIZE/2;
 	}
 
-	void ai(std::vector<Player> * players);
+	void ai(std::vector<Player> * players, float rt);
 
 public:
 	Texture* aliveTexture;

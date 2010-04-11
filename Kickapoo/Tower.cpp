@@ -1,7 +1,7 @@
 #include "Common.h"
 #include "Tower.h"
 
-void Tower::ai(std::vector<Player> * players)
+void Tower::ai(std::vector<Player> * players, float rt)
 {
 	if(type != ETT_SHOOTING)
 		return;
@@ -14,11 +14,10 @@ void Tower::ai(std::vector<Player> * players)
 	if((curTime - lastShootAt) <  shootTimeDelta)
 		return;
 
-	lastShootAt = curTime;
 
 	for(int i = 0 ; i < players->size() ; ++i)
 	{
-		D3DXVECTOR2 player(players->at(i).getX(), players->at(i).getY());
+		D3DXVECTOR2 player(players->at(i).relativePosition(rt));
 
 		D3DXVec2Subtract(&dvec, &player, &myPos);
 		float distanceFromPlayer = D3DXVec2Length(&dvec);
@@ -33,6 +32,7 @@ void Tower::ai(std::vector<Player> * players)
 			{				
 				g_ParticleSystem()->spawnParticle(myPos, shootDir * 4, false, 5.0f, 60.0f * (1.0f - retarded),
 					D3DCOLOR_ARGB(255, 0x80, 0, 0x20), 4.0f, ParticleHarmful);
+	lastShootAt = curTime;
 			}
 			return;
 		}
