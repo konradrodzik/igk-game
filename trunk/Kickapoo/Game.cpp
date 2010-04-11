@@ -92,6 +92,7 @@ void Game::startGame()
 
 void Game::killTower(Tower* tower)
 {
+	onTowerKilled();
 	//! kill tower
 	AnimationSequenceActivator* kill = new AnimationSequenceActivator(MakeDelegate(tower, &Tower::kill));
 	

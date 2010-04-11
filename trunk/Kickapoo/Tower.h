@@ -72,7 +72,7 @@ public:
 	void hide()
 	{
 		state = ETS_HIDE;
-		g_Game->onTowerKilled();
+//		g_Game->onTowerKilled();
 	}
 
 	int getX()
