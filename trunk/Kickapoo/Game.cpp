@@ -34,8 +34,8 @@ void Game::changeState(EGameState::TYPE state)
 		//! TODO: implement selection
 		if(state == EGameState::Selection) {
 		relativeTime = 0;
-		if(activePlayer)
-			activePlayer->Velocity = D3DXVECTOR2(0, 0);
+		//if(activePlayer)
+			//activePlayer->Velocity = D3DXVECTOR2(0, 0);
 		activePlayer = NULL;
 
 		// hack off
@@ -255,6 +255,7 @@ void Game::onLeftClick()
 			{
 
 				activePlayer = &playerList[i];
+				activePlayer->Velocity = D3DXVECTOR2(0, 0);
 				changeState(EGameState::Running);
 				return;
 			}

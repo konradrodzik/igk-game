@@ -290,6 +290,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Missile.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Player.h"
 				>
 			</File>
