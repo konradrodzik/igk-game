@@ -38,6 +38,15 @@ void Game::changeState(EGameState::TYPE state)
 			//activePlayer->Velocity = D3DXVECTOR2(0, 0);
 		activePlayer = NULL;
 
+		
+		// reset all towers state
+		for(int i = 0; i < towers.size(); ++i)
+		{
+			Tower* tower = &towers[i];
+			tower->state = ETS_ALIVE;
+		}
+
+
 		// hack off
 		// changeState(EGameState::Running);
 	}
