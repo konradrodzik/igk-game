@@ -9,6 +9,12 @@ public:
 	virtual float currentTime() const = 0;
 };
 
+enum
+{
+
+	ParticleShot = 1
+};
+
 class Particle
 {
 public:
