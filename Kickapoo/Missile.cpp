@@ -23,8 +23,9 @@ D3DXVECTOR2 Missile::applyVelocity(Particle * _self, float dt, float rt) const
 	PlayerState* state = player->findState(rt);
 	if(state) {
 		D3DXVECTOR2 force = state->Aim - self->position / BLOCK_SIZE;
+		//if(D3DXVec2Length(&force) < 5)
 		//D3DXVec2Normalize(&force, &force);
-		self->Velocity += force * dt * 5;
+			self->Velocity += force * dt * 5;
 	}
 
 	D3DXVec2Normalize(&self->Velocity, &self->Velocity);
