@@ -85,7 +85,7 @@ void Game:: explodeTower(void* t)
 {
 	Tower* tower = (Tower*)t;
 	ParticleSystem * ps = ParticleSystem::getSingletonPtr();
-	//ps->spawnExplosion(D3DXVECTOR2(tower->getX(), tower->getY()));
+	ps->spawnExplosion(D3DXVECTOR2(tower->getX(), tower->getY()));
 }
 
 

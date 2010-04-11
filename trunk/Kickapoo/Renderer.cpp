@@ -147,7 +147,7 @@ void Renderer::drawRects(const std::vector<D3DXVECTOR2> * positions, const std::
 	vertex * v;
 	std::vector<vertex> vertices;
 
-	vertices.resize(count * 4);
+	vertices.resize(count * 6);
 	v = &vertices[0];
 
 	for(int i = 0 ; i < count ; ++i)
@@ -181,23 +181,39 @@ void Renderer::drawRects(const std::vector<D3DXVECTOR2> * positions, const std::
 		v[2].color = color;
 		v[2].tu = 1.0f;
 		v[2].tv = 1.0f;		
-
-		v[3].pos.x = x + width;
-		v[3].pos.y = y + height;
+	
+		v[3].pos.x = x;
+		v[3].pos.y = y;
 		v[3].pos.z = 0;
 		//	v[3].rhw = 1.0f;
 		v[3].color = color;
-		v[3].tu = 1.0f;
-		v[3].tv = 0.0f;
+		v[3].tu = 0.0f;
+		v[3].tv = 1.0f;
 
-		v += 4;
+		v[4].pos.x = x + width;
+		v[4].pos.y = y;
+		v[4].pos.z = 0;
+		//	v[4].rhw = 1.0f;
+		v[4].color = color;
+		v[4].tu = 1.0f;
+		v[4].tv = 1.0f;		
+
+		v[5].pos.x = x + width;
+		v[5].pos.y = y + height;
+		v[5].pos.z = 0;
+		//	v[5].rhw = 1.0f;
+		v[5].color = color;
+		v[5].tu = 1.0f;
+		v[5].tv = 0.0f;
+
+		v += 6;
 	}
 
 	vb->pushData(sizeof(vertex) * vertices.size(), &vertices[0], chunk);
 
 	getDevice()->SetFVF(FVF_TEX);
 	getDevice()->SetStreamSource(0, vb->getBuffer(), chunk.offset, sizeof(vertex));
-	getDevice()->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2 * count);
+	getDevice()->DrawPrimitive(D3DPT_TRIANGLELIST, 0, 2 * count);
 }
 
 void Renderer::drawRect(float x, float y, float width, float height, 
