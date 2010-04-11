@@ -3,6 +3,9 @@
 
 void Tower::ai(std::vector<Player> * players)
 {
+	if(type != ETT_SHOOTING)
+		return;
+
 	D3DXVECTOR2 myPos(getX(), getY());
 	D3DXVECTOR2 dvec;
 

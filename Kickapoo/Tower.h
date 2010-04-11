@@ -64,7 +64,7 @@ public:
 
 			if(state == ETS_ALIVE && type == ETT_SHOOTING)
 			{
-				g_Renderer()->drawRotatedRect(Position.x*BLOCK_SIZE - BLOCK_SIZE/2, Position.y*BLOCK_SIZE - BLOCK_SIZE/2, BLOCK_SIZE, BLOCK_SIZE,
+				g_Renderer()->drawRotatedRect(Position.x*BLOCK_SIZE + BLOCK_SIZE/2, Position.y*BLOCK_SIZE +BLOCK_SIZE/2, BLOCK_SIZE, BLOCK_SIZE,
 					shootTarget);
 			}
 			else
