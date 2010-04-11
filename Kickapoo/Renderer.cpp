@@ -308,7 +308,7 @@ void Renderer::drawRect(
 	getDevice()->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
 }
 
-void Renderer::drawRotatedRect(float x, float y, float w, float h, D3DXVECTOR2& direction)
+void Renderer::drawRotatedRect(float x, float y, float w, float h, D3DXVECTOR2& direction, D3DCOLOR color)
 {
 	D3DXVECTOR2 norm;
 	D3DXVec2Normalize(&norm, &direction);
@@ -323,7 +323,7 @@ void Renderer::drawRotatedRect(float x, float y, float w, float h, D3DXVECTOR2& 
 	v[1].pos.y = y - tan.y - norm.y;
 	v[1].pos.z = 0;
 	//	v[0].rhw = 1.0f;
-	v[1].color = 0xffffffff;
+	v[1].color = color;
 	v[1].tu = 0.0f;
 	v[1].tv = 1.0f;
 
@@ -331,7 +331,7 @@ void Renderer::drawRotatedRect(float x, float y, float w, float h, D3DXVECTOR2& 
 	v[0].pos.y = y + tan.y - norm.y;
 	v[0].pos.z = 0;
 	//	v[1].rhw = 1.0f;
-	v[0].color = 0xffffffff;
+	v[0].color = color;
 	v[0].tu = 1.0f;
 	v[0].tv = 1.0f;	
 
@@ -339,7 +339,7 @@ void Renderer::drawRotatedRect(float x, float y, float w, float h, D3DXVECTOR2& 
 	v[2].pos.y = y + tan.y + norm.y;
 	v[2].pos.z = 0;
 	//	v[2].rhw = 1.0f;
-	v[2].color = 0xffffffff;
+	v[2].color = color;
 	v[2].tu = 1.0f;
 	v[2].tv = 0.0f;
 
@@ -347,7 +347,7 @@ void Renderer::drawRotatedRect(float x, float y, float w, float h, D3DXVECTOR2& 
 	v[3].pos.y = y - tan.y + norm.y;
 	v[3].pos.z = 0;
 	//	v[3].rhw = 1.0f;
-	v[3].color = 0xffffffff;
+	v[3].color = color;
 	v[3].tu = 0.0f;
 	v[3].tv = 0.0f;
 

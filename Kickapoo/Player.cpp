@@ -70,7 +70,7 @@ void Player::update(float rt) {
 		D3DXVec2Normalize(&direction, &direction);
 
 		ParticleSystem::getSingletonPtr()->spawnParticle(
-			state->center() * BLOCK_SIZE, direction, false, 10.0f, BLOCK_SIZE * 20, -1, 20, ParticleShot, &_bullet);
+			state->center() * BLOCK_SIZE, direction, false, 10.0f, BLOCK_SIZE * 20, D3DCOLOR_ARGB(127, 255, 0, 0), 20, ParticleShot, &_bullet);
 
 	}
 }
