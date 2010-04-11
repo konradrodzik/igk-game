@@ -10,6 +10,8 @@ static float _splashOneElementY = 600.0f;
 Audio g_AudioSystem;
 string _introText = "The time has changed and the world is FUCKED. BULLSHIT!";
 RECT _introRect;
+RECT _screenMiddleRect;
+
 
 
 Game::Game(void)
@@ -198,6 +200,13 @@ void Game::create()
 	introFont_->create("Comic Sans MS", 40, 5, false, &_introRect);
 	introFont_->setTextColor(D3DCOLOR_RGBA(127, 100, 0, 255));
 
+
+	RECT screenMiddle ={g_Window()->getWidth() * 0.25f, g_Window()->getHeight()*0.25f, g_Window()->getWidth(), g_Window()->getHeight()};
+	_screenMiddleRect = screenMiddle;
+	scoreFont = new Font();
+	scoreFont->create("Comic Sans MS", 40, 5, false, &_screenMiddleRect);
+	scoreFont->setTextColor(D3DCOLOR_RGBA(127, 100, 0, 255));
+
 	RECT rect2 = {665, 64, g_Window()->getWidth(), g_Window()->getHeight()};
 	clockFont = new Font();
 	clockFont->create("Verdana", 20, 0, false, &rect2);
@@ -322,9 +331,9 @@ void Game::draw()
 		map->draw();
 		drawDynamicObjects();
 		g_ParticleSystem()->renderParticles();
-		drawClock();
+		updateClock();
 		//! draw selection
-		if(_selectionAlpha > 0.0f)
+		if(_selectionAlpha > 0.0f && activePlayer)
 		{
 
 			float ssize = 1.5f * BLOCK_SIZE * (- _selectionAlpha + 3);
@@ -337,13 +346,13 @@ void Game::draw()
 		if(state_ == EGameState::LevelFinished)
 		{
 			getDevice()->SetTexture(0, NULL);
-			g_Renderer()->drawRect(_introRect.left, _introRect.top, _introRect.right - _introRect.left, _introRect.bottom - _introRect.top, D3DCOLOR_ARGB(127,255,255,255));
+			g_Renderer()->drawRect(_screenMiddleRect.left, _screenMiddleRect.top, _screenMiddleRect.right - _screenMiddleRect.left, _screenMiddleRect.bottom - _screenMiddleRect.top, D3DCOLOR_ARGB(127,255,255,255));
 			introFont_->write("Gratulacje! Uda³o Ci siê w czasie: %0.2f", relativeTime);
 		}
 		else if(state_ == EGameState::GameFinished)
 			{
 				getDevice()->SetTexture(0, NULL);
-				g_Renderer()->drawRect(_introRect.left, _introRect.top, _introRect.right - _introRect.left, _introRect.bottom - _introRect.top, D3DCOLOR_ARGB(127, 255,255,255));
+				g_Renderer()->drawRect(_screenMiddleRect.left, _screenMiddleRect.top, _screenMiddleRect.right - _screenMiddleRect.left, _screenMiddleRect.bottom - _screenMiddleRect.top, D3DCOLOR_ARGB(127, 255,255,255));
 				introFont_->write("Gratulacje! Gra ukoñczona ostatni czas: %0.2f", relativeTime);
 			}
 
@@ -380,25 +389,10 @@ void Game::onLeftClick()
 	}
 }
 
-void Game::drawClock()
-{
-	updateClock();
-/*	return;
-	clockTexture.set();
-	g_Renderer()->drawRect(620, 420, 128, 128);
-	char buffer[10];
-	sprintf(buffer, "%.2f", relativeTime);
-	for(int i = 0; i < clockLines.size(); ++i)
-	{
-		SLine line = clockLines[i];
-		g_Renderer()->drawLine(line.x1, line.y1, line.x2, line.y2, 1, D3DCOLOR_RGBA(0, 0, 255, 64));
-	}
-	clockFont->write(buffer);
-*/}
 
 void Game::updateClock()
 {
-	D3DXVECTOR3 position = D3DXVECTOR3(800, 500, 0);
+	D3DXVECTOR3 position = D3DXVECTOR3(g_Window()->getWidth()*0.75f, g_Window()->getHeight()*0.75f, 0);
 	D3DCOLOR color = D3DCOLOR_ARGB(127,0,255,0);
 	int vertexCount = 36;
 	float rotAngle = 0;
@@ -434,6 +428,8 @@ void Game::updateClock()
 			vertices[vertexCount - i - 1].color = D3DCOLOR_ARGB(127, 255, 0, 0);
 	}
 
+	g_AudioSystem.play(clockSound);
+	getDevice()->SetTexture(0, NULL);
 	getDevice()->SetFVF(FVF_TEX);
 	getDevice()->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, vertices.size()-2, &vertices[0], sizeof(vertex));
 

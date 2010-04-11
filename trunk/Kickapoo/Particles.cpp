@@ -19,6 +19,11 @@ Particle::Particle(IParticleSystem * _pSystem, const D3DXVECTOR2& pos, const D3D
 	respawnTime = particleSystem->currentTime();
 	position = start;
 	needRotation = needsRot;
+
+	if(type == ParticleHarmful)
+	{
+
+	}
 }
 
 Particle::~Particle()
