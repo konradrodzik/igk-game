@@ -48,13 +48,13 @@ bool Particle::updateState(Map * map)
 		return true;
 	}
 
-	position += dirVec * applyVelocity(velocity, g_Timer()->getFrameTime());
+	position += applyVelocity(this, g_Timer()->getFrameTime());
 	return true;
 }
 
 Particle2::Particle2(IParticleSystem * _pSystem, const D3DXVECTOR2& pos, const D3DXVECTOR2& dir,
 		  bool loop, float lifeTime, float velocity, D3DCOLOR color, float size, int type, Texture * tex, bool needsRot,
-		  const FastDelegate2<float, float, float>& _func)
+		  const FastDelegate2<Particle *, float, D3DXVECTOR2>& _func)
 		  : Particle(_pSystem, pos, dir, loop, lifeTime, velocity, color, size, type, tex, needsRot),
 		  _velocityTransform(_func)
 {
@@ -96,6 +96,15 @@ void ParticleSystem::spawnParticle(const D3DXVECTOR2& pos, const D3DXVECTOR2& di
 {
 	instances.push_back(new Particle(this, pos, direction, looping, lifeTime, velocity, color, size, type,
 		tex, needsRot));
+}
+
+void ParticleSystem::spawnParticle(const FastDelegate2<Particle *, float, D3DXVECTOR2>& _func, 
+				   const D3DXVECTOR2& pos, const D3DXVECTOR2& direction,
+				   bool looping, float lifeTime, float velocity, D3DCOLOR color, float size, int type,
+				   Texture * tex, bool needsRot)
+{
+	instances.push_back(new Particle2(this, pos, direction, looping, lifeTime, velocity, color, size, type,
+		tex, needsRot, _func));
 }
 
 /*void ParticleSystem::spawnParticle(const D3DXVECTOR2& pos, const D3DXVECTOR2& direction,
