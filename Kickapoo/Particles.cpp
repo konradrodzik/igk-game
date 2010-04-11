@@ -42,8 +42,9 @@ bool Particle::updateState(Map * map, float rt)
 		{
 			if(type == ParticleShot)
 			{
-			g_ParticleSystem()->spawnExplosion(position, 2.0f, 30.0f,
-				D3DCOLOR_ARGB(200,0,200,0), 3.0f, 20, 0, true);
+				g_AudioSystem.play(g_wallSound);
+				g_ParticleSystem()->spawnExplosion(position, 2.0f, 30.0f,
+					D3DCOLOR_ARGB(200,0,200,0), 3.0f, 20, 0, true);
 			}
 
 		return false;

@@ -2,6 +2,7 @@
 #include "Game.h"
 
 Sound* g_fireSound = NULL;
+Sound* g_wallSound = NULL;
 static float _introTime = 0.0f;
 static float _fake;
 static float _selectionAlpha = 0.0f;
@@ -34,6 +35,8 @@ Game::Game(void)
 	explosionSound = g_AudioSystem.loadSound("sfx/explosion.wav");
 	g_fireSound = g_AudioSystem.loadSound("sfx/fire.wav");
 	pickSound = g_AudioSystem.loadSound("sfx/pick.wav");
+
+	g_wallSound = g_AudioSystem.loadSound("sfx/wall.wav");
 }
 
 void Game::loadLevel()
