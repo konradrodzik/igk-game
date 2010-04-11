@@ -34,8 +34,13 @@ bool Window::initApplication(const string& appName,
 	hInstance = hInstance_;
 	strAppName = appName;
 
-	width  = width_;
-	height = height_;
+	RECT r = {0, 0, width_, height_};
+	
+	AdjustWindowRectEx(&r, isFullScreen ? WS_POPUP | WS_SYSMENU | WS_VISIBLE: WS_OVERLAPPEDWINDOW | WS_VISIBLE | WS_SYSMENU
+						  | WS_CLIPCHILDREN | WS_CLIPSIBLINGS, FALSE, 0);
+
+	width  = r.right - r.left;
+	height = r.bottom - r.top;
 
 	// rejestrowanie klasy okna
 	WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_HREDRAW | CS_VREDRAW,
@@ -53,6 +58,7 @@ bool Window::initApplication(const string& appName,
 
 	if (hWnd == NULL)
 		return false;
+
 
 	ShowWindow(hWnd, SW_SHOW);
 	UpdateWindow(hWnd);

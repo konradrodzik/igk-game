@@ -25,7 +25,7 @@ Particle::~Particle()
 {
 }
 
-bool Particle::updateState(Map * map)
+bool Particle::updateState(Map * map, float rt)
 {
 	float tt = particleSystem->currentTime();
 
@@ -48,7 +48,7 @@ bool Particle::updateState(Map * map)
 		return true;
 	}
 
-	position += applyVelocity(this, g_Timer()->getFrameTime());
+	position += applyVelocity(this, g_Timer()->getFrameTime(), rt);
 	return true;
 }
 
@@ -93,14 +93,14 @@ Itor fast_erase(Cont& cont, Itor itor) {
 	return itor;
 }
 
-void ParticleSystem::updateParticles(Map * map)
+void ParticleSystem::updateParticles(Map * map, float rt)
 {
 	LARGE_INTEGER timer = g_Timer()->getCurrentTime();
 	
 	curTime = g_Timer()->getEngineTime();
 	for(std::vector<Particle *>::iterator it = instances.begin() ; it != instances.end() ; )
 	{
-		if((*it)->updateState(map))
+		if((*it)->updateState(map, rt))
 		{
 			++it;
 		} else {

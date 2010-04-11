@@ -34,11 +34,11 @@ public:
 		bool loop, float lifeTime, float velocity, D3DCOLOR color, float size, int type,
 		Texture * tex, bool needsRot);
 	virtual ~Particle();
-	bool updateState(Map *);
+	bool updateState(Map *, float rt);
 
 	const D3DXVECTOR2& pos() const { return position; }
 
-	virtual D3DXVECTOR2 applyVelocity(Particle * self, float dt) const {
+	virtual D3DXVECTOR2 applyVelocity(Particle * self, float dt, float rt) const {
 		return self->dirVec * self->velocity * dt;
 	}
 protected:
@@ -51,7 +51,7 @@ class Particle2 : public Particle
 {
 	FastDelegate2<Particle *, float, D3DXVECTOR2> _velocityTransform;
 public:
-	virtual D3DXVECTOR2 applyVelocity(Particle * self, float dt) const
+	virtual D3DXVECTOR2 applyVelocity(Particle * self, float dt, float rt) const
 		{
 		return _velocityTransform(self, dt);
 		}
@@ -69,7 +69,7 @@ public:
 	ParticleSystem();
 	virtual ~ParticleSystem();
 
-	void updateParticles(Map * map);
+	void updateParticles(Map * map, float rt);
 	void spawnParticle(const D3DXVECTOR2& pos, const D3DXVECTOR2& direction,
 		bool looping, float lifeTime, float velocity, D3DCOLOR color, float size, int type = 0,
 		Texture * tex = NULL, bool needsRot = true);
