@@ -12,8 +12,39 @@ PlayerState* Player::findState(float time) {
 	return NULL;
 }
 
+static void resetState(PlayerState& state) {
+	state.Handled = false;
+}
 
-void Player::update(float dt, float rt, Map* map) {
+void Player::reset() {
+	std::for_each(StateList.begin(), StateList.end(), resetState);
+
+	LastShootTime = 0;
+}
+
+void Player::update(float rt) {
+	PlayerState* state = findState(rt);
+	if(!state || state->Handled)
+		return;
+
+	state->Handled = true;
+
+	if(state->Fire) {
+		if(rt - LastShootTime < 1.0f/10.0f)
+			return;
+
+		LastShootTime = rt;
+
+		D3DXVECTOR2 direction = state->Aim - state->Position;
+		D3DXVec2Normalize(&direction, &direction);
+
+		ParticleSystem::getSingletonPtr()->spawnParticle(
+			state->center() * BLOCK_SIZE, direction, false, 10.0f, BLOCK_SIZE * 20, -1, 3);
+
+	}
+}
+
+void Player::record(float dt, float rt, Map* map, bool fire) {
 	PlayerState* lastState = findState(rt);
 	D3DXVECTOR2 position(0, 0);
 	D3DXVECTOR2 force(0, 0);
@@ -25,13 +56,13 @@ void Player::update(float dt, float rt, Map* map) {
 	else
 		state.Position = Position;
 
-	if(GetKeyState(VK_UP)&0x80)
+	if(GetKeyState(VK_UP)&0x80 || GetKeyState('W')&0x80)
 		force.y += 1;
-	if(GetKeyState(VK_DOWN)&0x80)
+	if(GetKeyState(VK_DOWN)&0x80 || GetKeyState('S')&0x80)
 		force.y -= 1;
-	if(GetKeyState(VK_LEFT)&0x80)
+	if(GetKeyState(VK_LEFT)&0x80 || GetKeyState('A')&0x80)
 		force.x -= 1;
-	if(GetKeyState(VK_RIGHT)&0x80)
+	if(GetKeyState(VK_RIGHT)&0x80 || GetKeyState('D')&0x80)
 		force.x += 1;
 
 	Velocity *= exp(-dt) * 0.98f;
@@ -47,8 +78,9 @@ void Player::update(float dt, float rt, Map* map) {
 	state.Position = map->slide(oldPosition, state.Position);
 
 	state.Time = rt;
-	state.Fire = (GetKeyState(VK_SPACE)&0x80) != 0;
-	state.Direction = D3DXVECTOR2(0, 0);
+	state.Fire = (GetKeyState(VK_SPACE)&0x80) != 0 || (GetKeyState(VK_SHIFT)&0x80) != 0 ||
+		fire;
+	state.Aim = D3DXVECTOR2(g_Mouse()->getX() / (float)BLOCK_SIZE, g_Mouse()->getY() / (float)BLOCK_SIZE);
 
 	if(lastState && state.Time - lastState->Time < 1.0f/60.0f) {
 		state.Time = lastState->Time;

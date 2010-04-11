@@ -4,9 +4,18 @@
 struct PlayerState
 {
 	D3DXVECTOR2 Position;
-	D3DXVECTOR2 Direction;
+	D3DXVECTOR2 Aim;
 	bool Fire;
 	float Time;
+	bool Handled;
+
+	PlayerState() {
+		memset(this, 0, sizeof(*this));
+	}
+
+	D3DXVECTOR2 center() const {
+		return Position + D3DXVECTOR2(0.5f, 0.5f);
+	}
 };
 
 typedef vector<PlayerState> PlayerStateList;
@@ -17,6 +26,7 @@ public:
 	static const int playerSize = BLOCK_SIZE;
 	D3DXVECTOR2 Position;
 	D3DXVECTOR2 Velocity;
+	float LastShootTime;
 
 	bool contains(int x, int y)
 	{
@@ -43,9 +53,13 @@ public:
 		return Position.y*playerSize+playerSize/2;
 	}
 
-	void update(float dt, float rt, Map* map);
+	void record(float dt, float rt, Map* map, bool fire);
+
+	void update(float rt);
 
 	void draw(bool drawStateList, bool drawFromState, float relativeTime);
+
+	void reset();
 
 private:
 };

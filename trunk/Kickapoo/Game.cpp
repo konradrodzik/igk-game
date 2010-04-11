@@ -31,6 +31,10 @@ void Game::changeState(EGameState::TYPE state)
 	} else
 	if(state == EGameState::Running) {
 		relativeTime = 0;
+		
+		for(int i = 0; i < playerList.size(); ++i)
+			playerList[i].reset();
+
 	} else 
 		//! TODO: implement selection
 		if(state == EGameState::Selection) {
@@ -81,7 +85,7 @@ void Game:: explodeTower(void* t)
 {
 	Tower* tower = (Tower*)t;
 	ParticleSystem * ps = ParticleSystem::getSingletonPtr();
-	ps->spawnExplosion(D3DXVECTOR2(tower->getX(), tower->getY()));
+	//ps->spawnExplosion(D3DXVECTOR2(tower->getX(), tower->getY()));
 }
 
 
@@ -135,8 +139,8 @@ void Game::update()
 		}
 
 		ParticleSystem * ps = ParticleSystem::getSingletonPtr();
-		ps->spawnParticle(D3DXVECTOR2(g_Mouse()->getX(), g_Mouse()->getY()),
-			D3DXVECTOR2(0, 1), false, 1.0f, 50.0f, D3DCOLOR_ARGB(0x80, 0x80, 0x80, 0), 4.0f);
+		//ps->spawnParticle(D3DXVECTOR2(g_Mouse()->getX(), g_Mouse()->getY()),
+		//	D3DXVECTOR2(0, 1), false, 1.0f, 50.0f, D3DCOLOR_ARGB(0x80, 0x80, 0x80, 0), 4.0f);
 
 		g_ParticleSystem()->updateParticles();
 
@@ -146,9 +150,16 @@ void Game::update()
 			changeState(EGameState::Selection);
 		}
 		else if(activePlayer) {
-			activePlayer->update(dt, relativeTime, map);
+			activePlayer->record(dt, relativeTime, map, leftMouseDown);
+		}
+
+		if(state_ == EGameState::Running) {
+			for(int i = 0; i < playerList.size(); ++i)
+				playerList[i].update(relativeTime);
 		}
 	}
+
+	leftMouseClick = false;
 }
 	
 void Game::drawDynamicObjects()
@@ -208,6 +219,7 @@ void Game::draw()
 
 void Game::onLeftClick()
 {
+	leftMouseClick = true;
 
 	if(state_ ==  EGameState::Selection)
 	{
