@@ -30,6 +30,7 @@ public:
 	Texture* playerTexture;
 	Texture* playerSelectedTexture;
 	bool hasMissiles;
+	bool dead;
 
 	bool contains(int x, int y)
 	{
@@ -42,6 +43,8 @@ public:
 	PlayerStateList StateList;
 
 	PlayerState* findState(float time);
+
+	D3DXVECTOR2 relativePosition(float rt);
 
 	Player();
 

@@ -50,7 +50,7 @@ void Game::loadLevel()
 	activePlayer = NULL;
 
 	char buffer[100];
-	sprintf(buffer, "map%i.bmp", level_);
+	sprintf(buffer, "map1.bmp", level_);
 
 	map = Map::load(buffer);
 	map->loadContent(playerList, towers);
@@ -84,8 +84,9 @@ void Game::changeState(EGameState::TYPE state)
 		
 		towersAlive_ = towers.size();
 
-		for(int i = 0; i < playerList.size(); ++i)
+		for(int i = 0; i < playerList.size(); ++i) {
 			playerList[i].reset();
+		}
 
 		// reset all towers state
 		for(int i = 0; i < towers.size(); ++i)
@@ -103,6 +104,11 @@ void Game::changeState(EGameState::TYPE state)
 		activePlayer = NULL;
 
 		AnimationSequence::releaseAll();
+
+		
+		for(int i = 0; i < playerList.size(); ++i) {
+			playerList[i].dead = false;
+		}
 
 		
 		// reset all towers state
@@ -257,7 +263,7 @@ void Game::update()
 				playerList[i].update(relativeTime);
 
 			for(int i = 0 ; i < towers.size() ; ++i)
-				towers[i].ai(&playerList);
+				towers[i].ai(&playerList, relativeTime);
 
 			
 		}
@@ -463,7 +469,15 @@ void Game::updateClock()
 	}*/
 }
 
-void Game::onPlayerKilled()
+void Game::onPlayerKilled(Player* player)
 {
-	changeState(EGameState::Selection);
+	//if(activePlayer == player)
+	//	changeState(EGameState::Selection);
+	//
+
+	if(player != NULL)
+		player->dead = true;
+
+	if(player == activePlayer)
+		activePlayer = NULL;
 }

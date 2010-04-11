@@ -53,6 +53,8 @@ void Player::reset() {
 	std::for_each(StateList.begin(), StateList.end(), resetState);
 
 	LastShootTime = 0;
+
+	dead = false;
 }
 
 void Player::update(float rt) {
@@ -188,3 +190,11 @@ void Player::draw(bool drawStateList, bool drawFromState, float relativeTime) {
 		g_Renderer()->drawRect((Position.x)*BLOCK_SIZE, (Position.y)*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 	}
 }
+
+D3DXVECTOR2 Player::relativePosition(float rt) {
+	PlayerState* state = findState(rt);
+	if(state)
+		return (state->Position + D3DXVECTOR2(0.5f, 0.5f)) * BLOCK_SIZE;
+	return D3DXVECTOR2(getX(), getY());
+}
+
