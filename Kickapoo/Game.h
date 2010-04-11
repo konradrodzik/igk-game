@@ -1,7 +1,8 @@
 #pragma once
 #include "Common.h"
 #include "Map.h"
-	
+
+#define DEG2RAD 0.0174532925
 
 namespace EGameState
 {
@@ -12,6 +13,11 @@ namespace EGameState
 		Selection,
 		Running,
 	};
+};
+
+struct SLine
+{
+	float x1,y1,x2,y2;
 };
 
 
@@ -43,6 +49,9 @@ public:
 	void drawDynamicObjects();
 	void draw();
 
+	void drawClock();
+	void updateClock();
+
 	
 protected:
 	
@@ -58,4 +67,6 @@ protected:
 	Player* activePlayer;
 	float relativeTime;
 	bool leftMouseClick, leftMouseDown;
+	std::vector<SLine> clockLines;
+	Texture clockTexture;
 };
