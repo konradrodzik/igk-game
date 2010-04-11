@@ -9,7 +9,7 @@ static float _selectionAlpha = 0.0f;
 static float _splashZeroElementY = 0.0f;
 static float _splashOneElementY = 600.0f;
 Audio g_AudioSystem;
-string _introText = "W roku 2010 na konferencji IGK wyciek³ kod pluginu do firefoxa\ndaj¹cy mo¿liwoœæ podró¿owania w czasie.\nNic od tamtego momentu nie by³o ju¿ takie samo.";
+string _introText = "W roku 2010 na konferencji IGK wyciek³ kod pluginu do firefoxa\ndaj¹cy mo¿liwoœæ podró¿owania w czasie.\nNic od tamtego momentu nie by³o ju¿ takie samo.\n... a mówili, ¿e na wojnie nie ma God Mode.";
 RECT _introRect;
 RECT _screenMiddleRect;
 
@@ -325,7 +325,9 @@ void Game::draw()
 				{
 					getDevice()->SetTexture(0, gameScreen_.getTexture());
 					g_Renderer()->drawRect(0, 0, g_Window()->getWidth(), g_Window()->getHeight(), D3DCOLOR_ARGB((int)((_introTime - 2.0f) * 255.0f),255,255,255));
-	
+					getDevice()->SetTexture(0, zero_.getTexture());
+					g_Renderer()->drawRect(0, _splashZeroElementY, g_Window()->getWidth(), g_Window()->getHeight(), D3DCOLOR_ARGB(255,255,255,255));
+
 				} else
 				//! Type text [3.0f - 3.0f + textLength * 0.1f]
 				//! and change 2010 into 2110
@@ -333,6 +335,7 @@ void Game::draw()
 					static int typeChar = 0;
 					getDevice()->SetTexture(0, gameScreen_.getTexture());
 					g_Renderer()->drawRect(0, 0, g_Window()->getWidth(), g_Window()->getHeight(), D3DCOLOR_ARGB(255,255,255,255));
+
 					string typedText;
 					int currentLength = (int)((_introTime - 3.0f) * 10.0f);
 					typedText.assign(_introText.c_str(), currentLength);
