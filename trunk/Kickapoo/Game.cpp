@@ -1,6 +1,7 @@
 #include "Common.h"
 #include "Game.h"
 
+Sound* g_fireSound = NULL;
 static float _introTime = 0.0f;
 static float _fake;
 static float _selectionAlpha = 0.0f;
@@ -27,6 +28,8 @@ Game::Game(void)
 
 	g_AudioSystem.create();
 	clockSound = g_AudioSystem.loadSound("sfx/clock.mp3");
+	explosionSound = g_AudioSystem.loadSound("sfx/explosion.wav");
+	g_fireSound = g_AudioSystem.loadSound("sfx/fire.wav");
 }
 
 void Game::loadLevel()
@@ -139,6 +142,7 @@ void Game:: explodeTower(void* t)
 	Tower* tower = (Tower*)t;
 	ParticleSystem * ps = ParticleSystem::getSingletonPtr();
 	ps->spawnExplosion(D3DXVECTOR2(tower->getX(), tower->getY()));
+	g_AudioSystem.play(explosionSound);
 }
 
 
@@ -392,7 +396,7 @@ void Game::updateClock()
 
 
 
-
+/*
 
 	static float circleAngle = 0;
 	static bool isLooping = false;
@@ -416,5 +420,5 @@ void Game::updateClock()
 	{
 		g_AudioSystem.play(clockSound);
 		isLooping = true;
-	}
+	}*/
 }

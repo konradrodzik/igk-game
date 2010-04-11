@@ -3,6 +3,7 @@
 #include "Map.h"
 
 #define DEG2RAD 0.0174532925
+
 extern Audio g_AudioSystem;
 
 namespace EGameState
@@ -22,6 +23,9 @@ struct SLine
 {
 	float x1,y1,x2,y2;
 };
+
+
+extern Sound* g_fireSound;
 
 
 class Game
@@ -84,4 +88,8 @@ protected:
 
 	Sound* clockSound;
 	Font* clockFont;
+	Texture scoreLay;
+	Font* scoreFont;
+
+	Sound* explosionSound;
 };
