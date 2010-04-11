@@ -9,6 +9,7 @@ static float _splashZeroElementY = 0.0f;
 static float _splashOneElementY = 600.0f;
 Audio g_AudioSystem;
 string _introText = "The time has changed and the world is FUCKED. BULLSHIT!";
+RECT _introRect;
 
 
 Game::Game(void)
@@ -187,9 +188,9 @@ void Game::create()
 	}
 
 	//! intro font
-	RECT rect = {160, 400, g_Window()->getWidth(), g_Window()->getHeight()};
+	_introRect = {160, 400, g_Window()->getWidth(), g_Window()->getHeight()};
 	introFont_ = new Font();
-	introFont_->create("Comic Sans MS", 40, 0, false, &rect);
+	introFont_->create("Comic Sans MS", 40, 5, false, &_introRect);
 	introFont_->setTextColor(D3DCOLOR_RGBA(127, 100, 0, 255));
 
 	RECT rect2 = {665, 64, g_Window()->getWidth(), g_Window()->getHeight()};
@@ -327,11 +328,14 @@ void Game::draw()
 
 		if(state_ == EGameState::LevelFinished)
 		{
-
+			getDevice()->SetTexture(NULL);
+			g_Renderer()->drawRect(_introRect.left, _introRect.top, _introRect.right - _introRect.left, _introRect.bottom - _introRect.top, D3DCOLOR_ARGB(127,255,255,255));
 			introFont_->write("Gratulacje! Uda³o Ci siê w czasie: %0.2f", relativeTime);
 		}
 		else if(state_ == EGameState::GameFinished)
 			{
+				getDevice()->SetTexture(NULL);
+				g_Renderer()->drawRect(_introRect.left, _introRect.top, _introRect.right - _introRect.left, _introRect.bottom - _introRect.top, D3DCOLOR_ARGB(127, 255,255,255));
 				introFont_->write("Gratulacje! Gra ukoñczona ostatni czas: %0.2f", relativeTime);
 			}
 
