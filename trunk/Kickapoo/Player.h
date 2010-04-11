@@ -9,6 +9,8 @@ struct PlayerState
 	float Time;
 };
 
+typedef vector<PlayerState> PlayerStateList;
+
 class Player
 {
 public:
@@ -19,12 +21,12 @@ public:
 	bool contains(int x, int y)
 	{
 
-		if(Position.x*playerSize - playerSize > x || Position.x*playerSize + playerSize < x ) return false;
-		if(Position.y*playerSize - playerSize > y || Position.y*playerSize + playerSize < y ) return false;
+		if(Position.x*playerSize > x || Position.x*playerSize + playerSize < x ) return false;
+		if(Position.y*playerSize > y || Position.y*playerSize + playerSize < y ) return false;
 		return true;		
 	}
 
-	vector<PlayerState> StateList;
+	PlayerStateList StateList;
 
 	PlayerState* findState(float time);
 
