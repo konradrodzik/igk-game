@@ -102,14 +102,17 @@ void Player::draw(bool drawStateList, bool drawFromState, float relativeTime) {
 		}
 
 		if(StateList.size()) {
+			playerSelectedTexture->set();
 			g_Renderer()->drawRect(lastPosition.x * BLOCK_SIZE+ BLOCK_SIZE/2, lastPosition.y * BLOCK_SIZE+ BLOCK_SIZE/2, 2, 2, D3DCOLOR_XRGB(190, 80, 80));
 		}
 	}
 
 	if(drawFromState && (state = findState(relativeTime)))	{
+		playerSelectedTexture->set();
 		g_Renderer()->drawRect(state->Position.x*BLOCK_SIZE, state->Position.y*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 	}
 	else {
+		playerTexture->set();
 		g_Renderer()->drawRect(Position.x*BLOCK_SIZE, Position.y*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 	}
 }

@@ -22,7 +22,7 @@ Game::Game(void)
 {
 	relativeTime = 0;
 	activePlayer = NULL;
-	changeState(EGameState::Intro);
+	changeState(EGameState::Tutorial);
 	map = NULL;
 }
 

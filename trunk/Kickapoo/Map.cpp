@@ -6,9 +6,13 @@ Map::Map()
 	wall = new Texture;
 	tower = new Texture;
 	tower_death = new Texture;
+	playerTexture = new Texture;
+	playerSelected = new Texture;
 	wall->load("gfx/wall.png");
 	tower->load("gfx/tower.png");
 	tower_death->load("gfx/tower_death.png");
+	playerTexture->load("gfx/player.png");
+	playerSelected->load("gfx/player_selected.png");
 }
 
 Map::~Map()
@@ -104,6 +108,8 @@ void Map::loadContent(vector<Player>& playerList, vector<Tower>& towerList)
 				Player player;
 				player.Position.x = j;
 				player.Position.y = i;
+				player.playerTexture = playerTexture;
+				player.playerSelectedTexture = playerSelected;
 				playerList.push_back(player);
 			}
 			else if(block == '^' || block == '&') 
