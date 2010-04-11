@@ -207,12 +207,18 @@ bool AnimationSequenceScalar::update(float dt)
 
 AnimationSequenceActivator::AnimationSequenceActivator( FastDelegate0<void> function )
 : function_(function)
+, launched_(false)
 {}
 
 bool AnimationSequenceActivator::update(float dt)
 {
+	if(launched_)
+		return false;
+
 	if(!function_.empty())
 		function_();
+
+	launched_ = true;
 	return false;
 }
 
@@ -220,13 +226,17 @@ bool AnimationSequenceActivator::update(float dt)
 AnimationSequenceActivator1Param::AnimationSequenceActivator1Param( FastDelegate1<void*> function, void* param)
 : function_(function)
 , param_(param)
+, launched_(false)
 {}
 
 bool AnimationSequenceActivator1Param::update(float dt)
 {
+	if(launched_)
+		return false;
+
 	if(!function_.empty())
 		function_(param_);
-	function_.clear();
+	launched_ = true;
 	return false;
 }
 

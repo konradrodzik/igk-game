@@ -3,22 +3,32 @@
 
 static float _introTime = 0.0f;
 static float _fake;
+static float _selectionAlpha = 0.0f;
+static float _splashZeroElementY = 0.0f;
+static float _splashOneElementY = 600.0f;
+
 string _introText = "The time has changed and the world is FUCKED. BULLSHIT!";
+
 
 Game::Game(void)
 :  state_(EGameState::Intro)
 ,  kryzys_("kryzys_logo.jpg")
 ,  crysis_("crysis.jpg")
-,  gameScreen_("game_screen.jpg")
+,  selection_("gfx/wave.png")
+,  gameScreen_("gfx/splash_main.png")
+,  zero_("gfx/splash_0.png")
+,  one_("gfx/splash_1.png")
 , clockTexture("gfx/circle.png")
 {
 	relativeTime = 0;
 	activePlayer = NULL;
-	changeState(EGameState::Tutorial);
+	changeState(EGameState::Intro);
+	map = NULL;
 }
 
 Game::~Game(void)
 {
+	delete introFont_;
 }
 
 void Game::changeState(EGameState::TYPE state)
@@ -40,8 +50,6 @@ void Game::changeState(EGameState::TYPE state)
 		//! TODO: implement selection
 		if(state == EGameState::Selection) {
 		relativeTime = 0;
-		//if(activePlayer)
-			//activePlayer->Velocity = D3DXVECTOR2(0, 0);
 		activePlayer = NULL;
 
 		
@@ -84,9 +92,10 @@ void Game::killTower(Tower* tower)
 
 void Game:: explodeTower(void* t)
 {
-	Tower* tower = (Tower*)t;
-	ParticleSystem * ps = ParticleSystem::getSingletonPtr();
-	ps->spawnExplosion(D3DXVECTOR2(tower->getX(), tower->getY()));
+	//Tower* tower = (Tower*)t;
+	//ParticleSystem * ps = ParticleSystem::getSingletonPtr();
+	//ps->spawnExplosion(D3DXVECTOR2(tower->getX(), tower->getY()));
+	//ps->spawnExplosion(D3DXVECTOR2(tower->getX(), tower->getY()));
 }
 
 
@@ -107,8 +116,9 @@ void Game::create()
 
 	//! intro font
 	RECT rect = {160, 400, g_Window()->getWidth(), g_Window()->getHeight()};
-	introFont_.create("Verdana", 20, 0, false, &rect);
-	introFont_.setTextColor(D3DCOLOR_RGBA(255, 0, 0, 255));
+	introFont_ = new Font();
+	introFont_->create("Verdana", 20, 0, false, &rect);
+	introFont_->setTextColor(D3DCOLOR_RGBA(255, 0, 0, 255));
 
 
 	map = Map::load("mapa.txt");
@@ -143,8 +153,6 @@ void Game::update()
 		}
 
 		ParticleSystem * ps = ParticleSystem::getSingletonPtr();
-		//ps->spawnParticle(D3DXVECTOR2(g_Mouse()->getX(), g_Mouse()->getY()),
-		//	D3DXVECTOR2(0, 1), false, 1.0f, 50.0f, D3DCOLOR_ARGB(0x80, 0x80, 0x80, 0), 4.0f);
 
 		relativeTime += dt;
 
@@ -207,12 +215,18 @@ void Game::draw()
 	
 				} else
 				//! Type text [3.0f - 3.0f + textLength * 0.1f]
+				//! and change 2010 into 2110
 				{
 					getDevice()->SetTexture(0, gameScreen_.getTexture());
 					g_Renderer()->drawRect(0, 0, g_Window()->getWidth(), g_Window()->getHeight(), D3DCOLOR_ARGB(255,255,255,255));
 					string typedText;
 					typedText.assign(_introText.c_str(), (int)((_introTime - 3.0f) * 10.0f));
-					introFont_.write(typedText.c_str());
+					introFont_->write(typedText.c_str());
+
+			//		getDevice()->SetTexture(0, zero_.getTexture());
+			//		g_Renderer()->drawRect(0, _splashZeroElementY, g_Window()->getWidth(), g_Window()->getHeight(), D3DCOLOR_ARGB(255,255,255,255));
+			//		getDevice()->SetTexture(0, one_.getTexture());
+			//		g_Renderer()->drawRect(0, _splashOneElementY, g_Window()->getWidth(), g_Window()->getHeight(), D3DCOLOR_ARGB(255,255,255,255));
 				}
 
 	} else
@@ -221,6 +235,17 @@ void Game::draw()
 		drawDynamicObjects();
 		g_ParticleSystem()->renderParticles();
 		drawClock();
+		//! draw selection
+		if(_selectionAlpha > 0.0f)
+		{
+
+			float ssize = 32 * (- _selectionAlpha + 3);
+
+			getDevice()->SetTexture(0, selection_.getTexture());
+			g_Renderer()->drawRect( activePlayer->getX()- ssize * 0.5f, activePlayer->getY() - ssize * 0.5f, ssize, ssize, D3DCOLOR_ARGB((int)(_selectionAlpha*255), 255, 0,0));
+
+		}
+
 	}
 }
 
@@ -241,6 +266,11 @@ void Game::onLeftClick()
 				activePlayer = &playerList[i];
 				activePlayer->StateList.clear();
 				activePlayer->Velocity = D3DXVECTOR2(0, 0);
+				
+				//! draw selection 
+				AnimationSequenceScalar* sel = new AnimationSequenceScalar(_selectionAlpha, 1.0f, 0.0f, 1.0f);
+				AnimationSequence::add(sel);
+
 				changeState(EGameState::Running);
 				return;
 			}
