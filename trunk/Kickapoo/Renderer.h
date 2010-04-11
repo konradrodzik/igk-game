@@ -71,7 +71,7 @@ public:
 		float x4, float y4, float u4, float v4,
 		D3DCOLOR color = 0xFFFFFFFF);
 
-	void drawRotatedRect(float x, float y, float w, float h, D3DXVECTOR2& direction);
+	void drawRotatedRect(float x, float y, float w, float h, D3DXVECTOR2& direction, D3DCOLOR color = 0xFFFFFFFF);
 };
 DefineAccessToSingleton(Renderer);
 

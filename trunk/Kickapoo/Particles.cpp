@@ -3,14 +3,14 @@
 #include <math.h>
 
 Particle::Particle(IParticleSystem * _pSystem, const D3DXVECTOR2& pos, const D3DXVECTOR2& dir,
-	 bool loop, float lifeTime, float velocity, D3DCOLOR color, float size, int type,
+	 bool loop, float lifeTime, float velocity, D3DCOLOR pcolor, float size, int type,
 	 Texture * tex, bool needsRot)
 	: start(pos),
 	  dirVec(dir),
 	  looping(loop),
 	  lifeTime(lifeTime),
 	  velocity(velocity),
-	  color(color),
+	  color(pcolor),
 	  size(size),
 	  type(type),
 	  particleSystem(_pSystem),
@@ -179,14 +179,14 @@ void ParticleSystem::renderParticles()
 					texturedParticles[i]->pos().x,
 					texturedParticles[i]->pos().y,
 					size, size,
-					texturedParticles[i]->dirVec);
+					texturedParticles[i]->dirVec, texturedParticles[i]->color);
 			}
 			else
 			{
 				g_Renderer()->drawRect(texturedParticles[i]->pos().x, 
 					texturedParticles[i]->pos().y,
 					texturedParticles[i]->size,
-					texturedParticles[i]->size, 0xffffffff);
+					texturedParticles[i]->size, texturedParticles[i]->color);
 			}
 		}	
 
