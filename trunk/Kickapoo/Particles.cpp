@@ -138,15 +138,17 @@ void ParticleSystem::renderParticles()
 	{
 		if((*it)->texture)
 		{
-			texturedParticles.push_back(*it);		
+			texturedParticles.push_back(*it);
+			continue;
 		}
 		positions.push_back((*it)->pos());
 		sizes.push_back(D3DXVECTOR2((*it)->size, (*it)->size));
 		colors.push_back((*it)->color);
 	}
 
-	if(!instances.empty())
-		g_Renderer()->drawRects(&positions, &sizes, &colors, instances.size());
+	//! not textured
+	if(!positions.empty())
+		g_Renderer()->drawRects(&positions, &sizes, &colors, positions.size());
 
 	if(!texturedParticles.empty())
 	{
@@ -172,11 +174,10 @@ void ParticleSystem::renderParticles()
 			}
 			else
 			{
-
 				g_Renderer()->drawRect(texturedParticles[i]->pos().x, 
 					texturedParticles[i]->pos().y,
 					texturedParticles[i]->size,
-					texturedParticles[i]->size);
+					texturedParticles[i]->size, 0xffffffff);
 			}
 		}	
 
