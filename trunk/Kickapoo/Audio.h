@@ -14,6 +14,8 @@ public:
 	void update();
 	void play(FMOD::Sound* sound, float volume = 1.0f);
 
+	void stopSoud(FMOD::Sound* sound);
+
 	FMOD::Sound* loadSound(const char* filePath);
 	FMOD::Sound* loadStream(const char* filePath);
 

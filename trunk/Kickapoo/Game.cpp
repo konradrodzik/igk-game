@@ -6,7 +6,7 @@ static float _fake;
 static float _selectionAlpha = 0.0f;
 static float _splashZeroElementY = 0.0f;
 static float _splashOneElementY = 600.0f;
-
+Audio g_AudioSystem;
 string _introText = "The time has changed and the world is FUCKED. BULLSHIT!";
 
 
@@ -24,11 +24,16 @@ Game::Game(void)
 	activePlayer = NULL;
 	changeState(EGameState::Tutorial);
 	map = NULL;
+
+	g_AudioSystem.create();
+	clockSound = g_AudioSystem.loadSound("sfx/clock.mp3");
 }
 
 Game::~Game(void)
 {
 	delete introFont_;
+
+	g_AudioSystem.release();
 }
 
 void Game::changeState(EGameState::TYPE state)
@@ -172,9 +177,15 @@ void Game::update()
 
 			updateClock();
 		}
+		else
+		{
+			g_AudioSystem.stopSoud(clockSound);
+		}
 	}
 
 	leftMouseClick = false;
+
+	g_AudioSystem.update();
 }
 	
 void Game::drawDynamicObjects()
@@ -285,22 +296,35 @@ void Game::drawClock()
 	for(int i = 0; i < clockLines.size(); ++i)
 	{
 		SLine line = clockLines[i];
-		g_Renderer()->drawLine(line.x1, line.y1, line.x2, line.y2, 1, D3DCOLOR_RGBA(0, 0, 255, 255));
+		g_Renderer()->drawLine(line.x1, line.y1, line.x2, line.y2, 1, D3DCOLOR_RGBA(0, 0, 255, 128));
 	}
 }
 
 void Game::updateClock()
 {
 	static float circleAngle = 0;
+	static bool isLooping = false;
+	float step = 10.0f/360.0f*10; 
 	SLine line;
-	line.x1 = line.y1 = 0.0f;
-	line.x2 = sinf(circleAngle*DEG2RAD)*64;
-	line.y2 = cosf(circleAngle*DEG2RAD)*64;
-	clockLines.push_back(line);
-	circleAngle = circleAngle*360.0f/relativeTime;
+	line.x1 = 684.0f;
+	line.y1 = 484.0f;
+	line.x2 = line.x1+sin(circleAngle*DEG2RAD)*66;
+	line.y2 = line.y1+cos(circleAngle*DEG2RAD)*66;
+	circleAngle += step;
+
+	if((int)circleAngle >= clockLines.size())
+		clockLines.push_back(line);
+	
 	if(relativeTime > 10.0f)
 	{
 		circleAngle = 0;
 		clockLines.clear();
 	}
+	
+	if(!isLooping)
+	{
+		g_AudioSystem.play(clockSound);
+		isLooping = true;
+	}
+	
 }

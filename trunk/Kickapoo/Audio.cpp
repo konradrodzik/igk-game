@@ -45,3 +45,8 @@ void Audio::play(FMOD::Sound* sound, float volume)
 	system->playSound(FMOD_CHANNEL_FREE, sound, false, &channel);
 	channel->setVolume(volume);
 }
+
+void Audio::stopSoud( FMOD::Sound* sound )
+{
+	system->playSound(FMOD_CHANNEL_FREE, sound, true, &channel);
+}

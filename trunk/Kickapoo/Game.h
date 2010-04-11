@@ -3,6 +3,7 @@
 #include "Map.h"
 
 #define DEG2RAD 0.0174532925
+extern Audio g_AudioSystem;
 
 namespace EGameState
 {
@@ -72,4 +73,6 @@ protected:
 	bool leftMouseClick, leftMouseDown;
 	std::vector<SLine> clockLines;
 	Texture clockTexture;
+
+	Sound* clockSound;
 };
