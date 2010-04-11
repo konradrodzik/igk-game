@@ -93,4 +93,8 @@ protected:
 
 	Sound* explosionSound;
 	Sound* pickSound;
+	Sound* background;
+	bool backgroundMusicStarted;
+
+	Sound* typingSound;
 };
