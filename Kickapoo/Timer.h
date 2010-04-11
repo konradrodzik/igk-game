@@ -22,7 +22,8 @@ public:
 	float getAvgFPS() { return avgFps; }
 
 	LARGE_INTEGER getCurrentTime();
-	float calculateTime(LARGE_INTEGER *time);
+	double getCurrentTimeF();
+	double calculateTime(LARGE_INTEGER *time);
 
 private:
 	LARGE_INTEGER startTime;

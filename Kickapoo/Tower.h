@@ -21,7 +21,7 @@ public:
 	{
 		type = type_;
 		state = ETS_ALIVE;
-		minPlayerDistance = 100.0f;
+		minPlayerDistance = 200.0f;
 		retarded = 0.5f;
 		lastShootAt = 0.0f;
 		shootTimeDelta = 0.3f;
@@ -30,7 +30,7 @@ public:
 	Tower()
 	{
 		state = ETS_ALIVE;
-		minPlayerDistance = 100.0f;
+		minPlayerDistance = 200.0f;
 		retarded = 0.5f;
 		lastShootAt = 0.0f;
 		shootTimeDelta = 0.3f;
