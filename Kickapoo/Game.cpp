@@ -188,8 +188,8 @@ void Game::create()
 	//! intro font
 	RECT rect = {160, 400, g_Window()->getWidth(), g_Window()->getHeight()};
 	introFont_ = new Font();
-	introFont_->create("Verdana", 20, 0, false, &rect);
-	introFont_->setTextColor(D3DCOLOR_RGBA(255, 0, 0, 255));
+	introFont_->create("Comic Sans MS", 40, 0, false, &rect);
+	introFont_->setTextColor(D3DCOLOR_RGBA(127, 100, 0, 255));
 
 	RECT rect2 = {665, 64, g_Window()->getWidth(), g_Window()->getHeight()};
 	clockFont = new Font();
