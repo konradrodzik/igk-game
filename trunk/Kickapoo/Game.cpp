@@ -203,7 +203,7 @@ void Game::create()
 	clockFont->create("Verdana", 20, 0, false, &rect2);
 	clockFont->setTextColor(D3DCOLOR_RGBA(255, 0, 0, 255));
 
-	level_ = 0;
+	level_ = 1;
 	replayCount_ = 0;
 	
 }
