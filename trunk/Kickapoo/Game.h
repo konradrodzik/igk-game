@@ -60,7 +60,10 @@ protected:
 	Texture kryzys_;
 	Texture crysis_;
 	Texture gameScreen_;
-	Font introFont_;
+	Texture zero_;
+	Texture one_;
+	Texture selection_;
+	Font* introFont_;
 	Map* map;
 	std::vector<Tower> towers;
 	std::vector<Player> playerList;

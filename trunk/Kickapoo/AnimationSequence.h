@@ -26,7 +26,7 @@ public:
 	void setNext(AnimationSequence* next);
 
 	//! reset animation
-	void reset();
+	virtual void reset();
 
 	//! register in system
 	static void add(AnimationSequence* root);
@@ -105,9 +105,17 @@ public:
 	//! update sequence, returns false if should be deleted
 	virtual bool update(float dt);
 
+	//! reset
+	virtual void reset()
+	{
+		AnimationSequence::reset();
+		launched_ = false;
+	}
 protected:
 	//!
 	FastDelegate0<void> function_;
+
+	bool launched_;
 };
 
 
@@ -121,10 +129,17 @@ public:
 	//! update sequence, returns false if should be deleted
 	virtual bool update(float dt);
 
+	virtual void reset()
+	{
+		AnimationSequence::reset();
+		launched_ = false;
+	}
+
 protected:
 	//!
 	FastDelegate1<void*> function_;
 	void* param_;
+	bool launched_;
 };
 
 
