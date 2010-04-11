@@ -63,7 +63,7 @@ public:
 
 	void update(float rt);
 
-	void draw(bool drawStateList, bool drawFromState, float relativeTime);
+	void draw(bool drawStateList, bool drawFromState, float relativeTime, bool isActive);
 
 	void reset();
 

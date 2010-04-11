@@ -13,6 +13,8 @@ string _introText = "The time has changed and the world is FUCKED. BULLSHIT!";
 RECT _introRect;
 RECT _screenMiddleRect;
 
+const float MaxRelativeTime = 10.0f;
+
 
 
 Game::Game(void)
@@ -50,7 +52,7 @@ void Game::loadLevel()
 	activePlayer = NULL;
 
 	char buffer[100];
-	sprintf(buffer, "map1.bmp", level_);
+	sprintf(buffer, "map0.bmp", level_);
 
 	map = Map::load(buffer);
 	map->loadContent(playerList, towers);
@@ -100,7 +102,7 @@ void Game::changeState(EGameState::TYPE state)
 	} else 
 		//! TODO: implement selection
 		if(state == EGameState::Selection) {
-		relativeTime = 0;
+		//relativeTime = 0;
 		activePlayer = NULL;
 
 		AnimationSequence::releaseAll();
@@ -239,6 +241,11 @@ void Game::update()
 	} 
 	else if(state_ == EGameState::Running)
 	{
+		if(GetKeyState(VK_RETURN) & 0x80) {
+			changeState(EGameState::Selection);
+			return;
+		}
+
 		g_ParticleSystem()->updateParticles(map, relativeTime);
 		g_ParticleSystem()->checkParticlesAgainstMap(*map, ParticleShot, *this);
 		g_ParticleSystem()->checkParticlesAgainstPlayer(&playerList, ParticleHarmful, MakeDelegate(this, &Game::onPlayerKilled), relativeTime);
@@ -249,7 +256,7 @@ void Game::update()
 
 		relativeTime += dt;
 
-		if(relativeTime > 10.0f) {
+		if(relativeTime > MaxRelativeTime) {
 			changeState(EGameState::Selection);
 		}
 		else if(activePlayer) {
@@ -281,7 +288,7 @@ void Game::update()
 void Game::drawDynamicObjects()
 {
 	for(unsigned i = 0; i < playerList.size(); ++i) {
-		playerList[i].draw(true, state_ >= EGameState::Running, relativeTime);
+		playerList[i].draw(true, state_ >= EGameState::Running, relativeTime, &playerList[i] == activePlayer);
 	}
 
 	for(unsigned i = 0; i < towers.size(); ++i)
@@ -401,7 +408,9 @@ void Game::onLeftClick()
 
 void Game::updateClock()
 {
-	D3DXVECTOR3 position = D3DXVECTOR3(g_Window()->getWidth()*0.75f, g_Window()->getHeight()*0.75f, 0);
+	float radius = BLOCK_SIZE * 2;
+
+	D3DXVECTOR3 position = D3DXVECTOR3(g_Window()->getWidth()-radius, g_Window()->getHeight()-radius, 0);
 	D3DCOLOR color = D3DCOLOR_ARGB(127,0,255,0);
 	int vertexCount = 36;
 	float rotAngle = 0;
@@ -409,38 +418,46 @@ void Game::updateClock()
 	rotAngle -= 3.14f * 90.0f / 180.0f;
 	float timeStep = 360.0f / 10.0f;
 
+
+	const int steps = 60;
+	int k = 0;
+
+	
 	//! generate vertices
-	std::vector<vertex> vertices;
-	vertices.resize(vertexCount);
-	vertices[0].pos = position;
-	vertices[0].tu = vertices[0].tv = 0.5f;
-	vertices[0].color = color;
-	float radius = 100.0f;
+	static std::vector<vertex> vertices;
+	vertices.resize((steps+1) * 3);
 
-	for(int i=0; i < vertexCount; ++i)
+	D3DXVECTOR3 last = position + D3DXVECTOR3(0, 1, 0) * radius;
+
+	for(int i=1; i <= steps; ++i)
 	{
-		//! normalize texcoord to 0,1
-		float curAngle = angle*i + rotAngle;
-		float u = (cosf(angle*i + rotAngle) + 1.0)*0.5;
-		float v = (sinf(angle*i + rotAngle) + 1.0)*0.5;
+		float angle = (float) i / steps * D3DX_PI * 2;
+		float cf = cosf(angle);
+		float sf = sinf(angle);
 
-		float x = position.x + sinf(angle*i)*radius;
-		float y = position.y + cosf(angle*i)*radius;
-		float z = position.z;
-		vertices[vertexCount - i - 1].pos = D3DXVECTOR3(x,y,z);
-		vertices[vertexCount - i - 1].tu = u;
-		vertices[vertexCount - i - 1].tv = v;
+		float t = (float) i / steps * MaxRelativeTime;
 
-		if(curAngle > timeStep * relativeTime)
-			vertices[vertexCount - i - 1].color = color;
-		else
-			vertices[vertexCount - i - 1].color = D3DCOLOR_ARGB(127, 255, 0, 0);
+		D3DCOLOR color2 = t < relativeTime ? D3DCOLOR_ARGB(192+i*64/steps,(255-90+i*90/steps),64,0): D3DCOLOR_ARGB(160,0,255,0);
+
+		vertices[k].pos = position;
+		vertices[k].tu = vertices[k].tv = 0.5f;
+		vertices[k++].color = color2;
+
+		vertices[k].pos = last;
+		vertices[k].tu = vertices[k].tv = 0.5f;
+		vertices[k++].color = color2;
+		
+		vertices[k].pos = position + D3DXVECTOR3(sf, cf, 0) * radius;
+		vertices[k].tu = vertices[k].tv = 0.5f;
+		vertices[k++].color = color2;
+
+		last = position + D3DXVECTOR3(sf, cf, 0) * radius;
 	}
 
 	g_AudioSystem.play(clockSound);
 	getDevice()->SetTexture(0, NULL);
 	getDevice()->SetFVF(FVF_TEX);
-	getDevice()->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, vertices.size()-2, &vertices[0], sizeof(vertex));
+	getDevice()->DrawPrimitiveUP(D3DPT_TRIANGLELIST, k/3, &vertices[0], sizeof(vertex));
 
 /*
 

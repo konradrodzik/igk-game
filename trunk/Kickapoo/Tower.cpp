@@ -25,6 +25,9 @@ void Tower::ai(std::vector<Player> * players, float rt)
 	{
 		D3DXVECTOR2 player(players->at(i).relativePosition(rt));
 
+		if(players->at(i).dead)
+			continue;
+
 		D3DXVec2Subtract(&dvec, &player, &myPos);
 		float distanceFromPlayer = D3DXVec2Length(&dvec);
 
@@ -43,8 +46,8 @@ void Tower::ai(std::vector<Player> * players, float rt)
 		float willShoot = RandomFloat(0.0f, 1.2f);
 		if(willShoot > retarded)
 		{				
-			g_ParticleSystem()->spawnParticle(myPos, shootDir * 4, false, 5.0f, 60.0f * (1.0f - retarded),
-				D3DCOLOR_ARGB(255, 0x80, 0, 0x20), 4.0f, ParticleHarmful);
+			g_ParticleSystem()->spawnParticle(myPos, shootDir * 7, false, 5.0f, 6 * BLOCK_SIZE * (1.0f - retarded),
+				D3DCOLOR_ARGB(255, 0x0, 0x80, 0xff), 7.0f, ParticleHarmful);
 			lastShootAt = curTime;
 		}
 	}
