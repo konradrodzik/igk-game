@@ -76,7 +76,11 @@ Map* Map::load( const std::string& name )
 					continue;
 
 				if(bytes[0]>80) {
-					map->map[index] = '@';
+					if(bytes[2] > 80) {
+						map->map[index] = '$';					
+					} else {
+						map->map[index] = '@';
+					}
 				}
 				else if(bytes[2]>80) {
 					map->map[index] = '^';
@@ -162,11 +166,12 @@ void Map::loadContent(vector<Player>& playerList, vector<Tower>& towerList)
 		for(int j = 0; j < width; ++j)
 		{
 			char block = map[index(j, i)];
-			if(block == '@')
+			if(block == '@' || block == '$')
 			{
 				Player player;
 				player.Position.x = j;
 				player.Position.y = i;
+				player.hasMissiles = block == '$';
 				player.playerTexture = playerTexture;
 				player.playerSelectedTexture = playerSelected;
 				playerList.push_back(player);

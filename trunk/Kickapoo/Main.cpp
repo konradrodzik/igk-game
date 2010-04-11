@@ -9,7 +9,7 @@ Game* g_Game;
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nShowCmd)
 {
-	g_Window()->initApplication( "IGK Framework", 1280, 800, hInstance, false );
+	g_Window()->initApplication( "IGK Framework", 50*BLOCK_SIZE, 35*BLOCK_SIZE, hInstance, false );
 	g_Direct3D()->initDirect3D(32, false);
 	g_Renderer()->create();
 	g_Input()->init(hInstance, false);

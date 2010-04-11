@@ -76,7 +76,7 @@ void Player::update(float rt) {
 		if(hasMissiles)
 		{
 			ParticleSystem::getSingletonPtr()->addParticle(
-				new Missile(ParticleSystem::getSingletonPtr(), state->center() * BLOCK_SIZE, direction, &_missile));
+				new Missile(ParticleSystem::getSingletonPtr(), state->center() * BLOCK_SIZE, direction, &_missile, this));
 		} else {
 			ParticleSystem::getSingletonPtr()->spawnParticle(
 				state->center() * BLOCK_SIZE, direction, false, 10.0f, BLOCK_SIZE * 20, -1, 20, ParticleShot, &_bullet);
