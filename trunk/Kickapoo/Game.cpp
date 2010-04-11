@@ -247,7 +247,7 @@ void Game::update()
 			for(int i = 0 ; i < towers.size() ; ++i)
 				towers[i].ai(&playerList);
 
-			updateClock();
+			
 		}
 		else
 		{
@@ -382,7 +382,7 @@ void Game::onLeftClick()
 
 void Game::drawClock()
 {
-	return;
+/*	return;
 	clockTexture.set();
 	g_Renderer()->drawRect(620, 420, 128, 128);
 	char buffer[10];
@@ -393,36 +393,48 @@ void Game::drawClock()
 		g_Renderer()->drawLine(line.x1, line.y1, line.x2, line.y2, 1, D3DCOLOR_RGBA(0, 0, 255, 64));
 	}
 	clockFont->write(buffer);
-}
+*/}
 
 void Game::updateClock()
 {
-	/*SLine line;
-	line.x1 = 684.0f;
-	line.y1 = 484.0f;
-
+	D3DXVECTOR3 position = D3DXVECTOR3(800, 500, 0);
+	D3DCOLOR color = D3DCOLOR_ARGB(127,0,255,0);
 	int vertexCount = 36;
-	float angle = MATH_TWO_PI / vertexCount;
-	rotAngle -= MATH_PI * 90.0f / 180.0f;
+	float rotAngle = 0;
+	float angle = 3.14f * 2 / vertexCount;
+	rotAngle -= 3.14f * 90.0f / 180.0f;
+	float timeStep = 360.0f / 10.0f;
 
 	//! generate vertices
-	shape->vertices.resize(vertexCount);
-	shape->vertices[0] = ( Vertex(position, 0.5, 0.5, color_) );
+	std::vector<vertex> vertices;
+	vertices.resize(vertexCount);
+	vertices[0].pos = position;
+	vertices[0].tu = vertices[0].tv = 0.5f;
+	vertices[0].color = color;
+	float radius = 100.0f;
+
 	for(int i=0; i < vertexCount; ++i)
 	{
 		//! normalize texcoord to 0,1
+		float curAngle = angle*i + rotAngle;
 		float u = (cosf(angle*i + rotAngle) + 1.0)*0.5;
 		float v = (sinf(angle*i + rotAngle) + 1.0)*0.5;
 
 		float x = position.x + sinf(angle*i)*radius;
 		float y = position.y + cosf(angle*i)*radius;
 		float z = position.z;
-		shape->vertices[vertexCount - i - 1] = (Vertex(math::Vector(x,y,z), u, v, color_));
+		vertices[vertexCount - i - 1].pos = D3DXVECTOR3(x,y,z);
+		vertices[vertexCount - i - 1].tu = u;
+		vertices[vertexCount - i - 1].tv = v;
+
+		if(curAngle > timeStep * relativeTime)
+			vertices[vertexCount - i - 1].color = color;
+		else
+			vertices[vertexCount - i - 1].color = D3DCOLOR_ARGB(127, 255, 0, 0);
 	}
 
-*/
-
-
+	getDevice()->SetFVF(FVF_TEX);
+	getDevice()->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, vertices.size()-2, &vertices[0], sizeof(vertex));
 
 /*
 
