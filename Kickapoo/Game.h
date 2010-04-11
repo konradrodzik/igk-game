@@ -75,4 +75,5 @@ protected:
 	Texture clockTexture;
 
 	Sound* clockSound;
+	Font* clockFont;
 };
