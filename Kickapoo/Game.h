@@ -64,7 +64,7 @@ public:
 	void onTowerKilled();	
 	void onPlayerKilled(Player* player);
 protected:
-	static const int maxLevels_ = 2;
+	static const int maxLevels_ = 6;
 
 	EGameState::TYPE state_;
 	Texture kryzys_;

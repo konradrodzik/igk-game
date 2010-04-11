@@ -57,7 +57,7 @@ void Game::loadLevel()
 	activePlayer = NULL;
 
 	char buffer[100];
-	sprintf(buffer, "map0.bmp", level_);
+	sprintf(buffer, "map%i.bmp", level_);
 
 	map = Map::load(buffer);
 	map->loadContent(playerList, towers);
@@ -145,7 +145,9 @@ void Game::startGame()
 
 void Game::killTower(Tower* tower)
 {
-	onTowerKilled();
+
+	tower->state = ETS_DYING;
+
 	//! kill tower
 	AnimationSequenceActivator* kill = new AnimationSequenceActivator(MakeDelegate(tower, &Tower::kill));
 	
@@ -161,28 +163,36 @@ void Game::killTower(Tower* tower)
 
 	//! add to system
 	AnimationSequence::add(kill);
+
+		onTowerKilled();
+
+
 }
 
 void Game::onTowerKilled()
 {
 	towersAlive_--;
-	if(towersAlive_ <= 0)
-	{
-		//! Change level
-		if(++level_ < maxLevels_)
-		{
-			//! level finished change state and wait 1 sec
-			changeState(EGameState::LevelFinished);
-			AnimationSequenceScalar* wait3sec = new AnimationSequenceScalar(_fake, 0, 1, 3);
-			AnimationSequenceActivator* changeLevel = new AnimationSequenceActivator(MakeDelegate(this, &Game::loadLevel));
-			wait3sec->setNext(changeLevel);
-			AnimationSequence::add(wait3sec);
-		} else 
-		{
-			changeState(EGameState::GameFinished);
-		}
 
+	for(unsigned i = 0; i < towers.size(); ++i) {
+		if(towers[i].state == ETS_ALIVE)
+			return;
 	}
+
+	//! Change level
+	if(++level_ < maxLevels_)
+	{
+		//! level finished change state and wait 1 sec
+		changeState(EGameState::LevelFinished);
+		AnimationSequenceScalar* wait3sec = new AnimationSequenceScalar(_fake, 0, 1, 3);
+		AnimationSequenceActivator* changeLevel = new AnimationSequenceActivator(MakeDelegate(this, &Game::loadLevel));
+		wait3sec->setNext(changeLevel);
+		AnimationSequence::add(wait3sec);
+	} 
+	else 
+	{
+		changeState(EGameState::GameFinished);
+	}
+
 }
 
 void Game:: explodeTower(void* t)
@@ -249,6 +259,14 @@ void Game::update()
 		if(GetKeyState(VK_RETURN) & 0x80) {
 			changeState(EGameState::Selection);
 			return;
+		}
+
+		for(int i = 0; i < maxLevels_; ++i) {
+			if(GetKeyState('1' + i) & 0x80) {
+				level_ = i;
+				loadLevel();
+				return;
+			}
 		}
 
 		g_ParticleSystem()->updateParticles(map, relativeTime);
@@ -368,8 +386,8 @@ void Game::draw()
 		}
 		
 		map->draw();
-		drawDynamicObjects();
 		g_ParticleSystem()->renderParticles();
+		drawDynamicObjects();
 		updateClock();
 		//! draw selection
 		if(_selectionAlpha > 0.0f && activePlayer)
