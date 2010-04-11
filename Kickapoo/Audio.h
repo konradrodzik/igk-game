@@ -16,7 +16,7 @@ public:
 
 	void stopSoud(FMOD::Sound* sound);
 
-	FMOD::Sound* loadSound(const char* filePath);
+	FMOD::Sound* loadSound(const char* filePath, bool loop = false);
 	FMOD::Sound* loadStream(const char* filePath);
 
 private:

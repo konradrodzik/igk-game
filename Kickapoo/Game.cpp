@@ -40,7 +40,7 @@ Game::Game(void)
 
 	g_wallSound = g_AudioSystem.loadSound("sfx/wall.wav");
 
-	background =  g_AudioSystem.loadSound("sfx/background.mp3");
+	background =  g_AudioSystem.loadSound("sfx/background.mp3", true);
 	backgroundMusicStarted = false;
 
 	typingSound = g_AudioSystem.loadSound("sfx/typing.wav");
