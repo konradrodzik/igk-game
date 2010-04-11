@@ -92,4 +92,5 @@ protected:
 	Font* scoreFont;
 
 	Sound* explosionSound;
+	Sound* pickSound;
 };
