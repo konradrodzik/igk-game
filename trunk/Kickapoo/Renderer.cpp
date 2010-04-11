@@ -312,73 +312,44 @@ void Renderer::drawRotatedRect(float x, float y, float w, float h, D3DXVECTOR2& 
 {
 	D3DXVECTOR2 norm;
 	D3DXVec2Normalize(&norm, &direction);
-	D3DXVECTOR2 axis(1.0f, 0.0f);
-
-	D3DXVECTOR2 a, b, c, d;
-	a.x = - w / 2.0f;
-	a.y = - h / 2.0f;
-	b.x = w / 2.0f;
-	b.y = - h / 2.0f;
-	c.x = w / 2.0f;
-	c.y = h / 2.0f;
-	d.x = -w / 2.0f;
-	d.y = h / 2.0f;
-
-	float cosAlpha = D3DXVec2Dot(&norm, &axis);
-	float sinAlpha = sinf(acosf(cosAlpha));
-
-	D3DXVECTOR2 ap, bp, cp, dp;
-	ap.x = a.x * cosAlpha - a.y * sinAlpha;
-	ap.y = a.y * cosAlpha + a.x * sinAlpha;
-	bp.x = b.x * cosAlpha - b.y * sinAlpha;
-	bp.y = b.y * cosAlpha + b.x * sinAlpha;
-	cp.x = c.x * cosAlpha - c.y * sinAlpha;
-	cp.y = c.y * cosAlpha + c.x * sinAlpha;
-	dp.x = d.x * cosAlpha - d.y * sinAlpha;
-	dp.y = d.y * cosAlpha + d.x * sinAlpha;
-
-	ap.x += (w / 2.0f) + x;
-	ap.y += (h / 2.0f) + y;
-	bp.x += (w / 2.0f) + x;
-	bp.y += (h / 2.0f) + y;
-	cp.x += (w / 2.0f) + x;
-	cp.y += (h / 2.0f) + y;
-	dp.x += (w / 2.0f) + x;
-	dp.y += (h / 2.0f) + y;
+	D3DXVECTOR2 tan(-norm.y, norm.x);
+	
+	tan *= w/2;
+	norm *= h/2;
 
 	vertex v[4];
 
-	v[0].pos.x = ap.x;
-	v[0].pos.y = ap.y;
+	v[0].pos.x = x - tan.x - norm.x;
+	v[0].pos.y = y - tan.y - norm.y;
 	v[0].pos.z = 0;
 	//	v[0].rhw = 1.0f;
 	v[0].color = 0xffffffff;
 	v[0].tu = 0.0f;
 	v[0].tv = 1.0f;
 
-	v[1].pos.x = bp.x;
-	v[1].pos.y = bp.y;
+	v[1].pos.x = x + tan.x - norm.x;
+	v[1].pos.y = y + tan.y - norm.y;
 	v[1].pos.z = 0;
 	//	v[1].rhw = 1.0f;
 	v[1].color = 0xffffffff;
-	v[1].tu = 0.0f;
-	v[1].tv = 0.0f;	
+	v[1].tu = 1.0f;
+	v[1].tv = 1.0f;	
 
-	v[2].pos.x = cp.x;
-	v[2].pos.y = cp.y;
+	v[2].pos.x = x + tan.x + norm.x;
+	v[2].pos.y = y + tan.y + norm.y;
 	v[2].pos.z = 0;
 	//	v[2].rhw = 1.0f;
 	v[2].color = 0xffffffff;
 	v[2].tu = 1.0f;
 	v[2].tv = 0.0f;
 
-	v[3].pos.x = dp.x;
-	v[3].pos.y = dp.y;
+	v[3].pos.x = x - tan.x + norm.x;
+	v[3].pos.y = y - tan.y + norm.y;
 	v[3].pos.z = 0;
 	//	v[3].rhw = 1.0f;
 	v[3].color = 0xffffffff;
-	v[3].tu = 1.0f;
-	v[3].tv = 1.0f;
+	v[3].tu = 0.0f;
+	v[3].tv = 0.0f;
 
 	vb->pushData(sizeof(v), v, chunk);
 
