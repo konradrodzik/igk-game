@@ -128,6 +128,7 @@ void ParticleSystem::renderParticles()
 	texturedParticles.reserve(instances.size());
 
 	g_Renderer()->setIdentity();
+	getDevice()->SetTexture(0, NULL);
 
 	std::vector<D3DXVECTOR2> positions; positions.reserve(instances.size());
 	std::vector<D3DXVECTOR2> sizes; sizes.reserve(instances.size());

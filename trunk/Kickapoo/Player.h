@@ -64,4 +64,5 @@ public:
 	void reset();
 
 private:
+	Texture _bullet;
 };

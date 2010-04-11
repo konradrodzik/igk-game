@@ -1,6 +1,6 @@
 #include "Common.h"
 
-Player::Player() : Position(0,0), Velocity(0,0) {
+Player::Player() : Position(0,0), Velocity(0,0), _bullet("gfx/bullet.png") {
 
 }
 
@@ -39,7 +39,7 @@ PlayerState* Player::findState(float time) {
 		if(itor->Time < time)
 			return &*itor;
 	}
-#endif
+#endif*
 	return NULL;
 }
 
@@ -70,7 +70,7 @@ void Player::update(float rt) {
 		D3DXVec2Normalize(&direction, &direction);
 
 		ParticleSystem::getSingletonPtr()->spawnParticle(
-			state->center() * BLOCK_SIZE, direction, false, 10.0f, BLOCK_SIZE * 20, -1, 8, ParticleShot);
+			state->center() * BLOCK_SIZE, direction, false, 10.0f, BLOCK_SIZE * 20, -1, 20, ParticleShot, &_bullet);
 
 	}
 }
