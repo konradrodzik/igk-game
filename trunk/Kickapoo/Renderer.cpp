@@ -45,7 +45,7 @@ void VertexBuffer::release()
 //////////////////////////////////////////////////////////////////////
 void Renderer::create()
 {
-	vb = new VertexBuffer(32768);	// 2^15
+	vb = new VertexBuffer(32768 * sizeof(vertex));	// 2^15
 	vb->create();
 }
 
@@ -140,6 +140,60 @@ void Renderer::drawRect(float x, float y, float width, float height, D3DCOLOR co
 	getDevice()->SetFVF(FVF_TEX);
 	getDevice()->SetStreamSource(0, vb->getBuffer(), chunk.offset, sizeof(vertex));
 	getDevice()->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+}
+
+void Renderer::drawRects(const std::vector<D3DXVECTOR2> * positions, const std::vector<D3DXVECTOR2> * sizes, const std::vector<D3DCOLOR> * colors, int count)
+{
+	vertex v[4];
+	std::vector<vertex> vertices;
+
+	vertices.reserve(count * 4);
+
+	for(int i = 0 ; i < count ; ++i)
+	{
+		v[0].pos.x = positions->at(i).x;
+		v[0].pos.y = positions->at(i).y;
+		v[0].pos.z = 0;
+		//	v[0].rhw = 1.0f;
+		v[0].color = colors->at(i);
+		v[0].tu = 0.0f;
+		v[0].tv = 1.0f;
+
+		v[1].pos.x = positions->at(i).x;
+		v[1].pos.y = positions->at(i).y + sizes->at(i).y;
+		v[1].pos.z = 0;
+		//	v[1].rhw = 1.0f;
+		v[1].color = colors->at(i);
+		v[1].tu = 0.0f;
+		v[1].tv = 0.0f;		
+
+		v[2].pos.x = positions->at(i).x + sizes->at(i).x;
+		v[2].pos.y = positions->at(i).y;
+		v[2].pos.z = 0;
+		//	v[2].rhw = 1.0f;
+		v[2].color = colors->at(i);
+		v[2].tu = 1.0f;
+		v[2].tv = 1.0f;		
+
+		v[3].pos.x = positions->at(i).x + sizes->at(i).x;
+		v[3].pos.y = positions->at(i).y + sizes->at(i).y;
+		v[3].pos.z = 0;
+		//	v[3].rhw = 1.0f;
+		v[3].color = colors->at(i);
+		v[3].tu = 1.0f;
+		v[3].tv = 0.0f;
+
+		vertices.push_back(v[0]);
+		vertices.push_back(v[1]);
+		vertices.push_back(v[2]);
+		vertices.push_back(v[3]);
+	}
+
+	vb->pushData(sizeof(vertex) * count * 4, &vertices[0], chunk);
+
+	getDevice()->SetFVF(FVF_TEX);
+	getDevice()->SetStreamSource(0, vb->getBuffer(), chunk.offset, sizeof(vertex));
+	getDevice()->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2 * count);
 }
 
 void Renderer::drawRect(float x, float y, float width, float height, 
