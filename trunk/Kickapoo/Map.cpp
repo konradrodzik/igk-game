@@ -4,11 +4,13 @@ Map::Map()
 {
 	wall = new Texture;
 	tower = new Texture;
+	tower2 = new Texture;
 	tower_death = new Texture;
 	playerTexture = new Texture;
 	playerSelected = new Texture;
 	wall->load("gfx/wall.png");
 	tower->load("gfx/tower.png");
+	tower2->load("gfx/tower2.png");
 	tower_death->load("gfx/tower_death.png");
 	playerTexture->load("gfx/player.png");
 	playerSelected->load("gfx/player_selected.png");
@@ -181,13 +183,19 @@ void Map::loadContent(vector<Player>& playerList, vector<Tower>& towerList)
 				Tower tower_;
 				
 				if(block == '^')
+				{
 					tower_.type = ETT_STATIC;
+					tower_.setAliveTexture(tower2);
+				}
 				else if(block == '&')
+				{
 					tower_.type = ETT_SHOOTING;
+					tower_.setAliveTexture(tower);
+				}
 
 				tower_.Position.x = j;
 				tower_.Position.y = i;
-				tower_.setAliveTexture(tower);
+				
 				tower_.setDeathTexture(tower_death);
 				towerList.push_back(tower_);
 			}
