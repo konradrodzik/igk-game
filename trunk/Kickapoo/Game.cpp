@@ -39,6 +39,11 @@ Game::Game(void)
 	pickSound = g_AudioSystem.loadSound("sfx/pick.wav");
 
 	g_wallSound = g_AudioSystem.loadSound("sfx/wall.wav");
+
+	background =  g_AudioSystem.loadSound("sfx/background.mp3");
+	backgroundMusicStarted = false;
+
+	typingSound = g_AudioSystem.loadSound("sfx/typing.wav");
 }
 
 void Game::loadLevel()
@@ -325,11 +330,18 @@ void Game::draw()
 				//! Type text [3.0f - 3.0f + textLength * 0.1f]
 				//! and change 2010 into 2110
 				{
+					static int typeChar = 0;
 					getDevice()->SetTexture(0, gameScreen_.getTexture());
 					g_Renderer()->drawRect(0, 0, g_Window()->getWidth(), g_Window()->getHeight(), D3DCOLOR_ARGB(255,255,255,255));
 					string typedText;
-					typedText.assign(_introText.c_str(), (int)((_introTime - 3.0f) * 10.0f));
+					int currentLength = (int)((_introTime - 3.0f) * 10.0f);
+					typedText.assign(_introText.c_str(), currentLength);
 					introFont_->write(typedText.c_str());
+					if(currentLength > typeChar)
+					{
+						typeChar = currentLength;
+						g_AudioSystem.play(typingSound);
+					}
 
 					if(_splashOneElementY > 0.0f) {
 						float speed =  600.0f / 1.5f;
@@ -344,6 +356,12 @@ void Game::draw()
 
 	} else
 	{
+		if(!backgroundMusicStarted)
+		{
+			backgroundMusicStarted = true;
+			g_AudioSystem.play(background);
+		}
+		
 		map->draw();
 		drawDynamicObjects();
 		g_ParticleSystem()->renderParticles();
@@ -454,7 +472,7 @@ void Game::updateClock()
 		last = position + D3DXVECTOR3(sf, cf, 0) * radius;
 	}
 
-	g_AudioSystem.play(clockSound);
+	//g_AudioSystem.play(clockSound);
 	getDevice()->SetTexture(0, NULL);
 	getDevice()->SetFVF(FVF_TEX);
 	getDevice()->DrawPrimitiveUP(D3DPT_TRIANGLELIST, k/3, &vertices[0], sizeof(vertex));
