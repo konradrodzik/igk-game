@@ -130,6 +130,8 @@ void Game::update()
 	} 
 	else if(state_ == EGameState::Running)
 	{
+		g_ParticleSystem()->updateParticles(map);
+
 		for(int i = 0; i < towers.size(); ++i)
 		{
 			Tower* tower = &towers[i];
@@ -142,8 +144,6 @@ void Game::update()
 		ParticleSystem * ps = ParticleSystem::getSingletonPtr();
 		//ps->spawnParticle(D3DXVECTOR2(g_Mouse()->getX(), g_Mouse()->getY()),
 		//	D3DXVECTOR2(0, 1), false, 1.0f, 50.0f, D3DCOLOR_ARGB(0x80, 0x80, 0x80, 0), 4.0f);
-
-		g_ParticleSystem()->updateParticles();
 
 		relativeTime += dt;
 

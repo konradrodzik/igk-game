@@ -22,9 +22,20 @@ Particle::~Particle()
 {
 }
 
-bool Particle::updateState()
+bool Particle::updateState(Map * map)
 {
 	float tt = particleSystem->currentTime();
+
+	if(type == 1 && map)
+	{
+		float px = (position.x) / BLOCK_SIZE;
+		float py = (position.y) / BLOCK_SIZE;
+		if(map->blocked(px, py))
+		{
+		return false;
+		}
+	}
+
 	if(tt > (respawnTime + lifeTime))
 	{
 		if(!looping)
@@ -61,12 +72,12 @@ ParticleSystem::~ParticleSystem()
 		delete *it;
 }
 
-void ParticleSystem::updateParticles()
+void ParticleSystem::updateParticles(Map * map)
 {
 	curTime = g_Timer()->getEngineTime();
 	for(std::vector<Particle *>::iterator it = instances.begin() ; it != instances.end() ; )
 	{
-		if((*it)->updateState())
+		if((*it)->updateState(map))
 		{
 			++it;
 		} else {
