@@ -309,7 +309,7 @@ void ParticleSystem::checkParticlesAgainstMap(Map& map, int byType, Game& game) 
 	}
 }
 
-void ParticleSystem::checkParticlesAgainstPlayer(const std::vector<Player> * players, int byType, FastDelegate<void (Player*)> killPlayer)
+void ParticleSystem::checkParticlesAgainstPlayer(const std::vector<Player> * players, int byType, FastDelegate1<Player*> killPlayer)
 {
 	for(std::vector<Particle *>::iterator it = instances.begin() ; it != instances.end() ; ++it)
 	{
@@ -328,7 +328,7 @@ void ParticleSystem::checkParticlesAgainstPlayer(const std::vector<Player> * pla
 			if(x1 < p->pos().x && p->pos().x < x2 &&
 				y1 < p->pos().y && p->pos().y < y2)
 			{
-				killPlayer(q);
+				killPlayer(const_cast<Player*>(q));
 				return;
 			}
 		}
