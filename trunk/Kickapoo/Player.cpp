@@ -107,12 +107,12 @@ void Player::record(float dt, float rt, Map* map, bool fire) {
 	if(GetKeyState(VK_RIGHT)&0x80 || GetKeyState('D')&0x80)
 		force.x += 1;
 
-	Velocity *= exp(-dt) * 0.98f;
+	Velocity *= exp(-dt);
 	Velocity += 10 * force * dt;
 
 	float length = D3DXVec2Length(&Velocity);
-	if(length > 2)
-		Velocity /= length / 2;
+	if(length > 3)
+		Velocity /= length / 3;
 
 	D3DXVECTOR2 oldPosition = state.Position;
 	state.Position += Velocity * dt * BLOCK_SIZE / 3;
