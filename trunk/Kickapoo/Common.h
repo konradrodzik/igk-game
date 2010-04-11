@@ -59,8 +59,13 @@ using namespace std;
 #include "Mouse.h"
 #include "Map.h"
 #include "Player.h"
-#include "Tower.h"
+
+class Tower;
+class Game;
+extern Game* g_Game;
+
 #include "Game.h"
+#include "Tower.h"
 #include "Missile.h"
 #include "Particles.h"
 

@@ -29,6 +29,14 @@ Game::Game(void)
 	clockSound = g_AudioSystem.loadSound("sfx/clock.mp3");
 }
 
+void Game::loadLevel()
+{
+	map = Map::load("mapa.bmp");
+	map->loadContent(playerList, towers);
+	towersAlive_ = towers.size();
+	replayCount_ = 0;	
+}
+
 Game::~Game(void)
 {
 	delete introFont_;
@@ -67,10 +75,14 @@ void Game::changeState(EGameState::TYPE state)
 			tower->state = ETS_ALIVE;
 		}
 
-
 		// hack off
 		// changeState(EGameState::Running);
 	}
+
+	if(state == EGameState::LevelFinished)
+	{
+	}
+
 }
 
 void Game::startGame()
@@ -95,6 +107,30 @@ void Game::killTower(Tower* tower)
 
 	//! add to system
 	AnimationSequence::add(kill);
+}
+
+void Game::onTowerKilled()
+{
+towersAlive_--;
+	if(towersAlive_ <= 0)
+	{
+		//! Change level
+		if(level_ < maxLevels_)
+		{
+			level_++;
+
+			//! level finished change state and wait 1 sec
+			changeState(EGameState::LevelFinished);
+			AnimationSequenceScalar* wait3sec = new AnimationSequenceScalar(_fake, 0, 1, 3);
+			AnimationSequenceActivator* changeLevel = new AnimationSequenceActivator(MakeDelegate(this, &Game::loadLevel));
+			wait3sec->setNext(changeLevel);
+			AnimationSequence::add(wait3sec);
+		} else 
+		{
+			changeState(EGameState::GameFinished);
+		}
+
+	}
 }
 
 void Game:: explodeTower(void* t)
@@ -131,8 +167,9 @@ void Game::create()
 	clockFont->create("Verdana", 20, 0, false, &rect2);
 	clockFont->setTextColor(D3DCOLOR_RGBA(255, 0, 0, 255));
 
-	map = Map::load("mapa.bmp");
-	map->loadContent(playerList, towers);
+	level_ = 0;
+	replayCount_ = 0;
+	loadLevel();
 }
 
 void Game::update()
@@ -188,7 +225,17 @@ void Game::update()
 		{
 			g_AudioSystem.stopSoud(clockSound);
 		}
-	}
+	} else
+		if(state_ == EGameState::LevelFinished)
+		{
+
+			introFont_->write("Gratulacje! Uda³o Ci siê w czasie: %0.2f", relativeTime);
+		}
+		else
+			if(state_ == EGameState::GameFinished)
+			{
+				introFont_->write("Gratulacje! Gra ukoñczona ostatni czas: %0.2f", relativeTime);
+			}
 
 	leftMouseClick = false;
 

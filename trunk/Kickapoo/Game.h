@@ -13,6 +13,8 @@ namespace EGameState
 		Tutorial,
 		Selection,
 		Running,
+		LevelFinished,
+		GameFinished
 	};
 };
 
@@ -53,9 +55,11 @@ public:
 	void drawClock();
 	void updateClock();
 
-	
+	//! loads level
+	void loadLevel();
+	void onTowerKilled();	
 protected:
-	
+	static const int maxLevels_ = 1;
 
 	EGameState::TYPE state_;
 	Texture kryzys_;
@@ -73,6 +77,10 @@ protected:
 	bool leftMouseClick, leftMouseDown;
 	std::vector<SLine> clockLines;
 	Texture clockTexture;
+
+	int towersAlive_;
+	int replayCount_;
+	int level_;
 
 	Sound* clockSound;
 	Font* clockFont;
