@@ -19,9 +19,10 @@ public:
 	float velocity;
 	D3DCOLOR color;
 	float size;
+	int type;
 
 	Particle(IParticleSystem * _pSystem, const D3DXVECTOR2& pos, const D3DXVECTOR2& dir,
-		bool loop, float lifeTime, float velocity, D3DCOLOR color, float size);
+		bool loop, float lifeTime, float velocity, D3DCOLOR color, float size, int type);
 	virtual ~Particle();
 	bool updateState();
 
@@ -46,7 +47,7 @@ public:
 		}
 
 	Particle2(IParticleSystem * _pSystem, const D3DXVECTOR2& pos, const D3DXVECTOR2& dir,
-		bool loop, float lifeTime, float velocity, D3DCOLOR color, float size,
+		bool loop, float lifeTime, float velocity, D3DCOLOR color, float size, int type,
 		const FastDelegate2<float, float, float>& _func);
 	virtual ~Particle2();
 };
@@ -59,10 +60,10 @@ public:
 
 	void updateParticles();
 	void spawnParticle(const D3DXVECTOR2& pos, const D3DXVECTOR2& direction,
-		bool looping, float lifeTime, float velocity, D3DCOLOR color, float size);
+		bool looping, float lifeTime, float velocity, D3DCOLOR color, float size, int type = 0);
 	void spawnParticle(const D3DXVECTOR2& pos, const D3DXVECTOR2& direction,
 		bool looping, float lifeTime, float velocity, D3DCOLOR color, float size,
-		const FastDelegate2<float, float, float>& _func);
+		const FastDelegate2<float, float, float>& _func, int type = 0);
 
 	void renderParticles();
 
@@ -70,7 +71,7 @@ public:
 
 	void spawnExplosion(const D3DXVECTOR2& pos, float lifeTime = 1.5f,
 		float distance = 30.0f, D3DXCOLOR color = D3DCOLOR_ARGB(0x80, 0x80, 0, 0), float size = 3.0f,
-		int nParticles = 50);
+		int nParticles = 50, int type = 0);
 
 private: // IParticleSystem
 	virtual float currentTime() const;
