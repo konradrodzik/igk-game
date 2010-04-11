@@ -34,10 +34,23 @@ Game::Game(void)
 
 void Game::loadLevel()
 {
-	map = Map::load("mapa.bmp");
+	AnimationSequence::releaseAll();
+
+	delete map;
+	map = NULL;
+	towers.clear();
+	playerList.clear();
+	activePlayer = NULL;
+
+	char buffer[100];
+	sprintf(buffer, "map%i.bmp", level_);
+
+	map = Map::load(buffer);
 	map->loadContent(playerList, towers);
 	towersAlive_ = towers.size();
 	replayCount_ = 0;	
+
+	changeState(EGameState::Selection);
 }
 
 Game::~Game(void)
@@ -59,8 +72,17 @@ void Game::changeState(EGameState::TYPE state)
 	if(state == EGameState::Running) {
 		relativeTime = 0;
 		
+		towersAlive_ = towers.size();
+
 		for(int i = 0; i < playerList.size(); ++i)
 			playerList[i].reset();
+
+		// reset all towers state
+		for(int i = 0; i < towers.size(); ++i)
+		{
+			Tower* tower = &towers[i];
+			tower->state = ETS_ALIVE;
+		}
 
 		g_ParticleSystem()->clear();
 
@@ -70,16 +92,20 @@ void Game::changeState(EGameState::TYPE state)
 		relativeTime = 0;
 		activePlayer = NULL;
 
+		AnimationSequence::releaseAll();
+
 		
 		// reset all towers state
 		for(int i = 0; i < towers.size(); ++i)
 		{
-			Tower* tower = &towers[i];
-			tower->state = ETS_ALIVE;
+			//Tower* tower = &towers[i];
+			//tower->state = ETS_ALIVE;
 		}
 
 		// hack off
 		// changeState(EGameState::Running);
+
+		g_ParticleSystem()->clear();
 	}
 
 	if(state == EGameState::LevelFinished)
@@ -119,10 +145,8 @@ towersAlive_--;
 	if(towersAlive_ <= 0)
 	{
 		//! Change level
-		if(level_ < maxLevels_)
+		if(++level_ < maxLevels_)
 		{
-			level_++;
-
 			//! level finished change state and wait 1 sec
 			changeState(EGameState::LevelFinished);
 			AnimationSequenceScalar* wait3sec = new AnimationSequenceScalar(_fake, 0, 1, 3);
@@ -191,18 +215,7 @@ void Game::update()
 	else if(state_ == EGameState::Running)
 	{
 		g_ParticleSystem()->updateParticles(map);
-
-		for(int i = 0; i < towers.size(); ++i)
-		{
-			Tower* tower = &towers[i];
-			if(tower->state != ETS_ALIVE)
-				continue;
-			if(g_ParticleSystem()->particlesFoundByRect(tower->getX() - BLOCK_SIZE / 2, tower->getY() - BLOCK_SIZE / 2, BLOCK_SIZE, BLOCK_SIZE, ParticleShot))
-			{
-				g_ParticleSystem()->clipParticles(tower->getX() - BLOCK_SIZE / 2.0f, tower->getY() - BLOCK_SIZE / 2.0f, BLOCK_SIZE, BLOCK_SIZE, ParticleShot);
-				killTower(tower);
-			}
-		}
+		g_ParticleSystem()->checkParticlesAgainstMap(*map, ParticleShot, *this);
 
 		ParticleSystem * ps = ParticleSystem::getSingletonPtr();
 
@@ -230,17 +243,7 @@ void Game::update()
 		{
 			g_AudioSystem.stopSoud(clockSound);
 		}
-	} else
-		if(state_ == EGameState::LevelFinished)
-		{
-
-			introFont_->write("Gratulacje! Uda³o Ci siê w czasie: %0.2f", relativeTime);
-		}
-		else
-			if(state_ == EGameState::GameFinished)
-			{
-				introFont_->write("Gratulacje! Gra ukoñczona ostatni czas: %0.2f", relativeTime);
-			}
+	} 
 
 	leftMouseClick = false;
 
@@ -250,7 +253,7 @@ void Game::update()
 void Game::drawDynamicObjects()
 {
 	for(unsigned i = 0; i < playerList.size(); ++i) {
-		playerList[i].draw(true, state_ == EGameState::Running, relativeTime);
+		playerList[i].draw(true, state_ >= EGameState::Running, relativeTime);
 	}
 
 	for(unsigned i = 0; i < towers.size(); ++i)
@@ -314,12 +317,22 @@ void Game::draw()
 		if(_selectionAlpha > 0.0f)
 		{
 
-			float ssize = 32 * (- _selectionAlpha + 3);
+			float ssize = 1.5f * BLOCK_SIZE * (- _selectionAlpha + 3);
 
 			getDevice()->SetTexture(0, selection_.getTexture());
 			g_Renderer()->drawRect( activePlayer->getX()- ssize * 0.5f, activePlayer->getY() - ssize * 0.5f, ssize, ssize, D3DCOLOR_ARGB((int)(_selectionAlpha*255), 120, 255,0));
 
 		}
+
+		if(state_ == EGameState::LevelFinished)
+		{
+
+			introFont_->write("Gratulacje! Uda³o Ci siê w czasie: %0.2f", relativeTime);
+		}
+		else if(state_ == EGameState::GameFinished)
+			{
+				introFont_->write("Gratulacje! Gra ukoñczona ostatni czas: %0.2f", relativeTime);
+			}
 
 	}
 }
@@ -355,6 +368,7 @@ void Game::onLeftClick()
 
 void Game::drawClock()
 {
+	return;
 	clockTexture.set();
 	g_Renderer()->drawRect(620, 420, 128, 128);
 	char buffer[10];

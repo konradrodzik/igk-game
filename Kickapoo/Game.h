@@ -63,7 +63,7 @@ public:
 	void loadLevel();
 	void onTowerKilled();	
 protected:
-	static const int maxLevels_ = 1;
+	static const int maxLevels_ = 2;
 
 	EGameState::TYPE state_;
 	Texture kryzys_;
