@@ -45,6 +45,7 @@ public:
 	int height;
 	Texture* wall;
 	Texture* tower;
+	Texture* tower2;
 	Texture* tower_death;
 	Texture* playerTexture;
 	Texture* playerSelected;
