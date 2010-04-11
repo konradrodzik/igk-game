@@ -183,7 +183,7 @@ void Renderer::drawRects(const std::vector<D3DXVECTOR2> * positions, const std::
 		v[2].tv = 1.0f;		
 	
 		v[3].pos.x = x;
-		v[3].pos.y = y;
+		v[3].pos.y = y+height;
 		v[3].pos.z = 0;
 		//	v[3].rhw = 1.0f;
 		v[3].color = color;
@@ -213,7 +213,7 @@ void Renderer::drawRects(const std::vector<D3DXVECTOR2> * positions, const std::
 
 	getDevice()->SetFVF(FVF_TEX);
 	getDevice()->SetStreamSource(0, vb->getBuffer(), chunk.offset, sizeof(vertex));
-	getDevice()->DrawPrimitive(D3DPT_TRIANGLELIST, 0, 2 * count);
+	getDevice()->DrawPrimitive(D3DPT_TRIANGLELIST, 0, 2*count);
 }
 
 void Renderer::drawRect(float x, float y, float width, float height, 
@@ -319,21 +319,21 @@ void Renderer::drawRotatedRect(float x, float y, float w, float h, D3DXVECTOR2& 
 
 	vertex v[4];
 
-	v[0].pos.x = x - tan.x - norm.x;
-	v[0].pos.y = y - tan.y - norm.y;
-	v[0].pos.z = 0;
-	//	v[0].rhw = 1.0f;
-	v[0].color = 0xffffffff;
-	v[0].tu = 0.0f;
-	v[0].tv = 1.0f;
-
-	v[1].pos.x = x + tan.x - norm.x;
-	v[1].pos.y = y + tan.y - norm.y;
+	v[1].pos.x = x - tan.x - norm.x;
+	v[1].pos.y = y - tan.y - norm.y;
 	v[1].pos.z = 0;
-	//	v[1].rhw = 1.0f;
+	//	v[0].rhw = 1.0f;
 	v[1].color = 0xffffffff;
-	v[1].tu = 1.0f;
-	v[1].tv = 1.0f;	
+	v[1].tu = 0.0f;
+	v[1].tv = 1.0f;
+
+	v[0].pos.x = x + tan.x - norm.x;
+	v[0].pos.y = y + tan.y - norm.y;
+	v[0].pos.z = 0;
+	//	v[1].rhw = 1.0f;
+	v[0].color = 0xffffffff;
+	v[0].tu = 1.0f;
+	v[0].tv = 1.0f;	
 
 	v[2].pos.x = x + tan.x + norm.x;
 	v[2].pos.y = y + tan.y + norm.y;
