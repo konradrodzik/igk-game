@@ -72,7 +72,10 @@ ParticleSystem::ParticleSystem()
 ParticleSystem::~ParticleSystem()
 {
 	for(std::vector<Particle *>::iterator it = instances.begin() ; it != instances.end() ; ++it)
-		delete *it;
+	{
+		Particle * p = *it;
+		delete p;
+	}
 }
 
 template<typename Cont, typename Itor>
@@ -101,7 +104,9 @@ void ParticleSystem::updateParticles(Map * map)
 		{
 			++it;
 		} else {
-			delete *it;
+			Particle * p = *it;
+			delete p;
+
 			it = fast_erase(instances, it);
 			//it = instances.erase(it);
 		}
@@ -286,7 +291,8 @@ bool ParticleSystem::particlesFoundByRect(float x, float y, float w, float h, in
 			continue;
 		if(p->pos().y > (y + h))
 			continue;
-		return true;
+	
+	return true;
 	}	
 
 	return false;
@@ -306,7 +312,9 @@ void ParticleSystem::clipParticles(float x, float y, float w, float h, int byTyp
 			++it;
 		} else
 		{
-			delete *it;
+			Particle * p = *it;
+			delete p;
+
 			it = instances.erase(it);
 		}
 	}
@@ -315,6 +323,15 @@ void ParticleSystem::clipParticles(float x, float y, float w, float h, int byTyp
 void ParticleSystem::clear()
 {
 	for(std::vector<Particle *>::iterator it = instances.begin() ; it != instances.end() ; ++it)
-		delete *it;
+	{
+		Particle * p = *it;
+		delete p;
+	}
+		
 	instances.clear();
+}
+
+void ParticleSystem::addParticle(Particle * particle)
+{
+	instances.push_back(particle);
 }
