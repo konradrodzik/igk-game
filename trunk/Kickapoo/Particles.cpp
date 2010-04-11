@@ -276,6 +276,32 @@ void ParticleSystem::checkParticlesAgainstMap(Map& map, int byType, Game& game) 
 	}
 }
 
+void ParticleSystem::checkParticlesAgainstPlayer(const std::vector<Player> * players, int byType, FastDelegate0<> killPlayer)
+{
+	for(std::vector<Particle *>::iterator it = instances.begin() ; it != instances.end() ; ++it)
+	{
+		Particle * p = *it;
+		if(p->type != byType) {
+			continue;
+		}
+
+		for(int i = 0 ; i < players->size() ; ++i)
+		{
+			const Player * q = &(*players)[i];
+			float x1 = q->getX() - q->playerSize / 2;
+			float y1 = q->getY() - q->playerSize / 2;
+			float x2 = q->getX() + q->playerSize / 2;
+			float y2 = q->getY() + q->playerSize / 2;
+			if(p->pos().x < x1 || p->pos().x > x2 ||
+				p->pos().y < y1 || p->pos().y > y2)
+			{
+				killPlayer();
+				return;
+			}
+		}
+	}
+}
+
 bool ParticleSystem::particlesFoundByRect(float x, float y, float w, float h, int byType) const
 {
 	for(std::vector<Particle *>::const_iterator it = instances.begin() ; it != instances.end() ; ++it)

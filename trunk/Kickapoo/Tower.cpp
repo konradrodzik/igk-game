@@ -22,12 +22,12 @@ void Tower::ai(std::vector<Player> * players)
 
 		if(distanceFromPlayer < minPlayerDistance)
 		{
+			D3DXVECTOR2 shootDir;
+			D3DXVec2Normalize(&shootDir, &dvec);
+			shootTarget = shootDir;
 			float willShoot = RandomFloat(0.0f, 1.2f);
 			if(willShoot > retarded)
-			{
-				D3DXVECTOR2 shootDir;
-				D3DXVec2Normalize(&shootDir, &dvec);
-				
+			{				
 				g_ParticleSystem()->spawnParticle(myPos, shootDir * 4, false, 5.0f, 60.0f * (1.0f - retarded),
 					D3DCOLOR_ARGB(255, 0x80, 0, 0x20), 4.0f, ParticleHarmful);
 			}

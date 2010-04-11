@@ -223,6 +223,9 @@ void Game::update()
 	{
 		g_ParticleSystem()->updateParticles(map);
 		g_ParticleSystem()->checkParticlesAgainstMap(*map, ParticleShot, *this);
+		g_ParticleSystem()->checkParticlesAgainstPlayer(&playerList, ParticleHarmful, MakeDelegate(this, &Game::onPlayerKilled));
+		if(state_ != EGameState::Running)
+			return;
 
 		ParticleSystem * ps = ParticleSystem::getSingletonPtr();
 
@@ -446,4 +449,10 @@ void Game::updateClock()
 		g_AudioSystem.play(clockSound);
 		isLooping = true;
 	}*/
+}
+
+void Game::onPlayerKilled()
+{
+
+
 }

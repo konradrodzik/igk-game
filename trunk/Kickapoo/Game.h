@@ -62,6 +62,7 @@ public:
 	//! loads level
 	void loadLevel();
 	void onTowerKilled();	
+	void onPlayerKilled();
 protected:
 	static const int maxLevels_ = 2;
 
