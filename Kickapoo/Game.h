@@ -80,7 +80,6 @@ protected:
 	Player* activePlayer;
 	float relativeTime;
 	bool leftMouseClick, leftMouseDown;
-	std::vector<SLine> clockLines;
 	Texture clockTexture;
 
 	int towersAlive_;
