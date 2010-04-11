@@ -61,6 +61,7 @@ using namespace std;
 #include "Player.h"
 #include "Tower.h"
 #include "Game.h"
+#include "Missile.h"
 #include "Particles.h"
 
 #pragma comment(lib, "../Box2D/Library/box2d.lib")
