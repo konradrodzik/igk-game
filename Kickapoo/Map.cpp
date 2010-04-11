@@ -140,7 +140,7 @@ void Map::draw()
 			char block = map[index(j, i)];
 			if(block == '#')
 			{
-				float size = 3+cosf(blockRandom[i * width + j]*6) * 2.0f;
+				float size = 4+cosf(blockRandom[i * width + j]*6) * 2.0f;
 
 				wall->set();
 				g_Renderer()->drawRect(j*BLOCK_SIZE+size, i*BLOCK_SIZE+size, BLOCK_SIZE-2*size, BLOCK_SIZE-2*size);
@@ -162,8 +162,8 @@ void Map::draw()
 
 			if(a == '#' && a != b || a != b && b == '#') 
 			{
-				g_Renderer()->drawLine((j+1)*BLOCK_SIZE-1, i*BLOCK_SIZE+1,
-					(j+1)*BLOCK_SIZE-1, (i+1)*BLOCK_SIZE-1, 2, D3DCOLOR_XRGB(64, 64, 255));
+				g_Renderer()->drawLine((j+1)*BLOCK_SIZE-1, i*BLOCK_SIZE,
+					(j+1)*BLOCK_SIZE-1, (i+1)*BLOCK_SIZE, 2, D3DCOLOR_XRGB(64, 64, 255));
 			}
 		}
 	}
@@ -177,8 +177,8 @@ void Map::draw()
 
 			if(a == '#' && a != b || a != b && b == '#') 
 			{
-				g_Renderer()->drawLine(j*BLOCK_SIZE+1, (i+1)*BLOCK_SIZE-1,
-					(j+1)*BLOCK_SIZE-1, (i+1)*BLOCK_SIZE-1, 2, D3DCOLOR_XRGB(64, 64, 255));
+				g_Renderer()->drawLine(j*BLOCK_SIZE, (i+1)*BLOCK_SIZE-1,
+					(j+1)*BLOCK_SIZE, (i+1)*BLOCK_SIZE-1, 2, D3DCOLOR_XRGB(64, 64, 255));
 			}
 		}
 	}

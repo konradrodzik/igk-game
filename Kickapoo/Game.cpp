@@ -11,8 +11,9 @@ Game::Game(void)
 ,  crysis_("crysis.jpg")
 ,  gameScreen_("game_screen.jpg")
 {
-	changeState(EGameState::Tutorial);
 	relativeTime = 0;
+	activePlayer = NULL;
+	changeState(EGameState::Tutorial);
 }
 
 Game::~Game(void)
@@ -116,12 +117,15 @@ void Game::update()
 {
 	float dt = g_Timer()->getFrameTime();
 
+	if(state_ != EGameState::Intro) {
+		map->update();
+	}
+
 	if(state_ == EGameState::Intro)
 	{
 	} 
 	else if(state_ == EGameState::Running)
 	{
-		map->update();
 		for(int i = 0; i < towers.size(); ++i)
 		{
 			Tower* tower = &towers[i];
@@ -200,6 +204,17 @@ void Game::drawDynamicObjects()
 		else {
 			g_Renderer()->drawRect(player.Position.x*BLOCK_SIZE, player.Position.y*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 		}
+
+		D3DXVECTOR2 lastPosition = player.Position;
+		for(PlayerStateList::iterator itor = player.StateList.begin(); itor != player.StateList.end(); ++itor) {
+			g_Renderer()->drawLine(lastPosition.x * BLOCK_SIZE+ BLOCK_SIZE/2, lastPosition.y * BLOCK_SIZE+ BLOCK_SIZE/2, 
+				itor->Position.x * BLOCK_SIZE + BLOCK_SIZE/2, itor->Position.y * BLOCK_SIZE+ BLOCK_SIZE/2, 1, D3DCOLOR_XRGB(120, 120, 120));
+			lastPosition = itor->Position;
+		}
+
+		if(player.StateList.size()) {
+			g_Renderer()->drawRect(lastPosition.x * BLOCK_SIZE+ BLOCK_SIZE/2, lastPosition.y * BLOCK_SIZE+ BLOCK_SIZE/2, 2, 2, D3DCOLOR_XRGB(190, 80, 80));
+		}
 	}
 
 	for(unsigned i = 0; i < towers.size(); ++i)
@@ -264,6 +279,7 @@ void Game::onLeftClick()
 			{
 
 				activePlayer = &playerList[i];
+				activePlayer->StateList.clear();
 				activePlayer->Velocity = D3DXVECTOR2(0, 0);
 				changeState(EGameState::Running);
 				return;
