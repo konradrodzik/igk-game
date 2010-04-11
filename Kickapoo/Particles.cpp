@@ -141,3 +141,24 @@ void ParticleSystem::spawnExplosion(const D3DXVECTOR2& pos, float lifeTime,
 			_velocity, color, size, type);
 	}
 }
+
+bool ParticleSystem::particlesFoundByRect(float x, float y, float w, float h, int byType) const
+{
+	for(std::vector<Particle *>::const_iterator it = instances.begin() ; it != instances.end() ; ++it)
+	{
+		Particle * p = *it;
+		if(p->type != byType)
+			continue;
+		if(p->pos().x < x)
+			continue;
+		if(p->pos().y < y)
+			continue;
+		if(p->pos().x > (x + w))
+			continue;
+		if(p->pos().y > (y + h))
+			continue;
+		return true;
+	}	
+
+	return false;
+}
