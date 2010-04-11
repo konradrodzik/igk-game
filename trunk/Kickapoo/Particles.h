@@ -73,6 +73,8 @@ public:
 		float distance = 30.0f, D3DXCOLOR color = D3DCOLOR_ARGB(0x80, 0x80, 0, 0), float size = 3.0f,
 		int nParticles = 50, int type = 0);
 
+	bool particlesFoundByRect(float x, float y, float w, float h, int byType) const;
+
 private: // IParticleSystem
 	virtual float currentTime() const;
 
