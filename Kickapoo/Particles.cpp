@@ -3,7 +3,8 @@
 #include <math.h>
 
 Particle::Particle(IParticleSystem * _pSystem, const D3DXVECTOR2& pos, const D3DXVECTOR2& dir,
-	 bool loop, float lifeTime, float velocity, D3DCOLOR color, float size, int type)
+	 bool loop, float lifeTime, float velocity, D3DCOLOR color, float size, int type,
+	 Texture * tex, bool needsRot)
 	: start(pos),
 	  dirVec(dir),
 	  looping(loop),
@@ -12,10 +13,12 @@ Particle::Particle(IParticleSystem * _pSystem, const D3DXVECTOR2& pos, const D3D
 	  color(color),
 	  size(size),
 	  type(type),
-	  particleSystem(_pSystem)
+	  particleSystem(_pSystem),
+	  texture(tex)
 {
 	respawnTime = particleSystem->currentTime();
 	position = start;
+	needRotation = needsRot;
 }
 
 Particle::~Particle()
@@ -50,9 +53,9 @@ bool Particle::updateState(Map * map)
 }
 
 Particle2::Particle2(IParticleSystem * _pSystem, const D3DXVECTOR2& pos, const D3DXVECTOR2& dir,
-		  bool loop, float lifeTime, float velocity, D3DCOLOR color, float size, int type,
+		  bool loop, float lifeTime, float velocity, D3DCOLOR color, float size, int type, Texture * tex, bool needsRot,
 		  const FastDelegate2<float, float, float>& _func)
-		  : Particle(_pSystem, pos, dir, loop, lifeTime, velocity, color, size, type),
+		  : Particle(_pSystem, pos, dir, loop, lifeTime, velocity, color, size, type, tex, needsRot),
 		  _velocityTransform(_func)
 {
 }
@@ -88,9 +91,11 @@ void ParticleSystem::updateParticles(Map * map)
 }
 
 void ParticleSystem::spawnParticle(const D3DXVECTOR2& pos, const D3DXVECTOR2& direction,
-	bool looping, float lifeTime, float velocity, D3DCOLOR color, float size, int type)
+	bool looping, float lifeTime, float velocity, D3DCOLOR color, float size, int type,
+	Texture * tex, bool needsRot)
 {
-	instances.push_back(new Particle(this, pos, direction, looping, lifeTime, velocity, color, size, type));
+	instances.push_back(new Particle(this, pos, direction, looping, lifeTime, velocity, color, size, type,
+		tex, needsRot));
 }
 
 /*void ParticleSystem::spawnParticle(const D3DXVECTOR2& pos, const D3DXVECTOR2& direction,
@@ -105,10 +110,22 @@ float ParticleSystem::currentTime() const
 	return curTime;
 }
 
+class TextureSorter
+{
+public:
+	bool operator()(const Particle *& p1, const Particle *& p2) const
+	{
+		return (unsigned)p1->texture < (unsigned)p2->texture;
+	}
+};
+
 void ParticleSystem::renderParticles()
 {
 	if(instances.empty())
 		return;
+
+	std::vector<Particle *> texturedParticles;
+	texturedParticles.reserve(instances.size());
 
 	g_Renderer()->setIdentity();
 
@@ -118,12 +135,68 @@ void ParticleSystem::renderParticles()
 
 	for(std::vector<Particle *>::const_iterator it = instances.begin() ; it != instances.end() ; ++it)
 	{
+		if((*it)->texture)
+		{
+			texturedParticles.push_back(*it);		
+		}
 		positions.push_back((*it)->pos());
 		sizes.push_back(D3DXVECTOR2((*it)->size, (*it)->size));
 		colors.push_back((*it)->color);
 	}
 
-	g_Renderer()->drawRects(&positions, &sizes, &colors, instances.size());
+	if(!instances.empty())
+		g_Renderer()->drawRects(&positions, &sizes, &colors, instances.size());
+
+	if(!texturedParticles.empty())
+	{
+		std::sort(texturedParticles.begin(), texturedParticles.end(), TextureSorter());
+		Texture * currenTex = NULL;
+		for(int i = 0 ; i < texturedParticles.size() ; ++i)
+		{
+			if(currenTex != texturedParticles[i]->texture)
+			{
+				currenTex = texturedParticles[i]->texture;
+				currenTex->set();
+			}
+
+			if(texturedParticles[i]->needRotation)
+			{
+				float size = texturedParticles[i]->size;
+				D3DXVECTOR2 a, b;
+				a.x = - size / 2.0f;
+				a.y = - size / 2.0f;
+				b.x = size / 2.0f;
+				b.y = size / 2.0f;
+
+				D3DXVECTOR2 dir(texturedParticles[i]->dirVec);
+				D3DXVECTOR2 axis(1.0f, 0.0f);
+
+				float cosAlpha = D3DXVec2Dot(&dir, &axis);
+				float sinAlpha = sinf(acosf(cosAlpha));
+		
+				D3DXVECTOR2 ap, bp;
+				ap.x = a.x * cosAlpha - a.y * sinAlpha;
+				ap.y = a.y * cosAlpha + a.x * sinAlpha;
+				bp.x = b.x * cosAlpha - b.y * sinAlpha;
+				bp.y = b.y * cosAlpha + b.x * sinAlpha;
+
+				g_Renderer()->drawRect(ap.x, ap.y, 0.0f, 1.0f,
+									   ap.x, bp.y, 0.0f, 0.0f,
+									   bp.x, ap.y, 1.0f, 1.0f,
+									   bp.x, bp.y, 1.0f, 0.0f);	
+			}
+			else
+			{
+
+				g_Renderer()->drawRect(texturedParticles[i]->pos().x, 
+					texturedParticles[i]->pos().y(),
+					texturedParticles[i]->size,
+					texturedParticles[i]->size);
+			}
+		}	
+
+		getDevice()->SetTexture(0, NULL);
+	}
 }
 
 float ParticleSystem::_explosionTransform(float v, float dt)

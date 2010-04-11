@@ -26,9 +26,12 @@ public:
 	D3DCOLOR color;
 	float size;
 	int type;
+	Texture * texture;
+	bool needRotation;
 
 	Particle(IParticleSystem * _pSystem, const D3DXVECTOR2& pos, const D3DXVECTOR2& dir,
-		bool loop, float lifeTime, float velocity, D3DCOLOR color, float size, int type);
+		bool loop, float lifeTime, float velocity, D3DCOLOR color, float size, int type,
+		Texture * tex, bool needsRot);
 	virtual ~Particle();
 	bool updateState(Map *);
 
@@ -54,6 +57,7 @@ public:
 
 	Particle2(IParticleSystem * _pSystem, const D3DXVECTOR2& pos, const D3DXVECTOR2& dir,
 		bool loop, float lifeTime, float velocity, D3DCOLOR color, float size, int type,
+		Texture * tex, bool needsRot,
 		const FastDelegate2<float, float, float>& _func);
 	virtual ~Particle2();
 };
@@ -66,7 +70,8 @@ public:
 
 	void updateParticles(Map * map);
 	void spawnParticle(const D3DXVECTOR2& pos, const D3DXVECTOR2& direction,
-		bool looping, float lifeTime, float velocity, D3DCOLOR color, float size, int type = 0);
+		bool looping, float lifeTime, float velocity, D3DCOLOR color, float size, int type = 0,
+		Texture * tex = NULL, bool needsRot = true);
 	void spawnParticle(const D3DXVECTOR2& pos, const D3DXVECTOR2& direction,
 		bool looping, float lifeTime, float velocity, D3DCOLOR color, float size,
 		const FastDelegate2<float, float, float>& _func, int type = 0);
