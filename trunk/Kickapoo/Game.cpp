@@ -192,7 +192,8 @@ void Game::create()
 	}
 
 	//! intro font
-	_introRect = {160, 400, g_Window()->getWidth(), g_Window()->getHeight()};
+	RECT tmp={160, 400, g_Window()->getWidth(), g_Window()->getHeight()};
+	_introRect = tmp;
 	introFont_ = new Font();
 	introFont_->create("Comic Sans MS", 40, 5, false, &_introRect);
 	introFont_->setTextColor(D3DCOLOR_RGBA(127, 100, 0, 255));
@@ -332,13 +333,13 @@ void Game::draw()
 
 		if(state_ == EGameState::LevelFinished)
 		{
-			getDevice()->SetTexture(NULL);
+			getDevice()->SetTexture(0, NULL);
 			g_Renderer()->drawRect(_introRect.left, _introRect.top, _introRect.right - _introRect.left, _introRect.bottom - _introRect.top, D3DCOLOR_ARGB(127,255,255,255));
 			introFont_->write("Gratulacje! Uda³o Ci siê w czasie: %0.2f", relativeTime);
 		}
 		else if(state_ == EGameState::GameFinished)
 			{
-				getDevice()->SetTexture(NULL);
+				getDevice()->SetTexture(0, NULL);
 				g_Renderer()->drawRect(_introRect.left, _introRect.top, _introRect.right - _introRect.left, _introRect.bottom - _introRect.top, D3DCOLOR_ARGB(127, 255,255,255));
 				introFont_->write("Gratulacje! Gra ukoñczona ostatni czas: %0.2f", relativeTime);
 			}
