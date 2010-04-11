@@ -9,7 +9,7 @@ static float _selectionAlpha = 0.0f;
 static float _splashZeroElementY = 0.0f;
 static float _splashOneElementY = 600.0f;
 Audio g_AudioSystem;
-string _introText = "The time has changed and the world is FUCKED. BULLSHIT!";
+string _introText = "W roku 2010 na konferencji IGK wyciek³ kod pluginu do firefoxa\ndaj¹cy mo¿liwoœæ podró¿owania w czasie.\nNic od tamtego momentu nie by³o ju¿ takie samo.";
 RECT _introRect;
 RECT _screenMiddleRect;
 
@@ -202,7 +202,7 @@ void Game::create()
 	//! Fade In Game Screen [2.0f - 3.0f]
 	//! Type text [3.0f - 3.0f + textLength * 0.1f]
 	if(state_ == EGameState::Intro) {
-		float totalTime = 3 + _introText.size() * 0.1f;
+		float totalTime = 3 + _introText.size() * 0.1f + 3;
 		AnimationSequenceScalar* introTimeLine = new AnimationSequenceScalar(_introTime, 0.0f, totalTime, totalTime);
 		AnimationSequenceActivator* startGame = new AnimationSequenceActivator( MakeDelegate(this, &Game::startGame) );
 		introTimeLine->setNext(startGame);
@@ -210,7 +210,7 @@ void Game::create()
 	}
 
 	//! intro font
-	RECT tmp={160, 530, g_Window()->getWidth(), g_Window()->getHeight()};
+	RECT tmp={80, 530, g_Window()->getWidth(), g_Window()->getHeight()};
 	_introRect = tmp;
 	introFont_ = new Font();
 	introFont_->create("Comic Sans MS", 40, 0, false, &_introRect);
@@ -337,7 +337,9 @@ void Game::draw()
 					int currentLength = (int)((_introTime - 3.0f) * 10.0f);
 					typedText.assign(_introText.c_str(), currentLength);
 					introFont_->write(typedText.c_str());
-					if(currentLength > typeChar)
+					float totalTime = 3 + _introText.size() * 0.1f;
+
+					if(currentLength > typeChar && _introTime <= totalTime)
 					{
 						typeChar = currentLength;
 						g_AudioSystem.play(typingSound);
