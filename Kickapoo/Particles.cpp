@@ -29,7 +29,7 @@ bool Particle::updateState(Map * map)
 {
 	float tt = particleSystem->currentTime();
 
-	if(type == ParticleShot && map)
+	if((type == ParticleShot || type == ParticleHarmful) && map)
 	{
 		float px = (position.x) / BLOCK_SIZE;
 		float py = (position.y) / BLOCK_SIZE;

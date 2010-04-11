@@ -174,6 +174,8 @@ void Game::update()
 			for(int i = 0; i < playerList.size(); ++i)
 				playerList[i].update(relativeTime);
 
+			for(int i = 0 ; i < towers.size() ; ++i)
+				towers[i].ai(&playerList);
 
 			updateClock();
 		}

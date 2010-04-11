@@ -12,7 +12,8 @@ public:
 enum
 {
 
-	ParticleShot = 1
+	ParticleShot = 1,
+	ParticleHarmful
 };
 
 class Particle
