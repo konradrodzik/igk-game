@@ -386,7 +386,7 @@ void Game::draw()
 		else if(state_ == EGameState::GameFinished)
 			{
 				getDevice()->SetTexture(0, NULL);
-				g_Renderer()->drawRect(g_Window()->getWidth() / 4 - 30, g_Window()->getHeight() / 4, g_Window()->getWidth() / 2 + 60, g_Window()->getHeight() / 2, D3DCOLOR_ARGB(127,255,255,255));
+				g_Renderer()->drawRect(g_Window()->getWidth() / 4 - 60, g_Window()->getHeight() / 4, g_Window()->getWidth() / 2 + 200, g_Window()->getHeight() / 2, D3DCOLOR_ARGB(127,255,255,255));
 				scoreFont->write("Gratulacje! Gra ukoñczona ostatni czas: %0.2f", relativeTime);
 			}
 
