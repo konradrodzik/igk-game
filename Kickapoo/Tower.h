@@ -25,6 +25,7 @@ public:
 		retarded = 0.5f;
 		lastShootAt = 0.0f;
 		shootTimeDelta = 0.3f;
+		shootTarget = D3DXVECTOR2(1.0f, 0.0f);
 	}
 
 	Tower()
@@ -34,6 +35,7 @@ public:
 		retarded = 0.5f;
 		lastShootAt = 0.0f;
 		shootTimeDelta = 0.3f;
+		shootTarget = D3DXVECTOR2(1.0f, 0.0f);
 	}
 
 	~Tower()
@@ -60,7 +62,15 @@ public:
 			else if(state == ETS_ALIVE)
 				aliveTexture->set();
 
-			g_Renderer()->drawRect(Position.x*BLOCK_SIZE, Position.y*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+			if(state == ETS_ALIVE && type == ETT_SHOOTING)
+			{
+				g_Renderer()->drawRotatedRect(Position.x*BLOCK_SIZE, Position.y*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE,
+					shootTarget);
+			}
+			else
+			{
+				g_Renderer()->drawRect(Position.x*BLOCK_SIZE, Position.y*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+			}
 		}
 	}
 
@@ -99,4 +109,5 @@ public:
 	float retarded;
 	float lastShootAt;
 	float shootTimeDelta;
+	D3DXVECTOR2 shootTarget;
 };

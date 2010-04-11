@@ -94,6 +94,7 @@ public:
 	void addParticle(Particle * particle);
 
 	void checkParticlesAgainstMap(Map& map, int byType, Game& game);
+	void checkParticlesAgainstPlayer(const std::vector<Player> * players, int byType, FastDelegate0<> killPlayer);
 
 private: // IParticleSystem
 	virtual float currentTime() const;

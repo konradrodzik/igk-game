@@ -46,12 +46,12 @@ public:
 	Player();
 
 
-	int getX()
+	int getX() const
 	{
 		return Position.x*playerSize+playerSize/2;
 	}
 
-	int getY()
+	int getY() const
 	{
 		return Position.y*playerSize+playerSize/2;
 	}
