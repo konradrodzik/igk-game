@@ -136,7 +136,6 @@ void ParticleSystem::spawnExplosion(const D3DXVECTOR2& pos, float lifeTime,
 		float _velocity = RandomFloat(10.0f, 30.0f);
 
 		spawnParticle(pos, dir, false, _life,
-			_velocity, color, RandomFloat(size / 2.0f, size),
-			ParticleSystem::_explosionTransform);
+			_velocity, color, size);
 	}
 }

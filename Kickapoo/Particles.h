@@ -70,7 +70,7 @@ public:
 
 	void spawnExplosion(const D3DXVECTOR2& pos, float lifeTime = 1.5f,
 		float distance = 30.0f, D3DXCOLOR color = D3DCOLOR_ARGB(0x80, 0x80, 0, 0), float size = 3.0f,
-		int nParticles = 100);
+		int nParticles = 50);
 
 private: // IParticleSystem
 	virtual float currentTime() const;
