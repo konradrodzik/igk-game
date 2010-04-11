@@ -8,12 +8,17 @@ Map::Map()
 	tower_death = new Texture;
 	playerTexture = new Texture;
 	playerSelected = new Texture;
+	player2Texture = new Texture;
+	player2Selected = new Texture;
 	wall->load("gfx/wall.png");
 	tower->load("gfx/tower.png");
 	tower2->load("gfx/tower2.png");
 	tower_death->load("gfx/tower_death.png");
 	playerTexture->load("gfx/player.png");
 	playerSelected->load("gfx/player_selected.png");
+
+	player2Texture->load("gfx/player2.png");
+	player2Selected->load("gfx/player2_selected.png");
 }
 
 Map::~Map()
@@ -23,6 +28,8 @@ Map::~Map()
 	delete tower_death;
 	delete playerTexture;
 	delete playerSelected;
+	delete player2Texture;
+	delete player2Selected;
 }
 
 static void trimr(char * buffer) {
@@ -174,8 +181,17 @@ void Map::loadContent(vector<Player>& playerList, vector<Tower>& towerList)
 				player.Position.x = j;
 				player.Position.y = i;
 				player.hasMissiles = block == '$';
-				player.playerTexture = playerTexture;
-				player.playerSelectedTexture = playerSelected;
+				if(block == '$')
+				{
+					player.playerTexture = player2Texture;
+					player.playerSelectedTexture = player2Selected;
+				}
+				else
+				{
+					player.playerTexture = playerTexture;
+					player.playerSelectedTexture = playerSelected;
+				}
+				
 				playerList.push_back(player);
 			}
 			else if(block == '^' || block == '&') 

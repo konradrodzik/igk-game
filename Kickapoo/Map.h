@@ -49,4 +49,6 @@ public:
 	Texture* tower_death;
 	Texture* playerTexture;
 	Texture* playerSelected;
+	Texture* player2Texture;
+	Texture* player2Selected;
 };
