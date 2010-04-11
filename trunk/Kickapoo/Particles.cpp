@@ -160,30 +160,14 @@ void ParticleSystem::renderParticles()
 			}
 
 			if(texturedParticles[i]->needRotation)
-			{
+			{		
 				float size = texturedParticles[i]->size;
-				D3DXVECTOR2 a, b;
-				a.x = - size / 2.0f;
-				a.y = - size / 2.0f;
-				b.x = size / 2.0f;
-				b.y = size / 2.0f;
 
-				D3DXVECTOR2 dir(texturedParticles[i]->dirVec);
-				D3DXVECTOR2 axis(1.0f, 0.0f);
-
-				float cosAlpha = D3DXVec2Dot(&dir, &axis);
-				float sinAlpha = sinf(acosf(cosAlpha));
-		
-				D3DXVECTOR2 ap, bp;
-				ap.x = a.x * cosAlpha - a.y * sinAlpha;
-				ap.y = a.y * cosAlpha + a.x * sinAlpha;
-				bp.x = b.x * cosAlpha - b.y * sinAlpha;
-				bp.y = b.y * cosAlpha + b.x * sinAlpha;
-
-				g_Renderer()->drawRect(ap.x, ap.y, 0.0f, 1.0f,
-									   ap.x, bp.y, 0.0f, 0.0f,
-									   bp.x, ap.y, 1.0f, 1.0f,
-									   bp.x, bp.y, 1.0f, 0.0f);	
+				g_Renderer()->drawRotatedRect(
+					texturedParticles[i]->pos().x,
+					texturedParticles[i]->pos().y,
+					size, size,
+					texturedParticles[i]->dirVec);
 			}
 			else
 			{

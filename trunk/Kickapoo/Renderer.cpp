@@ -307,3 +307,35 @@ void Renderer::drawRect(
 	getDevice()->SetStreamSource(0, vb->getBuffer(), chunk.offset, sizeof(vertex));
 	getDevice()->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
 }
+
+void Renderer::drawRotatedRect(float x, float y, float w, float h, D3DXVECTOR2& direction)
+{
+	D3DXVECTOR2 norm;
+	D3DXVec2Normalize(&norm, &direction);
+	D3DXVECTOR2 axis(1.0f, 0.0f);
+
+	D3DXVECTOR2 a, b;
+	a.x = - w / 2.0f;
+	a.y = - h / 2.0f;
+	b.x = w / 2.0f;
+	b.y = h / 2.0f;
+
+	float cosAlpha = D3DXVec2Dot(&norm, &axis);
+	float sinAlpha = sinf(acosf(cosAlpha));
+
+	D3DXVECTOR2 ap, bp;
+	ap.x = a.x * cosAlpha - a.y * sinAlpha;
+	ap.y = a.y * cosAlpha + a.x * sinAlpha;
+	bp.x = b.x * cosAlpha - b.y * sinAlpha;
+	bp.y = b.y * cosAlpha + b.x * sinAlpha;
+
+	ap.x += (w / 2.0f) + x;
+	ap.y += (h / 2.0f) + y;
+	bp.x += (w / 2.0f) + x;
+	bp.y += (h / 2.0f) + y;
+
+	drawRect(ap.x, ap.y, 0.0f, 1.0f,
+		ap.x, bp.y, 0.0f, 0.0f,
+		bp.x, ap.y, 1.0f, 1.0f,
+		bp.x, bp.y, 1.0f, 0.0f);	
+}
