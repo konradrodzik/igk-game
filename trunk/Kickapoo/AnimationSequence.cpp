@@ -102,6 +102,9 @@ void AnimationSequence::updateAll(float dt)
 			bool r = cur->update(dt);
 			if(!r)
 			{
+				if(animations_.empty())
+					return;
+
 				if(cur->next_)
 				{
 					cur = cur->next_;
@@ -215,10 +218,11 @@ bool AnimationSequenceActivator::update(float dt)
 	if(launched_)
 		return false;
 
+	launched_ = true;
+
 	if(!function_.empty())
 		function_();
 
-	launched_ = true;
 	return false;
 }
 
