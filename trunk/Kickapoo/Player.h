@@ -29,6 +29,7 @@ public:
 	float LastShootTime;
 	Texture* playerTexture;
 	Texture* playerSelectedTexture;
+	bool hasMissiles;
 
 	bool contains(int x, int y)
 	{
@@ -65,4 +66,5 @@ public:
 
 private:
 	Texture _bullet;
+	Texture _missile;
 };

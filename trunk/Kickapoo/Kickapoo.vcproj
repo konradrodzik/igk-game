@@ -190,6 +190,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Missile.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Player.cpp"
 				>
 			</File>

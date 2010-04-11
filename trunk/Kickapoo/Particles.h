@@ -41,7 +41,7 @@ public:
 	virtual D3DXVECTOR2 applyVelocity(Particle * self, float dt) const {
 		return self->dirVec * self->velocity * dt;
 	}
-private:
+protected:
 	IParticleSystem * particleSystem;
 	float respawnTime;
 	D3DXVECTOR2 position;
@@ -90,6 +90,8 @@ public:
 	bool particlesFoundByRect(float x, float y, float w, float h, int byType) const;
 	void clipParticles(float x, float y, float w, float h, int byType);
 	void clear();
+
+	void addParticle(Particle * particle);
 
 	void checkParticlesAgainstMap(Map& map, int byType, Game& game);
 

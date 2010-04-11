@@ -1,8 +1,10 @@
 #include "Common.h"
 
-Player::Player() : Position(0,0), Velocity(0,0), _bullet("gfx/bullet.png") {
-
-}
+Player::Player() : Position(0,0), Velocity(0,0), _bullet("gfx/bullet.png"),
+	_missile("gfx/missile.png")
+	{
+		hasMissiles = false;
+	}
 
 static bool operator < (const PlayerState& state, const PlayerState& other) {
 	return state.Time < other.Time;
@@ -39,7 +41,7 @@ PlayerState* Player::findState(float time) {
 		if(itor->Time < time)
 			return &*itor;
 	}
-#endif*
+#endif
 	return NULL;
 }
 
@@ -69,10 +71,16 @@ void Player::update(float rt) {
 		D3DXVECTOR2 direction = state->Aim - state->Position;
 		D3DXVec2Normalize(&direction, &direction);
 
-		ParticleSystem::getSingletonPtr()->spawnParticle(
-			state->center() * BLOCK_SIZE, direction, false, 10.0f, BLOCK_SIZE * 20, D3DCOLOR_ARGB(127, 255, 0, 0), 20, ParticleShot, &_bullet);
 		
 		g_AudioSystem.play(g_fireSound);
+		if(hasMissiles)
+		{
+			ParticleSystem::getSingletonPtr()->addParticle(
+				new Missile(ParticleSystem::getSingletonPtr(), state->center() * BLOCK_SIZE, direction, &_missile));
+		} else {
+			ParticleSystem::getSingletonPtr()->spawnParticle(
+				state->center() * BLOCK_SIZE, direction, false, 10.0f, BLOCK_SIZE * 20, -1, 20, ParticleShot, &_bullet);
+		}
 	}
 }
 
