@@ -19,12 +19,12 @@ void Audio::release()
     system->release();
 }
 
-FMOD::Sound* Audio::loadSound(const char* filePath)
+FMOD::Sound* Audio::loadSound(const char* filePath, bool loop)
 {
 	FMOD::Sound* sound;
 	system->createSound(filePath, FMOD_SOFTWARE, 0, &sound);
-	sound->setMode(FMOD_LOOP_OFF);
-
+	if(loop)
+		sound->setMode(FMOD_LOOP_NORMAL);
 	return sound;
 }
 
@@ -42,8 +42,10 @@ void Audio::update()
 
 void Audio::play(FMOD::Sound* sound, float volume, bool stop)
 {
-	system->playSound(FMOD_CHANNEL_FREE, sound, stop, &channel);
 	channel->setVolume(volume);
+	//channel->setLoopCount(100000);
+	system->playSound(FMOD_CHANNEL_FREE, sound, stop, &channel);
+	//sound->setLoopCount(1000);
 }
 
 void Audio::stopSoud( FMOD::Sound* sound )
