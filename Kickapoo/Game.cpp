@@ -317,6 +317,35 @@ void Game::drawClock()
 
 void Game::updateClock()
 {
+	/*SLine line;
+	line.x1 = 684.0f;
+	line.y1 = 484.0f;
+
+	int vertexCount = 36;
+	float angle = MATH_TWO_PI / vertexCount;
+	rotAngle -= MATH_PI * 90.0f / 180.0f;
+
+	//! generate vertices
+	shape->vertices.resize(vertexCount);
+	shape->vertices[0] = ( Vertex(position, 0.5, 0.5, color_) );
+	for(int i=0; i < vertexCount; ++i)
+	{
+		//! normalize texcoord to 0,1
+		float u = (cosf(angle*i + rotAngle) + 1.0)*0.5;
+		float v = (sinf(angle*i + rotAngle) + 1.0)*0.5;
+
+		float x = position.x + sinf(angle*i)*radius;
+		float y = position.y + cosf(angle*i)*radius;
+		float z = position.z;
+		shape->vertices[vertexCount - i - 1] = (Vertex(math::Vector(x,y,z), u, v, color_));
+	}
+
+*/
+
+
+
+
+
 	static float circleAngle = 0;
 	static bool isLooping = false;
 	SLine line;

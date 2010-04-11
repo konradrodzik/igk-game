@@ -18,6 +18,9 @@ Map::~Map()
 {
 	delete wall;
 	delete tower;
+	delete tower_death;
+	delete playerTexture;
+	delete playerSelected;
 }
 
 static void trimr(char * buffer) {
