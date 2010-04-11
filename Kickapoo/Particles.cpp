@@ -3,7 +3,7 @@
 #include <math.h>
 
 Particle::Particle(IParticleSystem * _pSystem, const D3DXVECTOR2& pos, const D3DXVECTOR2& dir,
-	 bool loop, float lifeTime, float velocity, D3DCOLOR color, float size)
+	 bool loop, float lifeTime, float velocity, D3DCOLOR color, float size, int type)
 	: start(pos),
 	  dirVec(dir),
 	  looping(loop),
@@ -11,6 +11,7 @@ Particle::Particle(IParticleSystem * _pSystem, const D3DXVECTOR2& pos, const D3D
 	  velocity(velocity),
 	  color(color),
 	  size(size),
+	  type(type),
 	  particleSystem(_pSystem)
 {
 	respawnTime = particleSystem->currentTime();
@@ -38,9 +39,9 @@ bool Particle::updateState()
 }
 
 Particle2::Particle2(IParticleSystem * _pSystem, const D3DXVECTOR2& pos, const D3DXVECTOR2& dir,
-		  bool loop, float lifeTime, float velocity, D3DCOLOR color, float size,
+		  bool loop, float lifeTime, float velocity, D3DCOLOR color, float size, int type,
 		  const FastDelegate2<float, float, float>& _func)
-		  : Particle(_pSystem, pos, dir, loop, lifeTime, velocity, color, size),
+		  : Particle(_pSystem, pos, dir, loop, lifeTime, velocity, color, size, type),
 		  _velocityTransform(_func)
 {
 }
@@ -75,17 +76,17 @@ void ParticleSystem::updateParticles()
 }
 
 void ParticleSystem::spawnParticle(const D3DXVECTOR2& pos, const D3DXVECTOR2& direction,
-	bool looping, float lifeTime, float velocity, D3DCOLOR color, float size)
+	bool looping, float lifeTime, float velocity, D3DCOLOR color, float size, int type)
 {
-	instances.push_back(new Particle(this, pos, direction, looping, lifeTime, velocity, color, size));
+	instances.push_back(new Particle(this, pos, direction, looping, lifeTime, velocity, color, size, type));
 }
 
-void ParticleSystem::spawnParticle(const D3DXVECTOR2& pos, const D3DXVECTOR2& direction,
-				   bool looping, float lifeTime, float velocity, D3DCOLOR color, float size,
+/*void ParticleSystem::spawnParticle(const D3DXVECTOR2& pos, const D3DXVECTOR2& direction,
+				   bool looping, float lifeTime, float velocity, D3DCOLOR color, float size, int type,
 				   const FastDelegate2<float, float, float>& _func)
 {
-	instances.push_back(new Particle2(this, pos, direction, looping, lifeTime, velocity, color, size, _func));
-}
+	instances.push_back(new Particle2(this, pos, direction, looping, lifeTime, velocity, color, size, type, _func));
+}*/
 
 float ParticleSystem::currentTime() const
 {
@@ -124,7 +125,7 @@ float ParticleSystem::_explosionTransform(float v, float dt)
 
 void ParticleSystem::spawnExplosion(const D3DXVECTOR2& pos, float lifeTime,
 					float distance, D3DXCOLOR color, float size,
-					int nParticles)
+					int nParticles, int type)
 {
 	for (int i = 0 ; i < nParticles ; ++i)
 	{
@@ -136,6 +137,6 @@ void ParticleSystem::spawnExplosion(const D3DXVECTOR2& pos, float lifeTime,
 		float _velocity = RandomFloat(10.0f, 30.0f);
 
 		spawnParticle(pos, dir, false, _life,
-			_velocity, color, size);
+			_velocity, color, size, type);
 	}
 }
