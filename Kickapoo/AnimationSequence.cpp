@@ -226,6 +226,7 @@ bool AnimationSequenceActivator1Param::update(float dt)
 {
 	if(!function_.empty())
 		function_(param_);
+	function_.clear();
 	return false;
 }
 
