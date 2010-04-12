@@ -26,6 +26,7 @@ Game::Game(void)
 ,  zero_("gfx/splash_0.png")
 ,  one_("gfx/splash_1.png")
 , clockTexture("gfx/circle.png")
+,  activePlayer(NULL)
 {
 	relativeTime = 0;
 	activePlayer = NULL;
@@ -363,7 +364,9 @@ void Game::draw()
 					if(currentLength > typeChar && _introTime <= totalTime)
 					{
 						typeChar = currentLength;
-						g_AudioSystem.play(typingSound);
+
+						if(typedText[typedText.length() - 1] != ' ')
+							g_AudioSystem.play(typingSound);
 					}
 
 					if(_splashOneElementY > 0.0f) {
