@@ -1,0 +1,1 @@
+Winning game made for IGK'7 2010.
